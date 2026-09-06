@@ -1,5 +1,11 @@
 # HAC continuation experiment plan - 2026-09-06
 
+The later [team research review](HAC_ENGINEERING_RESEARCH_REVIEW_20260906.md) and
+[next-run plan](HAC_NEXT_RUN_PLAN_20260906.md) refine this draft. They add the
+zero-epoch attenuation finding, actual distinct-frame audit, and stronger matched
+controls, and correct the scenario-group interpretation through a
+[source-lineage receipt](HAC_SCENARIO_LINEAGE_REVIEW_20260906.md).
+
 ## Status
 
 **DRAFT DESIGN ONLY.** This document is not a protocol, protocol amendment, lock,

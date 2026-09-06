@@ -1,5 +1,12 @@
 # Experiment runners
 
+The September 2026 [team review](../docs/HAC_ENGINEERING_RESEARCH_REVIEW_20260906.md)
+and [next-run plan](../docs/HAC_NEXT_RUN_PLAN_20260906.md) add two analysis tools:
+`analyze_hac_component_relationships.py` compares immutable development exports with
+shared grouped resampling and saves an aggregate figure; `audit_cptr_initialization_contract.py`
+executes a synthetic no-data/no-fit check of legacy attenuation and short-frame sampling.
+Neither command trains or promotes a model.
+
 The repository contains four versioned experiment sequences. Each sequence separates
 data preparation, development-only model selection, final fitting, test access, and
 portable evidence export.
