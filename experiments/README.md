@@ -113,6 +113,26 @@ portable evidence export.
     calibration row can be opened. `export_okutama_cptr_results.py` produces the
     path-sanitized package in `results/okutama_cptr`.
 
+## 2026-09-06 continuation diagnostics
+
+The finalized receiving-workspace tools analyze retained development predictions
+without fitting models or opening test, calibration, or confirmation arrays. The
+continuation provenance record discloses an earlier mixed-manifest metadata exposure;
+it was not an array or model-evaluation access.
+
+1. `build_vcoco_development_evidence.py` binds the v2 train/val row manifests and joins
+   them to byte-locked predictions from a run that attests v3 grouped OOF; the retained
+   artifact does not permit independent fold reconstruction.
+2. `analyze_vcoco_development_evidence.py` reports paired error directions, scale
+   slices, proper losses, and source-image-cluster uncertainty.
+3. `analyze_okutama_cptr_baseline_preservation.py` compares the retained CPTR candidate
+   with its exact temporal anchor and a clearly labeled oracle occlusion fallback,
+   using recording-cluster intervals and exact recording swaps.
+
+The continuation provenance record and draft experiment plan are in `docs/`. The
+draft grants no fitting authorization; a new committed protocol and fresh lock are
+required before running any proposed intervention or candidate.
+
 The commands remain explicit so each gate has a visible input and output. Long-running
 jobs resume only when the recorded implementation and artifact hashes still match.
 `pipeline_source.ipynb` belongs to the historical COCO benchmark; the root notebook is

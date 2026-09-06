@@ -792,15 +792,7 @@ def validate_study_report_release(repository: Path) -> None:
     sys.path.insert(0, str(repository / "tools"))
     from build_readme import build_readme
     from build_study_release_manifest import checksum_text as historical_checksum_text
-    from build_v3_release_manifest import (
-        build_manifest as build_v3_manifest,
-    )
-    from build_v3_release_manifest import (
-        checksum_text as v3_checksum_text,
-    )
-    from build_v3_release_manifest import (
-        encoded_manifest as encode_v3_manifest,
-    )
+    from build_v3_release_manifest import verify_frozen_release as verify_v3_frozen_release
 
     if (repository / "README.md").read_text(encoding="utf-8") != build_readme(repository):
         raise RuntimeError("README is stale relative to locked evidence")
@@ -830,14 +822,8 @@ def validate_study_report_release(repository: Path) -> None:
         raise RuntimeError("Study v2.0.0 release checksums are stale")
 
     v3_manifest_path = repository / "results/human_activity_study_v3.0.0_manifest.json"
-    expected_v3_manifest = encode_v3_manifest(build_v3_manifest(repository))
-    if v3_manifest_path.read_bytes() != expected_v3_manifest:
-        raise RuntimeError("Study v3.0.0 release manifest is stale")
     v3_checksums_path = repository / "release/HUMAN_ACTIVITY_STUDY_V3.0.0_SHA256SUMS.txt"
-    if v3_checksums_path.read_text(encoding="utf-8") != v3_checksum_text(
-        repository, v3_manifest_path
-    ):
-        raise RuntimeError("Study v3.0.0 release checksums are stale")
+    verify_v3_frozen_release(repository, v3_manifest_path, v3_checksums_path)
 
     notebook_text = (repository / "human_activity_classification.ipynb").read_text(encoding="utf-8")
     for marker in (

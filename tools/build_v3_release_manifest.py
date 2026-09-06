@@ -14,6 +14,7 @@ RELEASE_ID = "human-activity-study-v3.0.0"
 REPORT_VERSION = "3.0.0"
 SOFTWARE_VERSION = "3.0.0"
 PREPARED_DATE = "2026-08-24"
+RELEASE_BASE_COMMIT = "2697126e3887f99d0b815ada68eb3c4a3c861822"
 DEFAULT_OUTPUT = PurePosixPath("results/human_activity_study_v3.0.0_manifest.json")
 DEFAULT_CHECKSUMS = PurePosixPath("release/HUMAN_ACTIVITY_STUDY_V3.0.0_SHA256SUMS.txt")
 
@@ -212,6 +213,167 @@ def checksum_text(repository: Path, manifest_path: Path) -> str:
     return "".join(f"{sha256_file(path)}  {path.name}\n" for path in targets)
 
 
+def _git_bytes(repository: Path, *arguments: str) -> bytes:
+    try:
+        return subprocess.run(
+            ["git", *arguments],
+            cwd=repository,
+            check=True,
+            capture_output=True,
+        ).stdout
+    except subprocess.CalledProcessError as error:
+        detail = error.stderr.decode("utf-8", errors="replace").strip()
+        suffix = f": {detail}" if detail else ""
+        raise RuntimeError(f"Git command failed ({' '.join(arguments)}){suffix}") from error
+
+
+def _verify_commit(repository: Path, revision: str) -> str:
+    resolved = (
+        _git_bytes(repository, "rev-parse", "--verify", f"{revision}^{{commit}}")
+        .decode("ascii")
+        .strip()
+    )
+    if resolved.lower() != revision.lower():
+        raise RuntimeError(
+            f"Release base revision resolved to {resolved}, expected exact commit {revision}"
+        )
+    return resolved
+
+
+def _repository_relative(repository: Path, path: Path) -> PurePosixPath:
+    try:
+        return PurePosixPath(path.resolve().relative_to(repository.resolve()).as_posix())
+    except ValueError as error:
+        raise RuntimeError(f"Release control file is outside the repository: {path}") from error
+
+
+def _git_blob(repository: Path, revision: str, relative: PurePosixPath) -> bytes:
+    return _git_bytes(repository, "cat-file", "blob", f"{revision}:{relative.as_posix()}")
+
+
+def _git_tree_paths(repository: Path, revision: str) -> set[PurePosixPath]:
+    payload = _git_bytes(repository, "ls-tree", "-r", "--name-only", "-z", revision)
+    return {PurePosixPath(value.decode("utf-8")) for value in payload.split(b"\0") if value}
+
+
+def _validate_frozen_manifest_identity(manifest: object) -> dict[str, dict[str, object]]:
+    if not isinstance(manifest, dict):
+        raise RuntimeError("Release manifest root must be an object")
+    expected_identity = {
+        "schema_version": 1,
+        "release_id": RELEASE_ID,
+        "report_version": REPORT_VERSION,
+        "software_version": SOFTWARE_VERSION,
+        "prepared_date": PREPARED_DATE,
+    }
+    if any(manifest.get(key) != value for key, value in expected_identity.items()):
+        raise RuntimeError("Release manifest identity changed")
+    artifacts = manifest.get("artifacts")
+    artifact_count = manifest.get("artifact_count")
+    if (
+        not isinstance(artifacts, dict)
+        or not isinstance(artifact_count, int)
+        or isinstance(artifact_count, bool)
+        or artifact_count < 1
+        or artifact_count != len(artifacts)
+    ):
+        raise RuntimeError("Release manifest artifact inventory is invalid")
+    for relative, evidence in artifacts.items():
+        if (
+            not isinstance(relative, str)
+            or not relative
+            or PurePosixPath(relative).is_absolute()
+            or ".." in PurePosixPath(relative).parts
+            or not isinstance(evidence, dict)
+        ):
+            raise RuntimeError(f"Release manifest artifact entry is invalid: {relative!r}")
+        digest = evidence.get("sha256")
+        size = evidence.get("size_bytes")
+        if (
+            not isinstance(digest, str)
+            or len(digest) != 64
+            or any(character not in "0123456789abcdef" for character in digest)
+            or not isinstance(size, int)
+            or isinstance(size, bool)
+            or size < 0
+        ):
+            raise RuntimeError(f"Release manifest evidence is invalid: {relative}")
+    return artifacts
+
+
+def _frozen_checksum_text(
+    repository: Path,
+    revision: str,
+    manifest_relative: PurePosixPath,
+) -> str:
+    targets = (
+        PurePosixPath("output/pdf/vcoco_v3_motion_identifiability_v3.0.0.pdf"),
+        PurePosixPath("output/pdf/okutama_cptr_development_v3.0.0.pdf"),
+        manifest_relative,
+    )
+    return "".join(
+        f"{hashlib.sha256(_git_blob(repository, revision, path)).hexdigest()}  {path.name}\n"
+        for path in targets
+    )
+
+
+def verify_frozen_release(
+    repository: Path,
+    manifest_path: Path,
+    checksums_path: Path,
+    *,
+    release_revision: str = RELEASE_BASE_COMMIT,
+) -> None:
+    """Verify the historical release against its immutable Git commit, not the worktree."""
+
+    repository = repository.resolve()
+    revision = _verify_commit(repository, release_revision)
+    manifest_relative = _repository_relative(repository, manifest_path)
+    checksums_relative = _repository_relative(repository, checksums_path)
+    if not manifest_path.is_file():
+        raise RuntimeError(f"Release manifest is missing: {manifest_path}")
+    if not checksums_path.is_file():
+        raise RuntimeError(f"Release checksums are missing: {checksums_path}")
+
+    manifest_bytes = manifest_path.read_bytes()
+    frozen_manifest_bytes = _git_blob(repository, revision, manifest_relative)
+    if manifest_bytes != frozen_manifest_bytes:
+        raise RuntimeError(f"Release manifest differs from {revision}: {manifest_path}")
+    try:
+        manifest = json.loads(manifest_bytes.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise RuntimeError("Release manifest is not valid UTF-8 JSON") from error
+    artifacts = _validate_frozen_manifest_identity(manifest)
+
+    tree_inventory = _git_tree_paths(repository, revision)
+    expected_inventory = tree_inventory.difference({manifest_relative, checksums_relative})
+    recorded_inventory = {PurePosixPath(relative) for relative in artifacts}
+    if recorded_inventory != expected_inventory:
+        missing = sorted(path.as_posix() for path in expected_inventory - recorded_inventory)
+        unexpected = sorted(path.as_posix() for path in recorded_inventory - expected_inventory)
+        raise RuntimeError(
+            "Release manifest does not cover the immutable release tree; "
+            f"missing={missing}, unexpected={unexpected}"
+        )
+
+    for relative, evidence in artifacts.items():
+        blob = _git_blob(repository, revision, PurePosixPath(relative))
+        if hashlib.sha256(blob).hexdigest() != evidence["sha256"]:
+            raise RuntimeError(f"Release-base artifact hash differs: {relative}")
+        if len(blob) != evidence["size_bytes"]:
+            raise RuntimeError(f"Release-base artifact size differs: {relative}")
+
+    expected_checksums = _frozen_checksum_text(repository, revision, manifest_relative)
+    frozen_checksums = _git_blob(repository, revision, checksums_relative)
+    if frozen_checksums != expected_checksums.encode("utf-8"):
+        raise RuntimeError(f"Release-base checksums are internally inconsistent at {revision}")
+    current_checksums = checksums_path.read_bytes()
+    if current_checksums != frozen_checksums:
+        raise RuntimeError(f"Release checksums differ from {revision}: {checksums_path}")
+    if current_checksums.decode("utf-8") != checksum_text(repository, manifest_path):
+        raise RuntimeError(f"Release checksum targets are stale: {checksums_path}")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repository", type=Path, default=REPOSITORY_ROOT)
@@ -226,18 +388,12 @@ def main() -> None:
     repository = args.repository.resolve()
     output = repository / args.output
     checksums = repository / args.checksums
-    expected = encoded_manifest(build_manifest(repository))
-
     if args.check:
-        if not output.is_file() or output.read_bytes() != expected:
-            raise RuntimeError(f"Release manifest is stale: {output}")
-        if not checksums.is_file() or checksums.read_text(encoding="utf-8") != checksum_text(
-            repository, output
-        ):
-            raise RuntimeError(f"Release checksums are stale: {checksums}")
+        verify_frozen_release(repository, output, checksums)
         print(f"Release manifest verified: {output}")
         return
 
+    expected = encoded_manifest(build_manifest(repository))
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_bytes(expected)
     checksums.parent.mkdir(parents=True, exist_ok=True)
