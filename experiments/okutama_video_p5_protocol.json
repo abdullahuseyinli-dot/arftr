@@ -1,0 +1,143 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_AFTER_P4_BEFORE_P5_MOMENT_DERIVATION_OR_FITTING",
+  "declared_on": "2026-09-07",
+  "study_id": "okutama_native_video_p5_orthogonal_space_time_moments",
+  "method_name": "Orthogonal Space-Time Moment probe (OSTM)",
+  "scope": "Adaptive single-seed exploratory follow-up on the same 11 development scenarios after P4; not independent confirmation, selection-adjusted evidence, or an originality claim.",
+  "objective": "Test whether P3 is limited by destructive global averaging by exposing fixed spatial contrasts and low-frequency temporal magnitudes to the same nested regularized probe.",
+  "seed": 42,
+  "primary_rows": 4977,
+  "class_order": ["sitting", "standing", "walking_running"],
+  "references": {
+    "p3_best": {
+      "arm": "dual_scale_factorized",
+      "macro_f1": 0.8144156332962987,
+      "probe_lock": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/probe_lock.json",
+        "sha256": "5c3c708cba716c92adaa54abf6dc606115299ccc7f37f343c5ce21982abf0af3",
+        "size_bytes": 1297098
+      },
+      "summary": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/results/summary.json",
+        "sha256": "262418ab23e1c39494fa4e88d70f517f36be2b5f05a23cd7f122317aaa2f8f89",
+        "size_bytes": 291853
+      },
+      "oof": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/results/oof_probabilities.npz",
+        "sha256": "4db1766f6545dffd05942fabb4922d0f68a07430f057ae03afa9370a1b108042",
+        "size_bytes": 582361
+      },
+      "role": "comparison only after all P5 fits; never fitting, selection, fallback, or feature input"
+    },
+    "p4_result": {
+      "summary_path": ".runs/research_20260907/okutama_native_video_p4/results/summary.json",
+      "status": "OKUTAMA_VIDEO_P4_ADAPTIVE_CROSSFIT_COMPLETE",
+      "finding": "all explicit trajectory arms failed to improve the P3 refit control",
+      "role": "adaptation disclosure only, never input"
+    }
+  },
+  "feature_recipe": {
+    "source_arrays": [
+      "P0 short vjepa21_real_clip [4977,8,9,768] float16",
+      "P3 long vjepa21_long16_real_clip [4977,8,9,768] float16",
+      "P0 short dinov2_native_frames [4977,16,1,768] float16",
+      "P3 long dinov2_long16_native_frames [4977,16,1,768] float16"
+    ],
+    "long_fallback": "for each of the 467 incomplete long rows, substitute the exact corresponding short tensor before every moment operation; add no missingness indicator",
+    "visual_posture": ["short_v", "long_v", "short_d", "long_d"],
+    "visual_motion": ["short_v", "long_v", "v_scale", "short_motion", "long_motion", "d_scale"],
+    "visual_direct": ["short_v", "long_v", "v_scale", "short_d", "long_d", "d_scale"],
+    "spatial_contrast": "time-average the long-or-short-fallback V-JEPA grid, subtract its nine-region mean independently per channel, then flatten region-major [9*768]",
+    "temporal_spectrum": "spatial-average V-JEPA and take absolute orthonormal DCT-II coefficients k=1..4 over 8 token times; take absolute orthonormal DCT-II k=1..4 over 16 DINO frame times; concatenate [8*768]",
+    "dc_coefficient_excluded": true,
+    "dct_definition": "sqrt(2/T)*cos(pi*(t+0.5)*k/T), k=1..4, t=0..T-1",
+    "arithmetic_dtype": "float32",
+    "learned_feature_operations": false,
+    "labels_used_in_feature_derivation": false
+  },
+  "arms": [
+    "mean_factorized_refit",
+    "spatial_contrast_factorized",
+    "temporal_spectrum_factorized",
+    "orthogonal_moments_factorized",
+    "orthogonal_moments_multinomial"
+  ],
+  "arm_contracts": {
+    "mean_factorized_refit": {
+      "posture": ["visual_posture"],
+      "motion": ["visual_motion"],
+      "kind": "factorized"
+    },
+    "spatial_contrast_factorized": {
+      "posture": ["visual_posture", "spatial_contrast"],
+      "motion": ["visual_motion"],
+      "kind": "factorized"
+    },
+    "temporal_spectrum_factorized": {
+      "posture": ["visual_posture"],
+      "motion": ["visual_motion", "temporal_spectrum"],
+      "kind": "factorized"
+    },
+    "orthogonal_moments_factorized": {
+      "posture": ["visual_posture", "spatial_contrast"],
+      "motion": ["visual_motion", "temporal_spectrum"],
+      "kind": "factorized"
+    },
+    "orthogonal_moments_multinomial": {
+      "features": ["visual_direct", "spatial_contrast", "temporal_spectrum"],
+      "kind": "multinomial_direct_control"
+    }
+  },
+  "probe": {
+    "C_values": [0.00001, 0.0001, 0.001, 0.01],
+    "solver": "lbfgs",
+    "class_weight": "balanced",
+    "max_iter": 2000,
+    "tolerance": 0.0001,
+    "standardize": true,
+    "inner_folds": 3,
+    "inner_splitter": "StratifiedGroupKFold",
+    "inner_shuffle": true,
+    "inner_seed": 42,
+    "selection": "pooled inner-held macro-F1 descending, NLL ascending, regularization ascending",
+    "factorized_C_candidates": "4 posture by 4 motion values using cached inner predictions",
+    "threshold_tuning": false,
+    "backbones_frozen": true,
+    "maximum_unique_estimator_fits": 585
+  },
+  "statistics": {
+    "primary_metric": "macro_f1",
+    "metrics": ["macro_f1", "per_class_f1", "accuracy", "NLL", "multiclass_Brier"],
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260907,
+    "exact_scenario_swaps": 2048,
+    "multiplicity": "Holm across every prespecified directional comparison",
+    "comparisons": [
+      {"candidate": "mean_factorized_refit", "reference": "p3_best"},
+      {"candidate": "spatial_contrast_factorized", "reference": "p3_best"},
+      {"candidate": "temporal_spectrum_factorized", "reference": "p3_best"},
+      {"candidate": "orthogonal_moments_factorized", "reference": "p3_best"},
+      {"candidate": "orthogonal_moments_multinomial", "reference": "p3_best"},
+      {"candidate": "spatial_contrast_factorized", "reference": "mean_factorized_refit"},
+      {"candidate": "temporal_spectrum_factorized", "reference": "mean_factorized_refit"},
+      {"candidate": "orthogonal_moments_factorized", "reference": "mean_factorized_refit"},
+      {"candidate": "orthogonal_moments_multinomial", "reference": "mean_factorized_refit"},
+      {"candidate": "orthogonal_moments_factorized", "reference": "spatial_contrast_factorized"},
+      {"candidate": "orthogonal_moments_factorized", "reference": "temporal_spectrum_factorized"},
+      {"candidate": "orthogonal_moments_multinomial", "reference": "orthogonal_moments_factorized"}
+    ],
+    "diagnostics": ["scenario", "class", "occluded_clear", "transition_stable", "long_valid_invalid"],
+    "primary_candidate": "orthogonal_moments_factorized",
+    "breakthrough_target": 0.82,
+    "interpretation": "adaptive development evidence; target crossing requires independent replication"
+  },
+  "authorization": {
+    "frozen_feature_read_after_separate_lock": true,
+    "probe_fitting_after_separate_lock": true,
+    "backbone_fitting": false,
+    "raw_image_access": false,
+    "protected_data_access": false,
+    "external_confirmation_claim": false
+  }
+}
