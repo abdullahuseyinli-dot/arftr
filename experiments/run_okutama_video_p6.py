@@ -40,11 +40,7 @@ def _load_lock(root: Path, path: Path) -> dict[str, Any]:
 
 
 def _read_phase(root: Path, entry: dict[str, Any]) -> dict[str, np.ndarray]:
-    path = p1._checked_path(root, entry["oof"]["path"])
-    if p1.sha256_file(path) != entry["oof"]["sha256"] or path.stat().st_size != int(
-        entry["oof"]["size_bytes"]
-    ):
-        raise RuntimeError("P6 OOF evidence receipt changed")
+    path = p1._checked_path(root, entry["oof"])
     with np.load(path, allow_pickle=False) as archive:
         missing = sorted(set(entry["required_arrays"]) - set(archive.files))
         if missing:
