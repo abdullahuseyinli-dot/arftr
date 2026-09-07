@@ -63,7 +63,7 @@
         "sha256": "ae73648e9651621061e5f6f94b9d84a7b196326ac5c6b9a70bb10d02db051621",
         "size_bytes": 631170
       },
-      "post_fit_reference_array": "spatial_contrast_factorized",
+      "post_fit_arrays": ["spatial_contrast_factorized", "orthogonal_moments_factorized"],
       "a0_reproduction_policy": "require exact float64 OOF array equality before interpreting any P7 result"
     },
     "p6": {
