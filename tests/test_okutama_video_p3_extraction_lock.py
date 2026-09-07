@@ -53,6 +53,15 @@ def test_retained_lock_detects_top_level_change() -> None:
     lock._compare(retained, current)
 
 
+def test_manifest_contract_distinguishes_present_from_encodable_frames() -> None:
+    source = (ROOT / "src/hac/okutama_long_video.py").read_text(encoding="utf-8")
+    validator = (ROOT / "tools/lock_okutama_video_p3_extraction.py").read_text(
+        encoding="utf-8"
+    )
+    assert "if present:\n            image_rows[member]" in source
+    assert "if is_present:\n                present.add" in validator
+
+
 def test_probe_protocol_declared_before_extraction_and_has_fixed_budget() -> None:
     spec = json.loads(
         (ROOT / "experiments/okutama_video_p3_probe_protocol.json").read_text(encoding="utf-8")

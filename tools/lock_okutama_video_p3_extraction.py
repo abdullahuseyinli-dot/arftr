@@ -264,11 +264,13 @@ def _validate_manifest(
                 or not math.isclose(float(frame["offset_seconds"]), offset / 30, abs_tol=1e-8)
             ):
                 raise RuntimeError("P3 frame sampling/order changed")
+            is_present = frame["image_present"].lower() in {"1", "true"}
             is_valid = frame["valid_frame"].lower() in {"1", "true"}
             if is_valid:
                 valid_count += 1
+            if is_present:
                 present.add(frame["image_member"])
-            if number < 0 and (is_valid or frame["image_present"].lower() in {"1", "true"}):
+            if number < 0 and (is_valid or is_present):
                 raise RuntimeError("Negative P3 frame was treated as available")
         if int(clip["valid_frame_count"]) != valid_count or int(clip["all_frames_valid"]) != int(valid_count == 16):
             raise RuntimeError("P3 clip validity disagrees with its frame rows")
