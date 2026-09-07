@@ -80,7 +80,7 @@
       {"candidate": "ocvc_uniform_spatial_sensitivity", "reference": "p5_best"},
       {"candidate": "ocvc_uniform_diverse_triad", "reference": "ocvc_uniform_spatial_sensitivity"}
     ],
-    "diagnostics": ["scenario", "class", "occluded_clear", "transition_stable", "long_valid_invalid", "component_error_correlation"],
+    "diagnostics": ["scenario", "class", "long_valid_invalid", "component_error_correlation"],
     "breakthrough_target": 0.82,
     "interpretation": "adaptive development result whose numerical target was exposed before this replay protocol"
   },
