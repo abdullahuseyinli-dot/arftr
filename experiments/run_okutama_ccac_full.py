@@ -112,7 +112,23 @@ def _retained_lock(lock_path: Path) -> dict[str, Any]:
     lock = json.loads(lock_path.read_text(encoding="utf-8"))
     if lock.get("status") != locker.STATUS or lock.get("authorization") != locker.AUTHORIZATION:
         raise RuntimeError("Expected retained full CCAC execution lock")
+    for name, receipt in lock.get("sources", {}).items():
+        path = (_ROOT / receipt["path"]).resolve()
+        if not path.is_relative_to(_ROOT):
+            raise RuntimeError(f"Full CCAC locked source escaped the repository: {name}")
+        raw = path.read_bytes()
+        if len(raw) != int(receipt["size_bytes"]) or hashlib.sha256(raw).hexdigest() != receipt[
+            "sha256"
+        ]:
+            raise RuntimeError(f"Full CCAC locked source changed before execution: {name}")
     return lock
+
+
+def _configure_locked_opencv(lock: dict[str, Any], stage: str) -> None:
+    configured = pilot_run.configure_opencv(threads=1, opencl=False)
+    expected = {"version": lock["opencv"]["version"], "threads": 1, "opencl": False}
+    if configured != expected:
+        raise RuntimeError(f"Full CCAC {stage} OpenCV runtime changed")
 
 
 def _require_request(
@@ -122,15 +138,20 @@ def _require_request(
     path = output / "request.json"
     if not path.exists() or json.loads(path.read_text()) != request:
         raise RuntimeError("Full CCAC initialization request is absent or changed")
+    synthetic_path = output / "synthetic_checks.json"
+    if not synthetic_path.exists():
+        raise RuntimeError("Full CCAC passing synthetic initialization is absent")
+    retained_synthetic = json.loads(synthetic_path.read_text())
+    current_synthetic = pilot_run._synthetic_checks(lock["measurement_protocol"])
+    if retained_synthetic != current_synthetic or not retained_synthetic.get("passed"):
+        raise RuntimeError("Full CCAC passing synthetic initialization changed")
     return request, pilot_run.canonical_digest(request)
 
 
 def initialize(lock_path: Path, output: Path) -> dict[str, Any]:
     root = Path(__file__).resolve().parents[1]
     lock = _locker().validate_lock(root, lock_path)
-    configured = pilot_run.configure_opencv(threads=1, opencl=False)
-    if configured != {"version": lock["opencv"]["version"], "threads": 1, "opencl": False}:
-        raise RuntimeError("Full CCAC OpenCV runtime changed")
+    _configure_locked_opencv(lock, "initialization")
     request = _base_request(lock_path, lock, output)
     request_path = output / "request.json"
     if request_path.exists():
@@ -259,9 +280,7 @@ def extract_shard(lock_path: Path, output: Path, shard_index: int) -> dict[str, 
     shard_count = int(protocol["execution"]["fixed_shard_count"])
     if not 0 <= shard_index < shard_count:
         raise ValueError("Full CCAC shard index is outside the fixed shard count")
-    configured = pilot_run.configure_opencv(threads=1, opencl=False)
-    if configured != {"version": lock["opencv"]["version"], "threads": 1, "opencl": False}:
-        raise RuntimeError("Full CCAC shard OpenCV runtime changed")
+    _configure_locked_opencv(lock, "shard")
     _, request_sha = _require_request(lock_path, lock, output)
     compatibility = _compatibility_lock(lock)
     pilot_ids = set(lock["pilot_sample_ids"])
@@ -440,6 +459,7 @@ def _validate_publication(output: Path, summary: dict[str, Any], request_sha: st
 def finalize(lock_path: Path, output: Path) -> dict[str, Any]:
     root = Path(__file__).resolve().parents[1]
     lock = _locker().validate_lock(root, lock_path)
+    _configure_locked_opencv(lock, "finalization")
     _, request_sha = _require_request(lock_path, lock, output)
     summary_path = output / "summary.json"
     if summary_path.exists():
@@ -590,6 +610,15 @@ def check(lock_path: Path, output: Path) -> dict[str, Any]:
     _, request_sha = _require_request(lock_path, lock, output)
     summary = json.loads((output / "summary.json").read_text())
     _validate_publication(output, summary, request_sha)
+    compatibility = _compatibility_lock(lock)
+    pilot_ids = set(lock["pilot_sample_ids"])
+    reused = 0
+    for clip in lock["selected_clips"]:
+        if clip["sample_id"] in pilot_ids:
+            _load_workload(output, compatibility, clip, request_sha)
+            reused += 1
+    if reused != 128:
+        raise RuntimeError("Full CCAC pilot-reference validation count changed")
     return summary
 
 

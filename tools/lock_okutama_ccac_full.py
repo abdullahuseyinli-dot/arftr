@@ -264,6 +264,20 @@ def build_payload(root: Path) -> dict[str, Any]:
         for name, relative in SOURCES.items()
     }
     pilot_lock, pilot_evidence = _pilot_evidence(root, spec)
+    inherited_source_names = {
+        "measurement_module": "ccac_module",
+        "pilot_locker": "locker",
+        "pilot_runner": "runner",
+        "native_video_module": "native_video_module",
+        "common_locker": "common_locker",
+        "requirements": "requirements",
+    }
+    for current_name, pilot_name in inherited_source_names.items():
+        if sources[current_name]["sha256"] != pilot_lock["source_sha256"][pilot_name]:
+            raise RuntimeError(
+                "Full CCAC measurement implementation drifted from the authorized pilot: "
+                f"{current_name}"
+            )
     measurement = pilot_lock["protocol"]
     unchanged = spec["measurement_contract"]["unchanged_sections"]
     if any(section not in measurement for section in unchanged):
