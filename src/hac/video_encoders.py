@@ -102,6 +102,13 @@ def _verify_module_origins(root: Path) -> list[dict[str, Any]]:
             receipts.append(receipt)
         else:
             namespace_paths = list(getattr(module, "__path__", ()))
+            # ``src`` is a PEP 420 namespace in upstream.  After restoring the
+            # caller's sys.path its dynamic top-level search path can point at the
+            # caller repository, even though every imported executable child came
+            # from the pinned checkout and is verified above.  A namespace has no
+            # executable bytes of its own; foreign child modules still fail.
+            if name == "src" and namespace_paths:
+                continue
             if not namespace_paths or any(
                 not Path(path).resolve().is_relative_to(root) for path in namespace_paths
             ):

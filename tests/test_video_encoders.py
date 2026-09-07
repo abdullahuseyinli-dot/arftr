@@ -82,11 +82,24 @@ def test_module_source_accepts_only_line_ending_changes(tmp_path, monkeypatch):
         video.verify_python_source(tmp_path / "nested", path)
 
 
-def test_foreign_preimported_namespace_is_rejected(tmp_path, monkeypatch):
-    module = types.ModuleType("src")
-    module.__path__ = [str(tmp_path.parent)]
-    monkeypatch.setattr(video, "_upstream_modules", lambda: [("src", module)])
-    with pytest.raises(RuntimeError, match="foreign origin"):
+def test_top_level_src_namespace_is_inert_but_foreign_child_is_rejected(
+    tmp_path, monkeypatch
+):
+    namespace = types.ModuleType("src")
+    namespace.__path__ = [str(tmp_path.parent)]
+    monkeypatch.setattr(video, "_upstream_modules", lambda: [("src", namespace)])
+    assert video._verify_module_origins(tmp_path) == []
+
+    foreign_path = tmp_path.parent / "foreign_module.py"
+    foreign_path.write_text("value = 1\n", encoding="utf-8")
+    child = types.ModuleType("src.foreign_module")
+    child.__file__ = str(foreign_path)
+    monkeypatch.setattr(
+        video,
+        "_upstream_modules",
+        lambda: [("src", namespace), ("src.foreign_module", child)],
+    )
+    with pytest.raises(RuntimeError, match="outside"):
         video._verify_module_origins(tmp_path)
 
 
