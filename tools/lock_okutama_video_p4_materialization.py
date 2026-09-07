@@ -64,7 +64,7 @@ MOTION_ARRAYS = {
     "to_centre_homography": ("a2dcfb49a953a624e094e3b50e6067541048c66c8b28e5ebaa7c8b482355b24e", 5103596),
 }
 MOTION_OTHER = {
-    "camera_estimation_by_recording.csv": ("d3517bab43537af17da47f5e7fce7edf2604f76e3905537ffdc012143329781b", 4113),
+    "camera_estimation_by_recording.csv": ("d3517bab43537af17da47b5e7fce7edf2604f76e3905537ffdc012143329781b", 4113),
     "completed.npy": ("facd0bdbaf494c19200602d55c0df55ed8a8b991af3a42afae5d8ae93cd267dc", 8467),
 }
 
