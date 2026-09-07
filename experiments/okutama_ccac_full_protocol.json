@@ -1,0 +1,101 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_AFTER_CCAC_PILOT_BEFORE_NONPILOT_PIXEL_ACCESS",
+  "declared_on": "2026-09-07",
+  "study_id": "okutama_p8_ccac_full_label_blind_extraction",
+  "scope": "Fixed label-blind measurement extraction on all 4977 adaptive-development rows. No action-label access, classifier fitting, outcome-based threshold change, independent-performance claim, or originality claim.",
+  "pilot_authorization": {
+    "decision": "FULL_CCAC_EXTRACTION_AUTHORIZED",
+    "execution_lock": {"path": ".runs/research_20260907/okutama_ccac_pilot/execution_lock.json", "sha256": "6bfde1ca8136201b4c2eae41c601abd1803b59df2273a45200187e7756155735", "size_bytes": 3271352, "status": "OKUTAMA_CCAC_PILOT_LOCKED_BEFORE_PIXEL_ACCESS"},
+    "request": {"path": ".runs/research_20260907/okutama_ccac_pilot/results/request.json", "sha256": "845fbc0033f6f387240d156f4c39b3c0ca3d6db4a3d838a1ab9598324bdb0e8c", "size_bytes": 1061},
+    "summary": {"path": ".runs/research_20260907/okutama_ccac_pilot/results/summary.json", "sha256": "6fc723c776b3efad2a6048980da3cd154876fe13ce464bd8ae026fc1b091b9e5", "size_bytes": 80931, "status": "OKUTAMA_CCAC_PILOT_COMPLETE"},
+    "completion": {"path": ".runs/research_20260907/okutama_ccac_pilot/results/completion.json", "sha256": "1e0befb5cd3bfd12cd0812d302289da31ca39554d0666731c953e20e88661fd3", "size_bytes": 234, "status": "OKUTAMA_CCAC_PILOT_PUBLICATION_COMPLETE"},
+    "passed_gates": ["synthetic_correctness", "exact_replay", "camera_pair_fraction", "overall_articulation_clip_fraction", "scenario_coverage", "native_size_band_coverage"]
+  },
+  "cohort": {
+    "clips": 4977,
+    "scenarios": 11,
+    "recordings": 21,
+    "tracks": 444,
+    "requested_frame_slots": 79632,
+    "valid_frame_slots": 78714,
+    "unique_valid_jpeg_members": 13093,
+    "requested_adjacent_pairs": 74655,
+    "available_adjacent_pairs": 73737,
+    "unique_available_jpeg_pairs": 12854,
+    "long_complete_clips": 4510,
+    "long_incomplete_clips": 467,
+    "ordering": "retain the 128 pilot clips in their locked ranks 0..127, then order remaining rows by SHA256('hac-ccac-p8-full-v1|20260907|order:'+sample_id), sample_id",
+    "row_dropping": false
+  },
+  "measurement_contract": {
+    "source": "exact pilot protocol embedded in the pilot execution lock",
+    "unchanged_sections": ["metadata_contract", "runtime", "background_correspondence", "actor_correspondence", "camera_hypotheses", "motion_decomposition", "engineering_gates"],
+    "pair_seed_domain": "hac-ccac-p8-pilot-v1|20260907|",
+    "threshold_changes_after_pilot": false,
+    "long_incomplete_policy": "retain the requested stride-4 long timestamps and all available adjacent pairs; unavailable pairs remain explicit failures; do not substitute short-stride CCAC measurements",
+    "known_box_policy": "same union of all valid boxes known to the locked P3 frame manifest, expanded 10 native pixels at each endpoint",
+    "stored_measurement_missingness": "null with explicit support and failure fields, never observed zero"
+  },
+  "reuse": {
+    "pilot_clip_workloads": 128,
+    "new_clip_workloads": 4849,
+    "policy": "reuse only after verifying the pilot summary artifact map, per-clip sample/frame/box/known-box/seed request, measurement-source hashes, pair and clip metrics, correspondence NPZ, and optional overlay hashes; preserve the pilot files and publish a new reference receipt",
+    "selection_rank_is_provenance_only": true
+  },
+  "execution": {
+    "opencv_threads_per_process": 1,
+    "opencv_opencl": false,
+    "fixed_shard_count": 8,
+    "shard_rule": "full selection rank modulo 8",
+    "within_shard_order": "provider recording, center frame, provider track, selection rank; output order remains the locked selection order",
+    "per_process_decompressed_jpeg_byte_lru_members": 128,
+    "concurrent_process_rng_isolation": true,
+    "aggregate_only_after_all_4977_receipts": true,
+    "new_nonpilot_exact_replay_clips": 2
+  },
+  "feature_recipe": {
+    "reduction_dtype": "float64",
+    "published_dtype": "float32",
+    "temporal_quantiles": [0.1, 0.5, 0.9],
+    "quantile_method": "linear",
+    "quality_columns": ["available_pair_fraction", "camera_usable_pair_fraction", "translation_usable_pair_fraction", "articulation_usable_pair_fraction", "translation_feature_valid", "articulation_feature_valid", "median_actor_seed_fraction_of_32", "median_actor_retained_fraction_of_32", "median_actor_vertical_region_fraction_of_3", "median_actor_forward_backward_error_pixels", "actor_forward_backward_observed", "median_camera_audit_error_pixels", "camera_audit_observed", "center_seeded_survival_fraction_75pct", "center_seed_fraction_of_32", "native_center_height_fraction_of_720"],
+    "quality_width": 16,
+    "translation_shared_mask": "translation_usable pairs for both raw and compensated blocks; require at least 10/15, otherwise zero-fill both blocks and set translation_feature_valid false in Q and the explicit validity array",
+    "translation_channels": ["x_height_per_second", "y_height_per_second", "norm_height_per_second"],
+    "raw_translation_width": 9,
+    "compensated_translation_width": 9,
+    "within_actor_mask": "articulation_usable pairs; require at least 10/15, otherwise zero-fill and set articulation_feature_valid false in Q and the explicit validity array",
+    "within_actor_channels": ["median_height_per_second", "p90_height_per_second"],
+    "within_actor_width": 6,
+    "forbidden_feature_inputs": ["sample identity", "selection rank", "scenario", "size-band category", "recording", "track identity", "annotation occluded/generated flag", "transition", "action label", "prediction", "confidence", "error"],
+    "numeric_zero_policy": "zero is only a finite modeling sentinel for an unavailable aggregate block and is accompanied by explicit validity/support features; source measurements remain null"
+  },
+  "feature_artifact": {
+    "arrays": {"sample_ids": [4977], "long_valid": [4977], "quality": [4977, 16], "raw_translation": [4977, 9], "compensated_translation": [4977, 9], "within_actor": [4977, 6], "translation_feature_valid": [4977], "articulation_feature_valid": [4977], "requested_pair_counts": [4977], "available_pair_counts": [4977], "camera_pair_counts": [4977], "translation_pair_counts": [4977], "articulation_pair_counts": [4977]},
+    "pickle_free": true,
+    "label_arrays": false,
+    "prediction_arrays": false
+  },
+  "future_supervised_arms": {
+    "A0_spatial_refit": {"posture_width": 9984, "motion_width": 4608},
+    "Q_reliability": {"posture_width": 9984, "motion_width": 4624},
+    "R_raw_translation": {"posture_width": 9984, "motion_width": 4633},
+    "C_compensated_translation": {"posture_width": 9984, "motion_width": 4633},
+    "F_primary": {"posture_width": 9984, "motion_width": 4639},
+    "authorization_in_this_stage": false
+  },
+  "outputs": ["4977 immutable workload receipts", "ccac_features.npz", "feature_manifest.json", "clip_metrics.csv", "pair_metrics.csv", "scenario_metrics.csv", "size_metrics.csv", "failure_reasons.csv", "quality_overview.png", "summary.json", "completion.json"],
+  "authorization": {
+    "read_pilot_measurements": true,
+    "read_locked_label_free_frame_metadata": true,
+    "decode_prelocked_nonpilot_jpeg_members_after_full_lock": true,
+    "fixed_geometric_estimation": true,
+    "derive_fixed_label_free_feature_blocks": true,
+    "read_action_labels": false,
+    "read_model_predictions_or_errors": false,
+    "fit_action_classifier": false,
+    "read_protected_calibration_or_test_data": false,
+    "download_external_data_or_models": false
+  }
+}
