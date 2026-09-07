@@ -1,0 +1,213 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_AFTER_P3_ANALYSIS_BEFORE_P4_FEATURE_VALUE_ACCESS_OR_FITTING",
+  "declared_on": "2026-09-07",
+  "study_id": "okutama_native_video_p4_dual_reference_kinematic_evidence",
+  "scope": "Adaptive exploratory follow-up on the same 11 development scenarios after observing P3; not independent confirmation, selection-adjusted evidence, or an originality claim.",
+  "objective": "Test whether context and explicit actor kinematics close the remaining gap from P3 0.8144 macro-F1 to the 0.82 engineering target, and whether marginalizing raw and camera-compensated references beats matched single-reference and concatenation controls.",
+  "seed": 42,
+  "primary_rows": 4977,
+  "class_order": ["sitting", "standing", "walking_running"],
+  "adaptation_disclosure": {
+    "observed_before_declaration": [
+      "all P0-P3 development results",
+      "P3 error correlations and diagnostic strata",
+      "a retrospective fixed probability-blend scan whose maximum was below 0.82",
+      "JSON/CSV declarations and file metadata for the historical role-safe bundle and motion store"
+    ],
+    "not_accessed_before_declaration": [
+      "values in eligible_feature_bundle.npz for the P4 feature recipe",
+      "values in any motion_features NPY array for P4",
+      "any protected calibration, confirmation, or test identity or value"
+    ]
+  },
+  "references": {
+    "baseline": {
+      "macro_f1": 0.7192376821204284,
+      "role": "comparison only"
+    },
+    "p3_best": {
+      "arm": "dual_scale_factorized",
+      "macro_f1": 0.8144156332962987,
+      "probe_lock": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/probe_lock.json",
+        "sha256": "5c3c708cba716c92adaa54abf6dc606115299ccc7f37f343c5ce21982abf0af3",
+        "size_bytes": 1297098
+      },
+      "summary": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/results/summary.json",
+        "sha256": "262418ab23e1c39494fa4e88d70f517f36be2b5f05a23cd7f122317aaa2f8f89",
+        "size_bytes": 291853
+      },
+      "oof": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/results/oof_probabilities.npz",
+        "sha256": "4db1766f6545dffd05942fabb4922d0f68a07430f057ae03afa9370a1b108042",
+        "size_bytes": 582361
+      },
+      "role": "comparison only after every P4 workload; never a feature, teacher, selector, calibrator, gate, or fallback"
+    }
+  },
+  "materialization_inputs": {
+    "eligible_index": {
+      "path": ".runs/research_20260907/cptr_replay_r0/eligible_index.csv",
+      "sha256": "5bf6d0cc11a18d3e986b714f8a3de71cadd9fef3bd233eb9b5f212f701aadbbb",
+      "size_bytes": 844664,
+      "allowed_scope": "grouped_crossfit_oof"
+    },
+    "role_safe_bundle": {
+      "path": ".runs/research_20260907/cptr_replay_r0/eligible_feature_bundle.npz",
+      "sha256": "66388c64f987371d278d298199d13f02957f6dbf47f12feafa463b1da9504852",
+      "size_bytes": 1097756711,
+      "summary_path": ".runs/research_20260907/cptr_replay_r0/bundle_summary.json",
+      "summary_sha256": "4edaefe263dfa3e0e82fbd965cf2af03520d70a7bfbf10eb2848c0bce4e5d6f5",
+      "summary_size_bytes": 6297,
+      "members_used": ["sample_ids", "scope", "source_feature_indices", "static_features", "quality_features"]
+    },
+    "role_mixed_motion_store": {
+      "directory": ".runs/cptr/motion_features",
+      "store_sha256": "8f59f41f808013db814d38e8e87ad495e501c9d7c39dedc803377192e7c3e644",
+      "store_size_bytes": 1804,
+      "request_sha256": "6b09c55aad9c1d5c8ba9e1f8baf9ea63f0d3646866314aceec14c5c2eef51419",
+      "request_size_bytes": 1184,
+      "source_rows": 8339,
+      "selection_rule": "read only source_feature_indices belonging to the 4977 grouped_crossfit_oof rows; never decode or persist complement identities or values",
+      "arrays_used": ["raw_sequence", "raw_summary", "compensated_sequence", "compensated_summary", "camera_quality"]
+    }
+  },
+  "materialized_feature_contract": {
+    "sample_ids": [4977],
+    "legacy_static_features": [4977, 1542],
+    "legacy_quality_features": [4977, 8],
+    "raw_sequence": [4977, 17, 21],
+    "raw_summary": [4977, 58],
+    "compensated_sequence": [4977, 17, 21],
+    "compensated_summary": [4977, 58],
+    "camera_quality": [4977, 17],
+    "floating_dtype": "float32",
+    "labels_or_predictions_persisted": false
+  },
+  "feature_recipe": {
+    "visual_posture": ["short_v", "long_v", "short_d", "long_d"],
+    "visual_motion": ["short_v", "long_v", "v_scale", "short_motion", "long_motion", "d_scale"],
+    "visual_direct": ["short_v", "long_v", "v_scale", "short_d", "long_d", "d_scale"],
+    "context_geometry": "legacy_static_features columns 768:1542 concatenated with all 8 legacy_quality_features; excludes the duplicate tight DINO block",
+    "raw_track": "raw_summary concatenated with row-major flattened raw_sequence and camera_quality",
+    "compensated_track": "compensated_summary concatenated with row-major flattened compensated_sequence and camera_quality",
+    "reference_disagreement": "absolute elementwise raw_summary minus compensated_summary",
+    "dual_track": ["raw_track", "compensated_track", "reference_disagreement"],
+    "arithmetic_dtype": "float32",
+    "learned_feature_operations": false,
+    "labels_used_in_feature_materialization": false
+  },
+  "arms": [
+    "visual_factorized_refit",
+    "visual_context_factorized",
+    "visual_raw_track_factorized",
+    "visual_comp_track_factorized",
+    "visual_dual_track_factorized",
+    "camera_reference_marginalized",
+    "visual_dual_track_multinomial"
+  ],
+  "arm_contracts": {
+    "visual_factorized_refit": {
+      "posture": ["visual_posture"],
+      "motion": ["visual_motion"],
+      "kind": "factorized"
+    },
+    "visual_context_factorized": {
+      "posture": ["visual_posture", "context_geometry"],
+      "motion": ["visual_motion"],
+      "kind": "factorized"
+    },
+    "visual_raw_track_factorized": {
+      "posture": ["visual_posture"],
+      "motion": ["visual_motion", "raw_track"],
+      "kind": "factorized"
+    },
+    "visual_comp_track_factorized": {
+      "posture": ["visual_posture"],
+      "motion": ["visual_motion", "compensated_track"],
+      "kind": "factorized"
+    },
+    "visual_dual_track_factorized": {
+      "posture": ["visual_posture", "context_geometry"],
+      "motion": ["visual_motion", "dual_track"],
+      "kind": "factorized"
+    },
+    "camera_reference_marginalized": {
+      "posture": ["visual_posture", "context_geometry"],
+      "motion_references": [
+        ["visual_motion", "raw_track"],
+        ["visual_motion", "compensated_track"]
+      ],
+      "conditional_motion_probability_reduction": "unweighted arithmetic mean after independent matched heads",
+      "kind": "factorized_two_reference_probability_marginalization"
+    },
+    "visual_dual_track_multinomial": {
+      "features": ["visual_direct", "context_geometry", "dual_track"],
+      "kind": "multinomial_direct_control"
+    }
+  },
+  "probe": {
+    "C_values": [0.00001, 0.0001, 0.001, 0.01],
+    "solver": "lbfgs",
+    "class_weight": "balanced",
+    "max_iter": 2000,
+    "tolerance": 0.0001,
+    "standardize": true,
+    "inner_folds": 3,
+    "inner_splitter": "StratifiedGroupKFold",
+    "inner_shuffle": true,
+    "inner_seed": 42,
+    "selection": "pooled inner-held macro-F1 descending, NLL ascending, regularization ascending",
+    "ordinary_factorized_C_candidates": "4 posture by 4 motion values using cached inner predictions",
+    "marginalized_C_candidates": "4 posture by 4 shared motion values; raw and compensated motion heads use the same candidate C",
+    "factorized_decode": "[p_sitting,(1-p_sitting)*(1-p_moving_given_upright),(1-p_sitting)*p_moving_given_upright]",
+    "threshold_tuning": false,
+    "probability_calibration": false,
+    "learned_gating": false,
+    "backbones_frozen": true,
+    "maximum_unique_estimator_fits": 910
+  },
+  "statistics": {
+    "primary_metric": "macro_f1",
+    "metrics": ["macro_f1", "per_class_f1", "accuracy", "NLL", "multiclass_Brier"],
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260907,
+    "exact_scenario_swaps": 2048,
+    "multiplicity": "Holm across every prespecified directional comparison",
+    "comparisons": [
+      {"candidate": "visual_factorized_refit", "reference": "p3_best"},
+      {"candidate": "visual_context_factorized", "reference": "p3_best"},
+      {"candidate": "visual_raw_track_factorized", "reference": "p3_best"},
+      {"candidate": "visual_comp_track_factorized", "reference": "p3_best"},
+      {"candidate": "visual_dual_track_factorized", "reference": "p3_best"},
+      {"candidate": "camera_reference_marginalized", "reference": "p3_best"},
+      {"candidate": "visual_dual_track_multinomial", "reference": "p3_best"},
+      {"candidate": "visual_context_factorized", "reference": "visual_factorized_refit"},
+      {"candidate": "visual_raw_track_factorized", "reference": "visual_factorized_refit"},
+      {"candidate": "visual_comp_track_factorized", "reference": "visual_factorized_refit"},
+      {"candidate": "visual_dual_track_factorized", "reference": "visual_factorized_refit"},
+      {"candidate": "camera_reference_marginalized", "reference": "visual_factorized_refit"},
+      {"candidate": "visual_dual_track_multinomial", "reference": "visual_factorized_refit"},
+      {"candidate": "visual_comp_track_factorized", "reference": "visual_raw_track_factorized"},
+      {"candidate": "visual_dual_track_factorized", "reference": "visual_comp_track_factorized"},
+      {"candidate": "camera_reference_marginalized", "reference": "visual_comp_track_factorized"},
+      {"candidate": "camera_reference_marginalized", "reference": "visual_dual_track_factorized"},
+      {"candidate": "visual_dual_track_multinomial", "reference": "visual_dual_track_factorized"}
+    ],
+    "diagnostics": ["scenario", "class", "occluded_clear", "transition_stable", "long_valid_invalid", "camera_quality_quartile"],
+    "primary_candidate": "camera_reference_marginalized",
+    "breakthrough_target": 0.82,
+    "interpretation": "adaptive development evidence; target crossing is an engineering milestone requiring independent replication"
+  },
+  "authorization": {
+    "opaque_source_hashing": true,
+    "selective_primary_feature_materialization_after_separate_lock": true,
+    "probe_fitting_after_separate_lock": true,
+    "backbone_fitting": false,
+    "raw_image_access": false,
+    "protected_data_access": false,
+    "external_confirmation_claim": false
+  }
+}
