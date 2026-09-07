@@ -117,7 +117,8 @@ What worked:
 - The execution and lineage controls worked: exact A0 reproduction, fold isolation,
   deterministic single-threaded probes, immutable workload receipts, and immutable
   publication receipt all passed.
-- P6 remains a well-calibrated incumbent at 82.5830% macro-F1.
+- P6 remains the incumbent at 82.5830% macro-F1 and had better NLL/Brier than the
+  attempted replacements; no separate calibration assessment was performed.
 - Factorized head allocation remained numerically better than the direct union in
   this comparison, though its interval includes no effect.
 - A2's 31 shared-failure rescues show that its representation is not wholly
@@ -133,7 +134,8 @@ What failed:
 
 One measured nuisance deserves a bounded control, not a rescue narrative. The mean
 center-change L2 norm was 13,958.48 for short-fallback rows versus 1,082.80 for
-long-valid rows, a 12.89-fold shift caused by the different physical time steps.
+long-valid rows, a 12.89-fold shift consistent with their different physical time
+steps but not isolated from the accompanying input/cohort differences.
 A2 lost 1.3128 points versus A1 on fallback rows, but also lost 0.1562 points on
 long-valid rows. Therefore stride-aware normalization cannot explain away the
 overall negative result.
@@ -210,7 +212,8 @@ to learned fusion unless the new expert first shows useful shared-failure repair
 Reaching 84% from P6 corresponds to about 66.5 proportional no-harm error repairs;
 85% corresponds to about 113.5. These are confusion-matrix thought experiments, not
 forecasts or minimum-error bounds. P7's entire six-expert oracle covered only 66
-shared failures, which is why a genuinely new physical observation is now necessary.
+shared failures, which makes a genuinely new physical observation the preferred
+next hypothesis; it does not prove that every other improvement route is exhausted.
 
 ## Evidence
 

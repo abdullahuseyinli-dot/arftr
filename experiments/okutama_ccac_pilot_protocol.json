@@ -1,0 +1,202 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_AFTER_P7_BEFORE_CCAC_PILOT_PIXEL_ACCESS",
+  "declared_on": "2026-09-07",
+  "study_id": "okutama_p8_ccac_label_blind_feasibility_pilot",
+  "method_name": "Camera-Compensated Actor Correspondence (CCAC) pilot",
+  "scope": "Label-blind measurement feasibility on the adaptive Okutama development source. No action classifier, model selection from labels, performance claim, or originality claim.",
+  "objective": "Determine whether native aerial frames support reproducible actor-region correspondences, held-background camera compensation, coherent actor translation, and within-actor residual motion before authorizing full P8 extraction.",
+  "design_inputs": {
+    "p7_result": {
+      "path": ".runs/research_20260907/okutama_native_video_p7/results/summary.json",
+      "sha256": "16d6a106bfd19923f6eb5a9e1654fbc1e26c80903036f27611b665f1e7da2200",
+      "size_bytes": 293464,
+      "status": "OKUTAMA_VIDEO_P7_ADAPTIVE_CROSSFIT_COMPLETE",
+      "decision": "P7 did not improve P6; move to a genuinely new physical correspondence source."
+    }
+  },
+  "inputs": {
+    "p0_r1_extraction_lock": {
+      "path": ".runs/research_20260907/okutama_native_video_p0_r1/extraction_lock.json",
+      "sha256": "13b4ee646efebd9e96015a71d48c10d1ed2bea1bd610092dfc456403e637daf0",
+      "size_bytes": 28938,
+      "status": "OKUTAMA_VIDEO_P0_EXTRACTION_LOCKED_BEFORE_IMAGE_ACCESS"
+    },
+    "p3_extraction_lock": {
+      "path": ".runs/research_20260907/okutama_native_video_p3/extraction_lock.json",
+      "sha256": "3ef99679f90f18e38b741177b3cc82aff3bd195a8b49ed86be7d3d5b34d8052a",
+      "size_bytes": 28226,
+      "status": "OKUTAMA_VIDEO_P3_EXTRACTION_LOCKED_BEFORE_IMAGE_ACCESS"
+    },
+    "p0_r1_frame_manifest": {
+      "path": ".runs/research_20260907/okutama_native_video_p0_r1/manifest/frame_manifest.csv",
+      "sha256": "b69fe9e00057ff535698afb02cb3e9031ce3f53246c7e7ba64f061d1d557427f",
+      "size_bytes": 17033356
+    },
+    "p3_frame_manifest": {
+      "path": ".runs/research_20260907/okutama_native_video_p3/manifest/frame_manifest.csv",
+      "sha256": "68a6f62dd0c033fd05421272345587f369da8d5ab04668d1f368477866c9cb9c",
+      "size_bytes": 17126582
+    },
+    "p3_image_allowlist": {
+      "path": ".runs/research_20260907/okutama_native_video_p3/manifest/image_allowlist.csv",
+      "sha256": "114b63a71666fd58a90ce38a9e78b796d81abcc53992774a70fb1f51c98ab503",
+      "size_bytes": 1094040
+    },
+    "archive": {
+      "path": "C:/Users/DELL/hac_external_data/OkutamaAction/TrainSetFrames.zip",
+      "sha256": "c021ce8a12c84e083f359023ffd41c145561aaedb48b118e7c5416d5ddcecb73",
+      "size_bytes": 5770432522
+    }
+  },
+  "metadata_contract": {
+    "candidate_rows": 4977,
+    "candidate_scenarios": 11,
+    "candidate_recordings": 21,
+    "candidate_tracks": 444,
+    "long_complete_rows": 4510,
+    "long_incomplete_rows": 467,
+    "frame_slots": 16,
+    "center_slot": 8,
+    "source_offsets": [-32, -28, -24, -20, -16, -12, -8, -4, 0, 4, 8, 12, 16, 20, 24, 28],
+    "source_fps": 30.0,
+    "image_size": [1280, 720],
+    "bbox_coordinates": "already in native 1280x720 pixel-edge scene coordinates; do not divide by three",
+    "center_geometry_check": "P0_r1 and P3 center-frame identity, member, dimensions, and box coordinates must match exactly for all 4977 rows",
+    "selection_fields_only": ["sample_id", "provider_recording_id", "provider_track_id", "time_index", "source_frame", "nominal_time_seconds", "offset_seconds", "image_member", "image_width", "image_height", "bbox_xmin", "bbox_ymin", "bbox_xmax", "bbox_ymax", "annotation_occluded", "annotation_generated", "valid_geometry", "image_present", "valid_frame", "missing_reason"],
+    "forbidden_selection_inputs": ["action label", "label index", "transition flag", "P6/P7 prediction", "confidence", "error", "prior pilot membership"]
+  },
+  "selection": {
+    "hash_domain": "hac-ccac-p8-pilot-v1|20260907|",
+    "selected_clips": 128,
+    "scenario_allocation": "11 per scenario plus one extra for the seven scenarios with smallest SHA256(hash_domain+'scenario:'+scenario)",
+    "native_center_height_bands": {
+      "small": "height < 32 pixels",
+      "medium": "32 <= height <= 64 pixels",
+      "large": "height > 64 pixels"
+    },
+    "size_targets": {"small": 48, "medium": 48, "large": 32},
+    "size_allocation": "allocate large then small targets by deterministic scenario round-robin with availability and scenario quotas; assign remaining slots to medium",
+    "long_incomplete_target": 12,
+    "incomplete_allocation": "allocate exactly 12 incomplete slots by deterministic nonempty scenario-size-cell round-robin, preserving enough complete candidates",
+    "within_cell_order": "iteratively minimize already-selected count for provider recording plus track, then SHA256(hash_domain+'sample:'+sample_id), then sample_id",
+    "replacement_after_pixel_failure": false,
+    "labels_used": false
+  },
+  "runtime": {
+    "opencv_version": "5.0.0",
+    "opencv_threads": 1,
+    "opencv_opencl": false,
+    "rng": "derive the pair seed from the first 31 bits of SHA256(hash_domain+sample_id+':pair:'+time_index); use it for H1 and pair_seed+1 modulo 2^31 for H2",
+    "decode": "cv2.imdecode grayscale at native resolution; no resizing or crop recentering",
+    "maximum_new_clip_workloads": 128,
+    "exact_replay_clips": 2
+  },
+  "background_correspondence": {
+    "known_actor_exclusion": "exclude the union of all valid actor boxes present in the locked P3 frame manifest for that JPEG member, expanded by 10 native pixels, at both correspondence endpoints",
+    "limitation": "the manifest union contains all known eligible boxes, not a guarantee that every visible person is masked",
+    "known_actor_expansion_pixels": 10.0,
+    "spatial_grid": [4, 3],
+    "maximum_corners_total": 800,
+    "corner_detector": {"quality_level": 0.01, "minimum_distance_pixels": 8, "block_size": 7},
+    "lk": {"window": [21, 21], "maximum_pyramid_level": 3, "iterations": 30, "epsilon": 0.01, "minimum_eigenvalue": 0.0001},
+    "forward_backward_max_pixels": 1.0,
+    "partition_rule": "within each source spatial cell sort retained points by y then x; index modulo five 0 is model-selection, modulo five 1 is final audit, and 2/3/4 are fit points",
+    "minimum_retained_correspondences": 40,
+    "minimum_occupied_cells": 6,
+    "minimum_selection_correspondences": 8,
+    "minimum_audit_correspondences": 8
+  },
+  "actor_correspondence": {
+    "name_limitation": "points inside an annotated actor box are actor-region correspondences, not verified body or anatomical points",
+    "seed_region": "source box eroded by 10 percent on each side",
+    "seed_region_erode_fraction": 0.1,
+    "maximum_corners": 32,
+    "corner_detector": {"quality_level": 0.01, "minimum_distance_pixels": 2, "block_size": 3},
+    "primary_lk": {"window": [7, 7], "maximum_pyramid_level": 2, "iterations": 30, "epsilon": 0.01, "minimum_eigenvalue": 0.00001},
+    "sensitivity_lk_window": [15, 15],
+    "forward_backward_max_pixels": 1.0,
+    "endpoint_box_expansion_fraction": 0.1,
+    "pairwise_reseeding": true,
+    "center_seeded_track_survival": true,
+    "no_grid_fallback": true
+  },
+  "camera_hypotheses": {
+    "H0": "identity/raw scene coordinates",
+    "H1": "RANSAC partial affine similarity transform",
+    "H2": "RANSAC homography",
+    "ransac_reprojection_pixels": 2.0,
+    "ransac_maximum_iterations": 2000,
+    "ransac_confidence": 0.995,
+    "similarity_plausibility": {"minimum_scale": 0.85, "maximum_scale": 1.15, "maximum_absolute_rotation_degrees": 15.0, "maximum_translation_pixels": 100.0},
+    "homography_maximum_condition_number": 1000000.0,
+    "homography_pole_and_orientation_guard": "all four image-corner homogeneous denominators must be finite, nonzero, and have one sign; projected corners must stay within the declared bounds; local Jacobian determinants at the corners and center must be finite and strictly positive",
+    "upgrade_minimum_absolute_pixels": 0.25,
+    "upgrade_minimum_relative_fraction": 0.2,
+    "selection": "begin H0; upgrade H0 to H1 only if held-background median error improves by at least 0.25 pixels and 20 percent; upgrade the retained simpler model to H2 under the same two conditions; never use actor displacement to select the camera model"
+  },
+  "motion_decomposition": {
+    "camera_residual": "q - project(H,p) in native scene pixels",
+    "actor_scale": "geometric mean of positive adjacent box heights",
+    "elapsed_time": "difference of locked nominal timestamps",
+    "normalized_velocity": "camera residual divided by actor_scale and elapsed_time",
+    "coherent_translation": "componentwise median normalized velocity",
+    "within_actor_residual": "normalized velocity minus coherent translation",
+    "vertical_regions": 3,
+    "translation_minimum_points": 4,
+    "articulation_minimum_points": 6,
+    "articulation_minimum_vertical_regions": 2,
+    "missing_measurement": "retain explicit failure and reliability fields; emit null, never observed zero, for translation or articulation quantities whose required support or camera gate failed"
+  },
+  "engineering_gates": {
+    "camera_pair_usable": "at least 40 retained background correspondences across at least 6/12 cells, at least 8 model-selection and 8 disjoint final-audit points; choose H0/H1/H2 only on model-selection points, then require final-audit median error <= 1 pixel and p90 <= 2 pixels; when final-audit H0 median displacement exceeds 2 pixels require selected-model reduction >= 50 percent",
+    "minimum_retained_correspondences": 40,
+    "minimum_occupied_cells": 6,
+    "minimum_selection_correspondences": 8,
+    "minimum_audit_correspondences": 8,
+    "maximum_heldout_median_pixels": 1.0,
+    "maximum_heldout_p90_pixels": 2.0,
+    "large_motion_threshold_pixels": 2.0,
+    "large_motion_minimum_reduction_fraction": 0.5,
+    "translation_pair_usable": "camera pair usable and at least 4 primary actor-region correspondences",
+    "articulation_pair_usable": "translation pair usable and at least 6 primary actor-region correspondences spanning at least 2/3 vertical regions",
+    "clip_usable": "at least 10 of all 15 requested adjacent pairs are articulation-pair usable; missing source frames count as failed requested pairs",
+    "camera_usable_pair_fraction_at_least": 0.9,
+    "full_articulation_clip_fraction_at_least": 0.7,
+    "minimum_scenarios_with_half_clips_usable": 8,
+    "minimum_clip_fraction_per_native_size_band": 0.5,
+    "translation_only_review_band": [0.5, 0.7],
+    "abandon_initial_lk_below_clip_fraction": 0.5,
+    "center_track_survival_fraction": "report fraction of center-seeded points surviving at least 75 percent of the 15 requested links; no gate",
+    "synthetic_global_warp_max_median_residual_pixels": 0.2,
+    "synthetic_rigid_actor_max_articulation_velocity": 0.05,
+    "synthetic_rigid_actor_max_translation_error_height_per_second": 0.05
+  },
+  "outputs": ["selection.csv", "pair_metrics.csv", "clip_metrics.csv", "summary.json", "quality_overview.png", "12 fixed-hash overlay PNGs", "128 immutable clip workload receipts"],
+  "decision_rule": {
+    "precedence": ["full_ccac_extraction", "narrow_translation_or_tracker_pilot", "abandon_initial_lk_extractor"],
+    "full_ccac_extraction": "all camera, overall clip, scenario, and size-band gates pass",
+    "narrow_translation_or_tracker_pilot": "full extraction failed, camera gate passed, and either translation clip coverage is at least 0.5 or articulation clip coverage is at least 0.5; authorize one bounded tracker/translation review only",
+    "abandon_initial_lk_extractor": "all other outcomes, including failure of the camera gate or both translation and articulation clip coverage below 0.5",
+    "supervised_access": false
+  },
+  "authorization": {
+    "read_locked_label_free_frame_metadata": true,
+    "opaque_hash_named_archive": true,
+    "decode_only_prelocked_jpeg_members": true,
+    "fixed_geometric_estimation": true,
+    "write_local_diagnostic_overlays": true,
+    "read_action_labels": false,
+    "read_model_predictions_or_errors": false,
+    "fit_action_classifier": false,
+    "read_protected_calibration_or_test_data": false,
+    "download_external_data_or_models": false
+  },
+  "prior_art_context": {
+    "opencv_tracking": "https://docs.opencv.org/5.0/main_modules/video_track.html",
+    "opencv_geometric_estimation": "https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html",
+    "cotracker3": "https://arxiv.org/abs/2410.11831",
+    "tapir": "https://arxiv.org/abs/2306.08637",
+    "interpretation": "Sparse LK, robust camera fitting, and point tracking are established. A contribution would require controlled shared-failure repair and independent transfer, not method naming."
+  }
+}
