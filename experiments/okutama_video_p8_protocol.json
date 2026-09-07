@@ -292,33 +292,33 @@
   "full_extraction": {
     "execution_lock": {
       "path": ".runs/research_20260907/okutama_ccac_full_v2/execution_lock.json",
-      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
-      "size_bytes": -1
+      "sha256": "58649a03850af8cd86825ebf06b234b192fad257f447a2301b0013c4a4e0bbd9",
+      "size_bytes": 67300486
     },
     "request": {
       "path": ".runs/research_20260907/okutama_ccac_full_v2/results/request.json",
-      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
-      "size_bytes": -1
+      "sha256": "cc50d0c525f13b188da268ed5b5b089d59243f8a04544c62f03046a3c47a9f36",
+      "size_bytes": 1153
     },
     "summary": {
       "path": ".runs/research_20260907/okutama_ccac_full_v2/results/summary.json",
-      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
-      "size_bytes": -1
+      "sha256": "98c084c86d130b0cd99e660f85aa95cd578956d8a1d6e19efa16d0c6dbb84d60",
+      "size_bytes": 2611424
     },
     "completion": {
       "path": ".runs/research_20260907/okutama_ccac_full_v2/results/completion.json",
-      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
-      "size_bytes": -1
+      "sha256": "c21eb885da489a6371b21460527aa29e60a9e625c7a9365efedc8f883187e482",
+      "size_bytes": 322
     },
     "feature_manifest": {
       "path": ".runs/research_20260907/okutama_ccac_full_v2/results/feature_manifest.json",
-      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
-      "size_bytes": -1
+      "sha256": "87c9aefd19a1360b7854f145978273fbbe4b4fa02ddb6cbd7e87590332b878a5",
+      "size_bytes": 4508
     },
     "features": {
       "path": ".runs/research_20260907/okutama_ccac_full_v2/results/ccac_features.npz",
-      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
-      "size_bytes": -1
+      "sha256": "9c09d72a91027e1d72fcba923086803e34554783b4c79cba92792e4165ab9ecb",
+      "size_bytes": 516584
     }
   }
 }
