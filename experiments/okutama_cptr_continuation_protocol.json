@@ -1,0 +1,571 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_BEFORE_OKUTAMA_CPTR_CONTINUATION_EXECUTION",
+  "declared_on": "2026-09-07",
+  "study_id": "hac_okutama_cptr_baseline_preservation_continuation",
+  "objective": "Measure whether preserving the established temporal path fixes CPTR's occlusion-sensitive regression without changing inputs, masks, decoder, or ensemble semantics.",
+  "data_contract": {
+    "class_order": [
+      "sitting",
+      "standing",
+      "walking_running"
+    ],
+    "eligible_scopes": {
+      "grouped_crossfit_oof": {
+        "role": "primary_reused_development",
+        "use": "R1_replay_decisions_and_outputs",
+        "rows": 4977,
+        "scenarios": 11,
+        "folds": 5
+      },
+      "fixed_development_validation": {
+        "role": "descriptive_reused_development",
+        "use": "role_safe_materialization_and_index_consistency_not_an_R1_decision_or_output",
+        "rows": 1383,
+        "scenarios": 3,
+        "folds": 0
+      }
+    },
+    "eligible_total_rows": 6360,
+    "eligible_total_scenarios": 14,
+    "group_key": "scenario_id_stored_as_recording_id",
+    "row_identity_source": ".runs/cptr/baseline_preservation_diagnostic/paired_rows.csv",
+    "feature_index_derivation": {
+      "source_order": [
+        "scenario_id_lexicographic",
+        "source_recording_id_lexicographic",
+        "provider_track_id_lexicographic",
+        "center_frame_numeric"
+      ],
+      "allowed_evidence": "eligible sample IDs plus aggregate selected-centre counts in the audited development summary",
+      "invariant": "every source recording belonging to an eligible scenario must have exactly its audited selected-centre count represented",
+      "output_policy": "persist source positions for eligible rows only to authorize the selective copy, then store those rows in contiguous eligible-only bundle order; never persist complement identities or values"
+    },
+    "forbidden_inputs": [
+      ".runs/vcoco_v3/temporal/development_manifest.csv",
+      ".runs/vcoco_v3/okutama/features/dinov2_base/development_metadata.csv",
+      "any calibration row, image, array, prediction, or checkpoint",
+      "any confirmation row, image, array, prediction, or checkpoint",
+      "any test row, image, array, prediction, or checkpoint"
+    ],
+    "access_rule": "After the eligible index passes every count and ordering invariant, the committed source lock must opaque-hash each complete role-mixed feature-array file and match its declaration without NumPy decoding, indexing, or value interpretation. Materialization may then read eligible positions only. No complement identity or decoded array value may be materialized, summarized, or persisted."
+  },
+  "historical_input_receipts": [
+    {
+      "name": "eligible_paired_rows",
+      "path": ".runs/cptr/baseline_preservation_diagnostic/paired_rows.csv",
+      "role": "eligible_development_rows_only",
+      "sha256": "4be1537f19fba6f4524618485da65044d1645228ae56fbbc1a11e4a64fbfdc46"
+    },
+    {
+      "name": "baseline_preservation_summary",
+      "path": ".runs/cptr/baseline_preservation_diagnostic/summary.json",
+      "role": "eligible_development_analysis_receipt",
+      "sha256": "32dcf384865983651c317fe961cfe6187013b13f6910df83330f804f6ee85e73"
+    },
+    {
+      "name": "development_audit_summary",
+      "path": ".runs/vcoco_v3/okutama/development_audit/summary.json",
+      "role": "aggregate_source_order_and_count_receipt",
+      "sha256": "212942e26b2a66df46435b770458adbd6da7632a9c3ba7b8dce51db25cf6af0f"
+    },
+    {
+      "name": "base_store_declaration",
+      "path": ".runs/vcoco_v3/okutama/features/dinov2_base/store.json",
+      "role": "role_mixed_store_declaration_only_before_source_lock",
+      "sha256": "e58fd947683b02183571296dd6a4599f8005f470763198674a9a91b93e2d8cd3"
+    },
+    {
+      "name": "part_store_declaration",
+      "path": ".runs/cptr/part_features/store.json",
+      "role": "role_mixed_store_declaration_only_before_source_lock",
+      "sha256": "f6d7c3650575470cc10fb74c5e0b771dd69abbe81183fd091a4b739dd13399f2"
+    },
+    {
+      "name": "crossfit_plan_lock",
+      "path": ".runs/cptr/crossfit_plan_lock.json",
+      "role": "historical_fold_seed_receipt",
+      "sha256": "82dd2a61ecf83606b9d794e11aa48a732325913b02d23a902ecd0e64ee41effb"
+    },
+    {
+      "name": "crossfit_development_summary",
+      "path": ".runs/cptr/development_final/summary.json",
+      "role": "historical_oof_completion_receipt",
+      "sha256": "4bfde80da8f0ab0ad3ebc95482e31d9df9fbfa5104b69c4831b72ab8468961c4"
+    },
+    {
+      "name": "temporal_epoch_proof_source",
+      "path": ".runs/vcoco_v3/temporal/development_final/summary.json",
+      "role": "eligible_development_fixed_epoch_provenance",
+      "sha256": "48301d3da04085f810d7fc7d146d4f61b770ff77b311c92cf13328083c726ece"
+    },
+    {
+      "name": "crossfit_oof_anchor",
+      "path": ".runs/vcoco_v3/temporal/crossfit_aggregate/crossfit_targets.npz",
+      "role": "eligible_primary_anchor",
+      "sha256": "3c27148171708919087df64dc155db0493dfa5c11cd51ed8219527c7efa82775"
+    },
+    {
+      "name": "fixed_validation_anchor",
+      "path": ".runs/cptr/baseline/baseline_and_diagnostic_predictions.npz",
+      "role": "eligible_descriptive_anchor",
+      "sha256": "34dfeb8d0642e28b6f02db8ea3a8118917c2440d56c929db28e64f2324bbb616"
+    }
+  ],
+  "checkpoint_inventory": {
+    "folds": 5,
+    "seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "families": {
+      "static": ".runs/vcoco_v3/temporal/crossfit/static/fold-{fold}/seed-{seed}",
+      "teacher": ".runs/vcoco_v3/temporal/crossfit/teacher/fold-{fold}/seed-{seed}",
+      "cptr": ".runs/cptr/crossfit/centre_short_parts/fold-{fold}/seed-{seed}"
+    },
+    "required_files": [
+      "summary.json",
+      "checkpoint.pt"
+    ],
+    "safe_loading": "torch.load(weights_only=True) with an exact state-key and shape contract before inference"
+  },
+  "fold_contract": {
+    "fold-0": [
+      "1.4",
+      "2.2",
+      "2.5"
+    ],
+    "fold-1": [
+      "1.5",
+      "2.11"
+    ],
+    "fold-2": [
+      "1.10",
+      "1.2"
+    ],
+    "fold-3": [
+      "2.7",
+      "2.8"
+    ],
+    "fold-4": [
+      "1.11",
+      "1.3"
+    ]
+  },
+  "sampling_contract": {
+    "frames_in_cache": 17,
+    "center_frame_index": 8,
+    "frames_per_second": 16.0,
+    "legacy_short_indices": [
+      4,
+      6,
+      6,
+      8,
+      8,
+      10,
+      10,
+      12
+    ],
+    "distinct_short_indices_for_t2": [
+      4,
+      5,
+      6,
+      7,
+      8,
+      10,
+      11,
+      12
+    ],
+    "distinct_sampler_note": "Retain center at slot four and omit the +1 offset to preserve the declared endpoints.",
+    "T2_time_encoding": "unchanged_sinusoidal_slot_ordinal_0_through_7_with_no_absolute_or_source_frame_timestamp",
+    "T2_fixed_factor": "only_the_source_frame_indices_change_between_the_two_refitted_arms"
+  },
+  "interventions": {
+    "original": "z_static + g_legacy * q_legacy * (z_teacher - z_static) + n",
+    "F1": "z_static + g_legacy * (z_teacher - z_static) + n",
+    "F2": "z_teacher + n",
+    "F3": "direct_return_exact_teacher_probabilities_with_all_new_contributions_disabled"
+  },
+  "replay_reproduction_contract": {
+    "current_gpu_teacher_max_abs_tolerance": 0.0005,
+    "F3_statistical_probabilities": "exact_retained_teacher_probabilities",
+    "current_gpu_direct_teacher_role": "reproduction_check_only_not_statistical_input",
+    "decoded_output_identity": "F3_decodes_from_exact_retained_teacher_probabilities"
+  },
+  "role_safe_retained_teacher_bundle_contract": {
+    "sample_ids_member": "primary_retained_teacher_sample_ids",
+    "sample_ids_shape": [
+      4977
+    ],
+    "sample_ids_dtype": "unicode",
+    "sample_ids_alignment": "exact_grouped_crossfit_oof_bundle_order",
+    "seeds_member": "retained_teacher_seeds",
+    "seeds_shape": [
+      5
+    ],
+    "seeds_dtype": "int64",
+    "seed_values": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "probabilities_member": "primary_retained_teacher_probabilities",
+    "probabilities_shape": [
+      4977,
+      5,
+      3
+    ],
+    "probabilities_dtype": "float32",
+    "class_order": [
+      "sitting",
+      "standing",
+      "walking_running"
+    ]
+  },
+  "execution_stages": {
+    "R1a": {
+      "mode": "inference_only",
+      "evaluation_scope": "4977_grouped_crossfit_oof_rows_only",
+      "folds": 5,
+      "seeds": [
+        43
+      ],
+      "interventions": [
+        "original",
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "q_source": "discrete_recovery_from_retained_output_permitted_only_after_verified_zero_head_and_gate_invariants",
+      "model_updates": 0
+    },
+    "R1b": {
+      "mode": "inference_only",
+      "evaluation_scope": "4977_grouped_crossfit_oof_rows_only",
+      "folds": 5,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "interventions": [
+        "original",
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "requires_exact_role_specific_window_masks": true,
+      "model_updates": 0
+    },
+    "R2": {
+      "mode": "matched_fit_only_after_R1_gate",
+      "candidate_families": 1,
+      "candidate": "centre_short_parts_with_legacy_anchor_fixed_at_one",
+      "folds": 5,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "fixed_epochs_by_seed": {
+        "42": 2,
+        "43": 0,
+        "44": 1,
+        "45": 9,
+        "46": 1
+      }
+    },
+    "T1": {
+      "mode": "matched_fit",
+      "candidate_families": 1,
+      "candidate": "permutation_invariant_arithmetic_mean_over_all_eight_legacy_slots",
+      "positional_or_timestamp_signal": false,
+      "validity_mask": "all_valid",
+      "folds": 5,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    "T2": {
+      "mode": "matched_refit",
+      "candidate_families": 2,
+      "candidates": [
+        "legacy_repeated_indices",
+        "fixed_distinct_indices"
+      ],
+      "folds": 5,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    }
+  },
+  "temporal_controls": {
+    "data_scope": {
+      "rows": 4977,
+      "scenarios": 11,
+      "scope_value": "grouped_crossfit_oof",
+      "folds": 5,
+      "seeds": [
+        42,
+        43,
+        44,
+        45,
+        46
+      ]
+    },
+    "generated_fold_map": {
+      "columns": [
+        "bundle_row_index",
+        "sample_id",
+        "recording_id",
+        "fold"
+      ],
+      "row_order": "eligible_feature_bundle_primary_row_order",
+      "group_isolation": true
+    },
+    "scenario_resampling": {
+      "bootstrap_seed": 20260906,
+      "bootstrap_resamples": 10000,
+      "bootstrap_shape": [
+        10000,
+        11
+      ],
+      "exact_swap_shape": [
+        2048,
+        11
+      ],
+      "canonical_group_order": "sorted_recording_id"
+    },
+    "T1_architecture": {
+      "arm_id": "t1_arithmetic_mean",
+      "pooling": "unweighted_arithmetic_mean_all_eight_legacy_slots",
+      "validity_mask": "all_valid",
+      "positional_or_timestamp_signal": false,
+      "input_projection": [
+        "LayerNorm(input_dim)",
+        "Linear(input_dim,256)",
+        "GELU",
+        "Dropout(0.1)"
+      ],
+      "classifier": "FactorizedClassifier(256,0.1)"
+    },
+    "T2_architecture": {
+      "arms": [
+        "t2_legacy_repeated",
+        "t2_fixed_distinct"
+      ],
+      "model": "TemporalFactorizedTeacher",
+      "model_dim": 256,
+      "layers": 2,
+      "attention_heads": 4,
+      "feedforward_dim": 512,
+      "dropout": 0.1,
+      "maximum_length": 8,
+      "validity_mask": "all_valid",
+      "legacy_indices": [
+        4,
+        6,
+        6,
+        8,
+        8,
+        10,
+        10,
+        12
+      ],
+      "distinct_indices": [
+        4,
+        5,
+        6,
+        7,
+        8,
+        10,
+        11,
+        12
+      ],
+      "center_slot": 4
+    },
+    "training": {
+      "optimizer": "AdamW",
+      "learning_rate": 0.0002,
+      "weight_decay": 0.01,
+      "batch_size": 64,
+      "fixed_epochs_by_seed": {
+        "42": 5,
+        "43": 5,
+        "44": 5,
+        "45": 5,
+        "46": 3
+      },
+      "epoch_proof_source": ".runs/vcoco_v3/temporal/development_final/summary.json",
+      "warmup_fraction": 0.1,
+      "gradient_clip_norm": 1.0,
+      "label_smoothing": 0.02,
+      "class_balance": "fit_partition_inverse_frequency",
+      "automatic_mixed_precision": true,
+      "execution_backend": "cuda",
+      "candidate_selection": "none"
+    },
+    "joint_latency_benchmark": {
+      "status": "OKUTAMA_TEMPORAL_CONTROLS_JOINT_LATENCY_COMPLETE",
+      "candidate_arm": "t1_arithmetic_mean",
+      "reference_arm": "t2_legacy_repeated",
+      "checkpoint_fold": "fold-0",
+      "checkpoint_seed": 42,
+      "cohort_selection": "first_64_fold-0_rows_in_locked_primary_bundle_order",
+      "cohort_rows": 64,
+      "input_contract": "identical_legacy_short_features_all_valid_mask",
+      "warmup_paired_rounds": 20,
+      "timed_paired_rounds": 200,
+      "order_schedule": "even_round_candidate_then_reference_odd_round_reference_then_candidate",
+      "synchronization": "device_synchronize_before_and_after_each_individual_arm_timing",
+      "timed_scope": "cached_CPU_feature_batch_to_CPU_probability_temporal_head",
+      "paired_bootstrap_resamples": 10000,
+      "paired_bootstrap_seed": 20260907,
+      "authoritative_p95_rule": "candidate_observed_p95_below_reference_and_paired_round_bootstrap_p95_delta_one_sided_95pct_upper_below_zero",
+      "isolated_per_workload_timings": "diagnostic_only"
+    },
+    "representative_benchmark": {
+      "workloads": [
+        "t1_arithmetic_mean/fold-0/seed-42",
+        "t2_legacy_repeated/fold-0/seed-42"
+      ],
+      "purpose": "measure_simple_and_expensive_family_fit_cost_before_full_schedule",
+      "required_resource_fields": [
+        "runtime_seconds",
+        "peak_cuda_memory_allocated_bytes",
+        "peak_cuda_memory_reserved_bytes"
+      ],
+      "must_complete_before_full": true
+    },
+    "prepared_input_paths": {
+      "fold_map": ".runs/research_20260907/okutama_temporal_controls_r0/fold_map.csv",
+      "scenario_resampling": ".runs/research_20260907/okutama_temporal_controls_r0/scenario_resampling.npz",
+      "prepare_summary": ".runs/research_20260907/okutama_temporal_controls_r0/prepare_summary.json"
+    },
+    "execution_output_root": ".runs/research_20260907/okutama_temporal_controls",
+    "execution_lock": {
+      "path": ".runs/research_20260907/protocol_locks/okutama_temporal_controls_execution_lock.json",
+      "status": "OKUTAMA_TEMPORAL_CONTROLS_LOCKED_BEFORE_FITTING"
+    }
+  },
+  "decision_rules": {
+    "R1_identity": "F3 statistical probabilities are the exact retained teacher probabilities and decoded outputs must be bit-exact with that retained source for every eligible row; separately, current-GPU direct-teacher recomputation must remain within maximum absolute probability drift 0.0005.",
+    "R1_mechanism": {
+      "F2_minus_original_occluded_macro_f1_minimum": 0.01,
+      "F2_minus_original_occluded_macro_f1_one_sided_95pct_lower_bound_minimum": 0.0,
+      "F2_minus_original_occluded_nll_one_sided_95pct_upper_bound_maximum": 0.0,
+      "F2_minus_teacher_aggregate_macro_f1_one_sided_95pct_lower_bound_minimum": -0.005,
+      "directional_swap_family": [
+        "F1",
+        "F2"
+      ],
+      "multiplicity": "Holm"
+    },
+    "T1_noninferiority": {
+      "accuracy_reference": "exact_retained_five_seed_teacher_probability_ensemble",
+      "latency_reference": "t2_legacy_repeated_fold-0_seed-42",
+      "latency_cohort": "same_fold-0_seed-42_cached_feature_cohort",
+      "authoritative_latency_artifact": "joint_latency_benchmark.json",
+      "authoritative_latency_measurement": "same_process_order_balanced_interleaved_AB_BA",
+      "pooling_minus_teacher_macro_f1_one_sided_95pct_lower_bound_minimum": -0.005,
+      "pooling_minus_teacher_nll_one_sided_95pct_upper_bound_maximum": 0.0,
+      "same_cohort_p95_latency_must_improve": true,
+      "paired_bootstrap_p95_delta_one_sided_95pct_upper_must_be_below": 0.0,
+      "promotion_guardrails_required": true,
+      "cached_head_latency_role": "provisional_component_evidence",
+      "end_to_end_latency_required_before_preference": true,
+      "isolated_per_workload_timings_role": "diagnostic_only"
+    },
+    "T2_sampler_benefit": {
+      "comparison": "t2_fixed_distinct_minus_newly_matched_t2_legacy_repeated",
+      "aggregate_macro_f1_two_sided_95pct_lower_bound_must_exceed": 0.0,
+      "aggregate_nll_one_sided_95pct_upper_bound_maximum": 0.0,
+      "one_sided_exact_whole_scenario_swap_pvalue_maximum": 0.05,
+      "promotion_guardrails_required": true,
+      "point_size_threshold": null,
+      "attribution": "sampling_only_never_gate_repair"
+    },
+    "promotion_guardrails": {
+      "maximum_class_point_regression": 0.01,
+      "occlusion_macro_f1_one_sided_95pct_lower_bound_minimum": -0.01,
+      "minimum_valid_subgroup_resample_fraction": 0.95,
+      "minimum_supported_scenario_or_stratum_delta": -0.01
+    }
+  },
+  "statistics": {
+    "bootstrap_unit": "whole_scenario",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260906,
+    "swap_test": "whole_scenario_probability_vector_swaps",
+    "swap_enumeration": "exact_when_feasible_for_11_primary_scenarios",
+    "zero_division": 0,
+    "class_count": 3
+  },
+  "generated_inputs": {
+    "eligible_index": ".runs/research_20260907/cptr_replay_r0/eligible_index.csv",
+    "input_inventory": ".runs/research_20260907/cptr_replay_r0/input_inventory.json",
+    "eligible_feature_bundle": ".runs/research_20260907/cptr_replay_r0/eligible_feature_bundle.npz",
+    "eligible_window_masks": ".runs/research_20260907/cptr_replay_r0/eligible_window_masks.npz",
+    "window_mask_summary": ".runs/research_20260907/cptr_replay_r0/window_mask_summary.json",
+    "bundle_summary": ".runs/research_20260907/cptr_replay_r0/bundle_summary.json"
+  },
+  "execution_outputs": {
+    "root": ".runs/research_20260907/cptr_replay",
+    "per_checkpoint": "fold-{fold}/seed-{seed}/replay.npz",
+    "stage_aggregate": "{stage}_aggregate_predictions.npz",
+    "stage_resample_indices": "{stage}_scenario_resample_indices.npz",
+    "stage_summary": "{stage}_summary.json",
+    "per_checkpoint_summary_status": "OKUTAMA_CPTR_FROZEN_INTERVENTION_REPLAY_COMPLETE",
+    "stage_summary_status": "OKUTAMA_CPTR_FROZEN_INTERVENTION_AGGREGATE_COMPLETE"
+  },
+  "source_lock_policy": {
+    "requires_clean_committed_worktree": true,
+    "bind_git_blob_ids": true,
+    "source_lock_status": "OKUTAMA_CPTR_REPLAY_MATERIALIZATION_LOCKED_BEFORE_FEATURE_ACCESS",
+    "source_lock_requires_eligible_index_inventory_and_exact_window_masks": true,
+    "source_lock_authorizes_only_prefit_artifact_construction": true,
+    "source_lock_authorized_artifacts": [
+      "eligible_feature_bundle",
+      "temporal_control_fold_map",
+      "temporal_control_scenario_resampling",
+      "temporal_control_prepare_summary"
+    ],
+    "execution_lock_status": "OKUTAMA_CPTR_FROZEN_REPLAY_LOCKED_BEFORE_EXECUTION",
+    "R1b_requires_eligible_window_masks_hash": true,
+    "temporal_controls_execution_lock_status": "OKUTAMA_TEMPORAL_CONTROLS_LOCKED_BEFORE_FITTING"
+  },
+  "source_archive_contract": {
+    "file_name": "TrainSetFrames.zip",
+    "expected_bytes": 5770432522,
+    "historical_sha256_attestation": "c021ce8a12c84e083f359023ffd41c145561aaedb48b118e7c5416d5ddcecb73",
+    "source_lock_policy": "Hash the supplied archive as an opaque byte stream at materialization lock time and require its filename, byte count, and SHA-256 to match the historical audit receipt. Do not parse any unselected member.",
+    "mask_extraction_policy": "Open annotation members only for the 14 eligible scenarios proven complete by the eligible-ID/count invariant; emit a role-specific 17-frame Boolean mask artifact before any feature-array access."
+  },
+  "access_disclosures": [
+    "The receiving audit previously printed five mixed-manifest calibration rows and an interim router raw-read 1979 calibration row strings solely to exclude them; no protected arrays, images, probabilities, or checkpoints were opened.",
+    "On 2026-09-07 an implementation review loaded the 8339-row role-mixed development_metadata.csv for schema/count inspection and printed five rows believed to be training rows; no values from that read are used here.",
+    "On 2026-09-07 the protocol audit printed aggregate recording evidence that exposed three complement scenario identifiers and per-video selected-centre counts. Those structural aggregates are authorized solely to calculate cumulative packed-store offsets, so they influence eligible numeric source positions and the lock over that index; no complement row identity, label, decoded array value, image, prediction, checkpoint, or model outcome is read or persisted.",
+    "Before the phase-one lock on 2026-09-07, five NumPy headers from the mixed feature stores were opened with mmap_mode='r' only to verify public shapes and dtypes already inferable from receipts and file sizes; no array element was indexed or materialized."
+  ],
+  "prelock_access_accounting": {
+    "mixed_store_array_headers_opened_before_lock": 5,
+    "feature_array_values_read": 0
+  }
+}

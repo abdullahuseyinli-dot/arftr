@@ -1,0 +1,420 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_BEFORE_VCOCO_CONTINUATION_FITTING",
+  "declared_on": "2026-09-07",
+  "study_id": "hac_vcoco_uncertain_spatial_correction_continuation",
+  "objective": "Test whether uncertainty-aware anatomy and support evidence improves a factorized classifier beyond matched mixed-representation and ordinary spatial controls.",
+  "execution_determinism": {
+    "cublas_workspace_config": ":4096:8",
+    "torch_deterministic_algorithms": true,
+    "cudnn_deterministic": true,
+    "cudnn_benchmark": false
+  },
+  "data_contract": {
+    "endpoint": "three_class_person_level_source_tag_classification",
+    "class_order": [
+      "sitting",
+      "standing",
+      "walking_running"
+    ],
+    "development_sources": {
+      "former_train": {
+        "people": 3090,
+        "images": 1924
+      },
+      "former_val": {
+        "people": 3550,
+        "images": 2199
+      }
+    },
+    "combined_development_people": 6640,
+    "combined_development_images": 4123,
+    "role_authorization": "The locked historical train and val rows are jointly authorized as reused development data. Neither source tag is a fresh holdout.",
+    "group_key": "source_image_id",
+    "protected_roles": [
+      "historical_official_test",
+      "calibration",
+      "confirmation",
+      "future_independent_replication"
+    ],
+    "forbidden_inputs": [
+      ".runs/polar_v2/locked_protocol/vcoco_test_clean.csv",
+      "any official-test row, image, feature, prediction, metric used for selection, or checkpoint",
+      "any calibration row, image, array, prediction, or checkpoint",
+      "any confirmation row, image, array, prediction, or checkpoint"
+    ]
+  },
+  "historical_input_receipts": [
+    {
+      "name": "v2_protocol_lock",
+      "path": ".runs/polar_v2/locked_protocol/vcoco_v2_protocol_lock.json",
+      "role": "historical_split_role_receipt",
+      "sha256": "3a90d6720a6cf5250b995820801199eca611706d514e7b5de2c83bea03f5a143"
+    },
+    {
+      "name": "former_train_manifest",
+      "path": ".runs/polar_v2/locked_protocol/vcoco_train_clean.csv",
+      "role": "reused_development",
+      "sha256": "aa0919b4283dd683d1317b1cb1621af072800aa80d7a3bc1bd8a58271ff1514b"
+    },
+    {
+      "name": "former_val_manifest",
+      "path": ".runs/polar_v2/locked_protocol/vcoco_val_clean.csv",
+      "role": "reused_development",
+      "sha256": "837d5470e616b374471dd1b2d2723ba9e3a9861683cdf47a7c030a133a608097"
+    }
+  ],
+  "pooled_feature_inputs": [
+    {
+      "name": "dino_tight",
+      "directory": ".runs/polar_v2/features/dinov2_base/person_tight/aspect_pad_224",
+      "receipt_sha256": "9292936eecc2f8bbd685ce53b4b96e37e8f2a4889d158479c71d0069e81910f1",
+      "features_sha256": "d2523566b56631f43b42087e2cd14d12024a9c36c477117393cfa04cc87ee25b",
+      "rows_sha256": "fc0772cdf1f1bce3786cfdf3c9571bcf456cfaa00cb12ea0d26212a7ff0504cb",
+      "representation": "final_cls"
+    },
+    {
+      "name": "dino_context",
+      "directory": ".runs/polar_v2/features/dinov2_base/person_context_25/aspect_pad_224",
+      "receipt_sha256": "213c7bc691a40c6cfb0d9a23e812e23c74e18d401dd07b82b5fa5d54cc543ab2",
+      "features_sha256": "93d0324fb062f119f4c9bfea7ce596303a4b1590820d18e3bf3125f80ea40b12",
+      "rows_sha256": "fc0772cdf1f1bce3786cfdf3c9571bcf456cfaa00cb12ea0d26212a7ff0504cb",
+      "representation": "final_cls"
+    },
+    {
+      "name": "siglip_tight",
+      "directory": ".runs/polar_v2/features/siglip2_base/person_tight/aspect_pad_224",
+      "receipt_sha256": "963cccbcb610e2989234f7ef3d684d170494e6e10086779176cc751407cf4e10",
+      "features_sha256": "d509786913846fc68921ed942d8044f8affabba656e09118e1fb814a127d58ed",
+      "rows_sha256": "fc0772cdf1f1bce3786cfdf3c9571bcf456cfaa00cb12ea0d26212a7ff0504cb",
+      "representation": "pooled"
+    },
+    {
+      "name": "siglip_context",
+      "directory": ".runs/polar_v2/features/siglip2_base/person_context_25/aspect_pad_224",
+      "receipt_sha256": "f35e844d8224c252b322f1fdd4b89cb61a732729adbe5684cb37d7886ee2b157",
+      "features_sha256": "c62c5b2369799a23238dd74f46053bcd851afd086eb33fe320a2a297d58efff6",
+      "rows_sha256": "fc0772cdf1f1bce3786cfdf3c9571bcf456cfaa00cb12ea0d26212a7ff0504cb",
+      "representation": "pooled"
+    }
+  ],
+  "cross_validation": {
+    "outer_folds": 5,
+    "inner_folds": 3,
+    "stack_folds": 3,
+    "splitter": "sklearn.model_selection.StratifiedGroupKFold",
+    "shuffle": true,
+    "random_seed": 20260827,
+    "inner_seed_by_outer_fold": "20260827 + 10000 * (outer_fold + 1)",
+    "stack_seed_by_outer_fold": "20260827 + 100000 + outer_fold",
+    "selection_stack_seed_by_outer_and_inner_fold": "20260827 + 200000 + 1000 * outer_fold + inner_fold",
+    "group": "source_image_id",
+    "shared_fold_map_required": true,
+    "fold_map": {
+      "path": ".runs/research_20260907/vcoco_v0_r0/fold_map.csv",
+      "row_order": "shared_feature_rows_csv_order",
+      "columns": [
+        "row_index",
+        "person_id",
+        "image_id",
+        "label_index",
+        "outer_fold",
+        "inner_fold_o0",
+        "stack_fold_o0",
+        "inner_fold_o1",
+        "stack_fold_o1",
+        "inner_fold_o2",
+        "stack_fold_o2",
+        "inner_fold_o3",
+        "stack_fold_o3",
+        "inner_fold_o4",
+        "stack_fold_o4",
+        "selection_stack_fold_o0_i0",
+        "selection_stack_fold_o0_i1",
+        "selection_stack_fold_o0_i2",
+        "selection_stack_fold_o1_i0",
+        "selection_stack_fold_o1_i1",
+        "selection_stack_fold_o1_i2",
+        "selection_stack_fold_o2_i0",
+        "selection_stack_fold_o2_i1",
+        "selection_stack_fold_o2_i2",
+        "selection_stack_fold_o3_i0",
+        "selection_stack_fold_o3_i1",
+        "selection_stack_fold_o3_i2",
+        "selection_stack_fold_o4_i0",
+        "selection_stack_fold_o4_i1",
+        "selection_stack_fold_o4_i2"
+      ],
+      "outer_held_sentinel_for_inner_and_stack": -1,
+      "selection_stack_eligibility": "outer_fold != k and inner_fold_ok != j",
+      "selection_stack_sentinel_outside_eligibility": -1
+    },
+    "outer_held_label_rule": "No residual feature, base score, calibration fit, or model-selection decision may use the outer-held fold's labels."
+  },
+  "V0": {
+    "purpose": "Resolve the benefit of mixed representations, factorization, and reliability before adding pose or spatial structure.",
+    "runs": "one deterministic nested run using the locked shared outer, inner, and stack folds",
+    "model_seed": 20260907,
+    "inner_candidate_seed": "20260907 + 10000 * outer_fold + candidate_index",
+    "inner_candidate_seed_role": "base_seed_before_the_fixed_inner_fold_offset",
+    "inner_fit_estimator_seed": "20260907 + 10000 * outer_fold + candidate_index + 10000 * (inner_fold + 1)",
+    "outer_final_fit_seed": "20260907 + 100000 + 1000 * outer_fold + family_index",
+    "candidate_selection_budget_per_family": 8,
+    "candidate_selection": {
+      "scope": "shared_inner_folds_only",
+      "labels": "source_tag_labels_only",
+      "aggregation": "metrics_on_concatenated_inner_oof_predictions_not_mean_fold_scores",
+      "zero_division": 0,
+      "ranking": [
+        {
+          "metric": "macro_f1",
+          "direction": "descending"
+        },
+        {
+          "metric": "locomotion_f1",
+          "direction": "descending"
+        },
+        {
+          "metric": "log_loss",
+          "direction": "ascending"
+        },
+        {
+          "metric": "candidate_id",
+          "direction": "ascending"
+        }
+      ]
+    },
+    "shared_geometry_features": {
+      "source": "shared_pooled_feature_rows_csv",
+      "source_rows_sha256": "fc0772cdf1f1bce3786cfdf3c9571bcf456cfaa00cb12ea0d26212a7ff0504cb",
+      "dimensions": 6,
+      "names": [
+        "log_bbox_area_fraction",
+        "log_bbox_aspect_ratio",
+        "bbox_center_x_fraction",
+        "bbox_center_y_fraction",
+        "log_person_pixel_height",
+        "bbox_edge_distance_fraction"
+      ],
+      "preprocessing": "hac.vcoco_v3_models.geometry_features",
+      "identical_across_all_families": true
+    },
+    "families": {
+      "mixed_flat": {
+        "features": [
+          "dino_tight",
+          "dino_context",
+          "siglip_tight",
+          "siglip_context"
+        ],
+        "head": "multinomial_logistic_probability_stack",
+        "factorized": false,
+        "reliability": false
+      },
+      "mixed_factorized": {
+        "features": [
+          "dino_tight",
+          "dino_context",
+          "siglip_tight",
+          "siglip_context"
+        ],
+        "head": "posture_motion_logistic_probability_stack",
+        "factorized": true,
+        "reliability": false
+      },
+      "mixed_factorized_reliability": {
+        "features": [
+          "dino_tight",
+          "dino_context",
+          "siglip_tight",
+          "siglip_context"
+        ],
+        "head": "posture_motion_logistic_probability_stack",
+        "factorized": true,
+        "reliability": true
+      },
+      "mixed_linear_svm": {
+        "features": [
+          "dino_tight",
+          "dino_context",
+          "siglip_tight",
+          "siglip_context"
+        ],
+        "head": "cuda_primal_one_vs_rest_squared_hinge_with_grouped_oof_calibration",
+        "factorized": false,
+        "reliability": false
+      }
+    },
+    "probability_stack_grid": {
+      "component_C": [
+        0.01,
+        0.1
+      ],
+      "meta_C": [
+        0.1,
+        1.0
+      ],
+      "class_weight": [
+        "none",
+        "balanced"
+      ]
+    },
+    "linear_svm_grid": {
+      "C": [
+        0.001,
+        0.01,
+        0.1,
+        1.0
+      ],
+      "class_weight": [
+        "none",
+        "balanced"
+      ],
+      "calibrator_C": 1.0,
+      "maximum_iterations": 2000,
+      "tolerance": 0.0001,
+      "require_iteration_limit_not_reached": true
+    }
+  },
+  "V1": {
+    "status": "BLOCKED_PENDING_SPATIAL_AND_AUXILIARY_INPUTS",
+    "frozen_encoder": "facebook/dinov2-base@f9e44c814b77203eaa57a6bdbbd535f21ede1415",
+    "spatial_grid": {
+      "image_size": 224,
+      "patch_grid": [
+        16,
+        16
+      ],
+      "feature_dimensions": 768,
+      "views": [
+        "person_tight",
+        "person_context_25"
+      ],
+      "storage_dtype": "float16"
+    },
+    "pose_hypotheses": 4,
+    "training_seeds": [
+      42,
+      43,
+      44,
+      45,
+      46
+    ],
+    "promotion_candidate": "B3_uncertainty",
+    "candidate_selection_budget_per_arm": 1,
+    "arms": [
+      "B0_matched_V0_established_classifier",
+      "B1_fixed_grid_equal_capacity",
+      "B2_predicted_joint_tokens_no_relations",
+      "B3_average",
+      "B3_uncertainty",
+      "top_one_pose_repeated_to_matched_budget",
+      "anatomy_deletion",
+      "support_deletion"
+    ],
+    "architecture_invariant": "z_head = z_anchor_head + availability_mask_head * gate_head * weighted_residual_head, with anchor coefficient fixed at one and exact anchor return when evidence is absent or disabled.",
+    "required_missing_inputs": [
+      "rights_safe_COCO_train_and_val_source_images_and_receipt",
+      "DINOv2_spatial_patch_grids",
+      "K4_label_blind_predicted_pose_hypotheses",
+      "auxiliary_checkpoint_and_training_corpus_overlap_audit",
+      "fixed_head_optimization_configuration_and_update_count"
+    ],
+    "ineligible_inputs": [
+      "COCO_ground_truth_pose_oracle_for_promotion",
+      "HOT_weights_without_target_overlap_classification"
+    ]
+  },
+  "decision_rules": {
+    "primary_metric": "three_class_person_level_macro_f1",
+    "B3_uncertainty_minus_B0_point_minimum": 0.01,
+    "primary_paired_95pct_interval_lower_bound_minimum": 0.0,
+    "NLL_must_not_worsen": true,
+    "structural_claim_controls": [
+      "B1_fixed_grid_equal_capacity",
+      "B2_predicted_joint_tokens_no_relations",
+      "B3_average"
+    ],
+    "structural_claim_requires_each_corresponding_positive_interval": true,
+    "multiplicity": "Holm_within_predeclared_VCOCO_family"
+  },
+  "statistics": {
+    "bootstrap_unit": "whole_source_image",
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260906,
+    "random_generator": "numpy.random.PCG64_via_SeedSequence_spawn_2",
+    "bootstrap_indices_artifact": {
+      "path": ".runs/research_20260907/vcoco_v0_r0/bootstrap_group_indices.npy",
+      "dtype": "uint16",
+      "shape": [
+        10000,
+        4123
+      ]
+    },
+    "swap_test": "whole_image_probability_vector_swaps",
+    "swap_monte_carlo_draws": 100000,
+    "swap_signs_artifact": {
+      "path": ".runs/research_20260907/vcoco_v0_r0/swap_signs_packbits.npy",
+      "dtype": "uint8",
+      "shape": [
+        100000,
+        516
+      ],
+      "decode": "np.unpackbits(values, axis=1, bitorder='little')[:, :4123]"
+    },
+    "randomization_receipt": ".runs/research_20260907/vcoco_v0_r0/statistics_randomization_receipt.json",
+    "pre_fit_lock_required": true,
+    "shared_across_all_declared_comparisons": true,
+    "swap_plus_one_correction": true,
+    "zero_division": 0,
+    "class_count": 3
+  },
+  "resource_contract": {
+    "same_cohort": true,
+    "V0_scope": "locked_cached_development_features_through_nested_heads",
+    "V0_measures": [
+      "bounded_outer_fold_wall_time",
+      "complete_nested_run_wall_time",
+      "cuda_peak_allocated_bytes",
+      "cuda_peak_reserved_bytes",
+      "cuda_svm_iteration_audit"
+    ],
+    "end_to_end_pipeline_resource_claim_authorized": false,
+    "deferred_until_V1_inputs_exist": [
+      "decode",
+      "pose_extraction",
+      "spatial_feature_extraction",
+      "cold_start",
+      "synchronized_warm_latency",
+      "throughput",
+      "host_memory",
+      "energy"
+    ]
+  },
+  "execution_outputs": {
+    "root": ".runs/research_20260907/vcoco_v0",
+    "files": [
+      "metrics.csv",
+      "per_class_metrics.csv",
+      "candidate_selection.csv",
+      "oof_probabilities.npz",
+      "paired_statistics.json",
+      "cuda_svm_optimization.json",
+      "fold_usage_receipt.json",
+      "summary.json"
+    ],
+    "summary_status": "VCOCO_CONTINUATION_V0_MATCHED_CONTROLS_COMPLETE"
+  },
+  "source_lock_policy": {
+    "requires_clean_committed_worktree": true,
+    "bind_git_blob_ids": true,
+    "V0_source_lock_may_authorize_fold_map_and_pooled_feature_execution": true,
+    "V0_source_lock_authorizes_shared_statistics_randomization_construction": true,
+    "V1_execution_remains_blocked_until_all_missing_inputs_are_bound": true
+  },
+  "access_disclosures": [
+    "The incomplete historical external-CUDA document lock is retained as history and is not reused or repaired.",
+    "The receiving-session calibration-manifest incident remains recorded in the continuation provenance document.",
+    "A prior review encountered a public README paragraph containing historical aggregate test metrics; those metrics are excluded from this protocol's inputs and decisions."
+  ]
+}

@@ -69,6 +69,47 @@ independently hash-bound development prediction arrays and anchors. Any future
 continuation lock must disclose both exposures and must not describe the calibration
 manifest as pristine or unseen.
 
+### Execution addendum — 2026-09-07
+
+During preparation of the role-specific continuation bundle, a worker incorrectly
+treated `.runs/vcoco_v3/okutama/features/dinov2_base/development_metadata.csv` as an
+already role-specific provider-train export. It loaded all 8,339 pre-split metadata
+rows into pandas for schema and count inspection and printed column/count summaries
+plus the first five rows. The table is broader than the 6,360 explicitly permitted
+OOF and fixed-development-validation rows and may contain the calibration complement.
+No values from that inspection are used for modeling, selection, feature lookup, or
+analysis. The path is now explicitly forbidden to continuation runners.
+
+No feature array, image, checkpoint, prediction, mixed-role temporal manifest,
+confirmation input, or test input was opened in that incident. The replacement route
+uses the already permitted 6,360 sample identities, the hash-bound auditor's sort
+semantics, and aggregate `recording_evidence` counts. In verifying that derivation,
+the full aggregate audit table was printed and the three complement scenario names
+and their per-video selected-centre counts became visible. Those aggregates contain
+no row identities, labels, features, predictions, or model outcomes. They are used
+only to calculate absolute offsets into the historical shared stores; only permitted
+indices may be copied into the new role-specific bundle. Both 2026-09-07 exposures
+must remain in future receipts, and no continuation claim may describe the pre-split
+metadata or complement scenario identities as unseen.
+
+The official provider training archive was subsequently retrieved from the
+Okutama-Action project download link to a dedicated external-data directory. The
+completed file is 5,770,432,522 bytes and has SHA-256
+`c021ce8a12c84e083f359023ffd41c145561aaedb48b118e7c5416d5ddcecb73`, exactly
+matching the historical archive receipt. Continuation tooling may read only the two
+annotation members for each provider recording belonging to the 14 eligible scenarios;
+it must not run an archive-wide decompression/CRC traversal or open complement frames
+or annotations. The full-file hash and ZIP central-directory lookup are provenance
+checks, not authorization to use every member.
+
+Before the phase-one materialization lock was created, the continuation review opened
+the NumPy headers of the three mixed base-store arrays and two mixed part-store arrays
+with read-only memory mapping to confirm their declared shapes and dtypes. No array
+element was indexed, decoded, summarized, or materialized; observed metadata was
+limited to five shapes and dtypes. Future receipts must record five pre-lock mixed-store
+header opens and zero pre-lock feature-array value reads rather than claiming that the
+array files themselves were never opened.
+
 ## External-CUDA amendment portability defect
 
 The restored historical lock at
