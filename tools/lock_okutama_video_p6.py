@@ -106,7 +106,7 @@ def _artifact_receipt(root: Path, declared: dict[str, Any]) -> dict[str, Any]:
 def _evidence_receipts(root: Path, spec: dict[str, Any]) -> dict[str, Any]:
     receipts: dict[str, Any] = {}
     for phase, expected_status in (
-        ("p3", "OKUTAMA_VIDEO_P3_ADAPTIVE_CROSSFIT_COMPLETE"),
+        ("p3", "OKUTAMA_VIDEO_P3_EXPLORATORY_CROSSFIT_COMPLETE"),
         ("p5", "OKUTAMA_VIDEO_P5_ADAPTIVE_CROSSFIT_COMPLETE"),
     ):
         declared = spec["sources"][phase]
