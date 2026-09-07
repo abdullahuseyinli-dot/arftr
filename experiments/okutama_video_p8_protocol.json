@@ -1,0 +1,324 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_AFTER_CCAC_EXTRACTION_BEFORE_P8_SUPERVISED_FITTING",
+  "declared_on": "2026-09-07",
+  "study_id": "okutama_native_video_p8_ccac_supervised",
+  "method_name": "Camera-Compensated Actor Correspondence (CCAC)",
+  "scope": "Adaptive grouped development experiment on the same 11 scenarios after P6. It is not independent confirmation, selection-adjusted evidence, or an originality claim.",
+  "objective": "Test whether fixed physical actor-correspondence statistics improve conditional standing-versus-locomotion evidence while holding posture predictions exactly fixed.",
+  "adaptation_disclosure": {
+    "inputs_to_design": [
+      "P3 long-context and factorized results",
+      "P5 spatial-contrast and absolute-DCT results",
+      "P6 retrospectively selected consensus and its OOF error analysis",
+      "P7 negative CAPE trial",
+      "128-clip label-blind CCAC feasibility pilot",
+      "Full fixed label-blind CCAC extraction"
+    ],
+    "p6_selection": "P6 had already screened 28 uniform pairs, 56 uniform triples, and a pair-weight screen with 19 values on these development outcomes.",
+    "consequence": "P7 intervals quantify variation over reused scenarios but cannot remove accumulated design and selection optimism.",
+    "posture_freeze": "The previous P8 outline allowed up to650 fits; this pre-fit refinement freezes each outer fold's newly selected A0 posture C for four add-on arms, requiring470 actual fit invocations. Historical selected Cs are not fitting inputs."
+  },
+  "seed": 42,
+  "primary_rows": 4977,
+  "primary_scenarios": 11,
+  "class_order": [
+    "sitting",
+    "standing",
+    "walking_running"
+  ],
+  "fold_contract": {
+    "fold-0": [
+      "1.4",
+      "2.2",
+      "2.5"
+    ],
+    "fold-1": [
+      "1.5",
+      "2.11"
+    ],
+    "fold-2": [
+      "1.10",
+      "1.2"
+    ],
+    "fold-3": [
+      "2.7",
+      "2.8"
+    ],
+    "fold-4": [
+      "1.11",
+      "1.3"
+    ]
+  },
+  "references": {
+    "p3": {
+      "probe_lock": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/probe_lock.json",
+        "sha256": "5c3c708cba716c92adaa54abf6dc606115299ccc7f37f343c5ce21982abf0af3",
+        "size_bytes": 1297098
+      },
+      "summary": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/results/summary.json",
+        "sha256": "262418ab23e1c39494fa4e88d70f517f36be2b5f05a23cd7f122317aaa2f8f89",
+        "size_bytes": 291853,
+        "status": "OKUTAMA_VIDEO_P3_EXPLORATORY_CROSSFIT_COMPLETE"
+      },
+      "oof": {
+        "path": ".runs/research_20260907/okutama_native_video_p3/results/oof_probabilities.npz",
+        "sha256": "4db1766f6545dffd05942fabb4922d0f68a07430f057ae03afa9370a1b108042",
+        "size_bytes": 582361
+      },
+      "post_fit_arrays": [
+        "long_vjepa_mean",
+        "dual_scale_vjepa_dino"
+      ]
+    },
+    "p5": {
+      "execution_lock": {
+        "path": ".runs/research_20260907/okutama_native_video_p5/execution_lock.json",
+        "sha256": "464b086cb4a3deece080cb1455346dd8faa1b429acbb4fe9d46e08a3c22252ff",
+        "size_bytes": 1288557
+      },
+      "summary": {
+        "path": ".runs/research_20260907/okutama_native_video_p5/results/summary.json",
+        "sha256": "8981f14c9a68640a7819e5ecfe8d9a3221dc3f629afa1ca81de0172f3e9cd7ab",
+        "size_bytes": 228745,
+        "status": "OKUTAMA_VIDEO_P5_ADAPTIVE_CROSSFIT_COMPLETE"
+      },
+      "oof": {
+        "path": ".runs/research_20260907/okutama_native_video_p5/results/oof_probabilities.npz",
+        "sha256": "ae73648e9651621061e5f6f94b9d84a7b196326ac5c6b9a70bb10d02db051621",
+        "size_bytes": 631170
+      },
+      "post_fit_arrays": [
+        "spatial_contrast_factorized",
+        "orthogonal_moments_factorized"
+      ],
+      "a0_reproduction_policy": "require exact float64 OOF array equality before interpreting any P8 result"
+    },
+    "p6": {
+      "execution_lock": {
+        "path": ".runs/research_20260907/okutama_native_video_p6/execution_lock_v2.json",
+        "sha256": "87249eff3abbbdfbf0b9d0918a1d51de16c987b9d2ec69f46b650c385c8c71e8",
+        "size_bytes": 17060
+      },
+      "summary": {
+        "path": ".runs/research_20260907/okutama_native_video_p6/results/summary.json",
+        "sha256": "61fc852d1da29670032e8e01356d7231bc7801437e9478a80ca47484eaa47256",
+        "size_bytes": 60016,
+        "status": "OKUTAMA_VIDEO_P6_ADAPTIVE_REPLAY_COMPLETE"
+      },
+      "oof": {
+        "path": ".runs/research_20260907/okutama_native_video_p6/results/oof_probabilities.npz",
+        "sha256": "5a2741dcf1617d0f584d3291c0d40050a380405ab265761697f938cf8bdd8acc",
+        "size_bytes": 511402
+      },
+      "reference_array": "ocvc_uniform_diverse_triad",
+      "reference_macro_f1": 0.8258300963800421,
+      "reference_nll": 0.41657000476156425,
+      "reference_brier": 0.2409015437227207
+    }
+  },
+  "feature_recipe": {
+    "module": "hac.ccac_features",
+    "posture": "Exact P5 spatial posture9984, unchanged in all arms",
+    "motion": "Exact P5 motion4608 plus only committed CCAC blocks in declared order",
+    "sample_join": "Exact unique4977-ID bijection; reorder all CCAC arrays to PrimaryData order; assert long_valid equality",
+    "missingness": "Retain all rows; translation and articulation blocks require10/15 usable pairs; zero invalid blocks with explicit Q validity; no short-stride CCAC substitution",
+    "labels_used_in_feature_derivation": false,
+    "learned_feature_operations": false
+  },
+  "arms": [
+    "spatial_refit",
+    "ccac_reliability",
+    "ccac_raw_translation",
+    "ccac_compensated_translation",
+    "ccac_full"
+  ],
+  "primary_expert": "ccac_full",
+  "arm_contracts": {
+    "spatial_refit": {
+      "kind": "factorized",
+      "posture_width": 9984,
+      "motion_width": 4608,
+      "fits_per_fold": 26
+    },
+    "ccac_reliability": {
+      "kind": "factorized",
+      "posture_width": 9984,
+      "motion_width": 4624,
+      "fits_per_fold": 17
+    },
+    "ccac_raw_translation": {
+      "kind": "factorized",
+      "posture_width": 9984,
+      "motion_width": 4633,
+      "fits_per_fold": 17
+    },
+    "ccac_compensated_translation": {
+      "kind": "factorized",
+      "posture_width": 9984,
+      "motion_width": 4633,
+      "fits_per_fold": 17
+    },
+    "ccac_full": {
+      "kind": "factorized",
+      "posture_width": 9984,
+      "motion_width": 4639,
+      "fits_per_fold": 17
+    }
+  },
+  "systems": {
+    "p6_reference": "Read fixed P6 probabilities only after all25 P8 workloads complete.",
+    "ccac_replacement_triad": {
+      "components": [
+        "P3.long_vjepa_mean",
+        "P3.dual_scale_vjepa_dino",
+        "P8.ccac_full"
+      ],
+      "fusion": "validate components; equal float64 arithmetic mean; normalize row sums; validate again",
+      "learned_parameters": 0,
+      "fitted_weights": false,
+      "primary_system": true
+    }
+  },
+  "probe": {
+    "C_values": [
+      0.00001,
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "solver": "lbfgs",
+    "class_weight": "balanced",
+    "max_iter": 2000,
+    "tolerance": 0.0001,
+    "standardize": true,
+    "inner_folds": 3,
+    "inner_splitter": "StratifiedGroupKFold",
+    "inner_shuffle": true,
+    "inner_seed": 42,
+    "selection": "pooled inner-held macro-F1 descending, NLL ascending, regularization ascending",
+    "factorized_C_candidates": "A0:16 Cartesian posture/motion Cs from24 cached inner fits. Q/R/C/F:4 motion Cs with current-fold A0 posture C fixed;3 inner posture refits+12 inner motion fits+2 final fits.",
+    "threshold_tuning": false,
+    "backbones_frozen": true,
+    "maximum_unique_estimator_fits": 470,
+    "maximum_workloads": 25,
+    "posture_selection": "A0 pooled inner selection only; immutable per-outer-fold dependency for Q/R/C/F; require exact final posture checkpoint and held sitting-probability equality",
+    "maximum_estimator_fit_invocations": 470,
+    "fit_count_semantics": "Actual estimator-fit invocations including repeated identical posture refits; not globally unique mathematical configurations. No automatic retry after a started workload."
+  },
+  "statistics": {
+    "primary_metric": "macro_f1",
+    "metrics": [
+      "macro_f1",
+      "per_class_f1",
+      "accuracy",
+      "NLL",
+      "multiclass_Brier"
+    ],
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260907,
+    "exact_scenario_swaps": 2048,
+    "multiplicity": "Holm across exactly six directional development comparisons",
+    "comparisons": [
+      {
+        "candidate": "ccac_replacement_triad",
+        "reference": "p6_reference"
+      },
+      {
+        "candidate": "ccac_full",
+        "reference": "spatial_refit"
+      },
+      {
+        "candidate": "ccac_full",
+        "reference": "ccac_compensated_translation"
+      },
+      {
+        "candidate": "ccac_compensated_translation",
+        "reference": "ccac_raw_translation"
+      },
+      {
+        "candidate": "ccac_full",
+        "reference": "ccac_reliability"
+      },
+      {
+        "candidate": "ccac_raw_translation",
+        "reference": "spatial_refit"
+      }
+    ],
+    "diagnostics": [
+      "scenario_and_fold",
+      "class",
+      "legacy_transition_and_occlusion_proxies",
+      "long_valid_and_short_fallback",
+      "p6_component_agreement",
+      "p6_all_three_wrong",
+      "p6_potentially_routable_errors",
+      "rescue_harm_and_changed_still_wrong",
+      "feature_norms",
+      "CCAC_translation_and_articulation_validity",
+      "P6_shared_upright_and_shared_motion_boundary_errors",
+      "selected_C_and_fit_runtime"
+    ],
+    "interpretation": "adaptive development evidence; no strong architecture or performance claim without independent replication"
+  },
+  "engineering_guardrails": {
+    "primary_system_macro_f1_at_least": 0.835,
+    "milestone_macro_f1": 0.84,
+    "stretch_macro_f1": 0.85,
+    "primary_system_nll_strictly_below_p6": true,
+    "primary_system_brier_strictly_below_p6": true,
+    "minimum_scenarios_improved_over_p6": 7,
+    "maximum_scenario_macro_f1_decline": 0.02,
+    "positive_net_correct_change_overall": true,
+    "positive_net_correct_change_clear_stable": true,
+    "shared_failure_rescues": "report count; no post-result minimum",
+    "mechanism_claim": "C versus R tests compensation; F versus C tests within-actor residuals; F versus Q tests motion beyond reliability. R versus A0 changes reliability and raw motion jointly. Require uncertainty and independent replication."
+  },
+  "authorization": {
+    "read_named_p0_p3_frozen_caches_after_separate_lock": true,
+    "read_completed_label_free_ccac_features_after_separate_lock": true,
+    "probe_fitting_after_separate_lock": true,
+    "read_named_p3_p5_p6_oof_only_after_all_p8_fits": true,
+    "deterministic_post_fit_probability_fusion": true,
+    "raw_image_access": false,
+    "feature_extraction": false,
+    "backbone_fitting": false,
+    "learned_fusion": false,
+    "protected_data_access": false,
+    "external_confirmation_claim": false
+  },
+  "full_extraction": {
+    "execution_lock": {
+      "path": ".runs/research_20260907/okutama_ccac_full_v2/execution_lock.json",
+      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
+      "size_bytes": -1
+    },
+    "request": {
+      "path": ".runs/research_20260907/okutama_ccac_full_v2/results/request.json",
+      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
+      "size_bytes": -1
+    },
+    "summary": {
+      "path": ".runs/research_20260907/okutama_ccac_full_v2/results/summary.json",
+      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
+      "size_bytes": -1
+    },
+    "completion": {
+      "path": ".runs/research_20260907/okutama_ccac_full_v2/results/completion.json",
+      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
+      "size_bytes": -1
+    },
+    "feature_manifest": {
+      "path": ".runs/research_20260907/okutama_ccac_full_v2/results/feature_manifest.json",
+      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
+      "size_bytes": -1
+    },
+    "features": {
+      "path": ".runs/research_20260907/okutama_ccac_full_v2/results/ccac_features.npz",
+      "sha256": "UNSET_FULL_EXTRACTION_SHA256",
+      "size_bytes": -1
+    }
+  }
+}
