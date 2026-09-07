@@ -843,7 +843,7 @@ def _load_primary_retained_teacher_probabilities(
     ]
     if len(primary) != EXPECTED_OOF_ROWS or primary["sample_id"].duplicated().any():
         raise RuntimeError("Primary retained-teacher row identity changed")
-    primary_ids = primary["sample_id"].astype(str).to_numpy()
+    primary_ids = primary["sample_id"].to_numpy(dtype=str)
     primary_position = {value: index for index, value in enumerate(primary_ids)}
     probabilities = np.empty(
         (EXPECTED_OOF_ROWS, len(EXPECTED_SEEDS), 3), dtype=np.float32

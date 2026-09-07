@@ -281,6 +281,7 @@ def test_retained_teacher_predictions_are_hash_bound_and_aligned(tmp_path, monke
     )
 
     assert ids.tolist() == ["a", "b", "c", "d"]
+    assert ids.dtype.kind == "U"
     assert seeds.tolist() == [42, 43]
     assert probabilities.shape == (4, 2, 3)
     assert np.allclose(probabilities.sum(axis=2), 1.0)
