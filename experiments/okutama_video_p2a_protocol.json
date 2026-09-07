@@ -1,0 +1,113 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_BEFORE_OKUTAMA_P2A_PROBE_FITTING",
+  "study_id": "okutama_native_video_p2a_frozen_feature_fusion",
+  "scope": "prospective exploratory follow-up chosen after P1; reused development scenarios, not independent confirmation or an originality claim",
+  "seed": 42,
+  "primary_rows": 4977,
+  "class_order": ["sitting", "standing", "walking_running"],
+  "arms": ["video_mean_multinomial", "video_dino_mean_multinomial", "video_dino_motion_multinomial", "factorized_specialist"],
+  "fold_contract": {
+    "fold-0": ["1.4", "2.2", "2.5"],
+    "fold-1": ["1.5", "2.11"],
+    "fold-2": ["1.10", "1.2"],
+    "fold-3": ["2.7", "2.8"],
+    "fold-4": ["1.11", "1.3"]
+  },
+  "p1_artifacts": {
+    "execution_lock": {"path": ".runs/research_20260907/okutama_native_video_p1/execution_lock.json", "sha256": "1a0eb28e6cae312bc32840d6f19d08072ed347df83ca8d7eb94bb091d3294311", "size_bytes": 1294125},
+    "summary": {"path": ".runs/research_20260907/okutama_native_video_p1/results/summary.json", "sha256": "6f69baac232a76df89096e29f1f697cc33e34f048c30fd34cbb28dff41ec6096", "size_bytes": 123815},
+    "oof": {"path": ".runs/research_20260907/okutama_native_video_p1/results/oof_probabilities.npz", "sha256": "aca2f85f034860fbc691e3d8fa9d32a0b378da720164f73d0b37aa7d188eecb6", "size_bytes": 611510}
+  },
+  "p1_reference": {"probabilities_member": "vjepa21_real_clip__linear", "macro_f1": 0.7715389093258217, "role": "comparison only; never features, teacher labels, calibration, inner selection, or fallback"},
+  "feature_recipes": {
+    "arithmetic_dtype": "float32",
+    "order": ["vmean", "dmean", "motion"],
+    "vmean": "mean(real, axis=(time,region)); 768 dimensions",
+    "dmean": "mean(dino, axis=(time,region)); 768 dimensions",
+    "motion": "concat(mean(abs(real-repeated), axis=(time,region)), mean(abs(diff(mean(real, axis=region), axis=time)), axis=time)); 1536 dimensions",
+    "video_mean_multinomial": ["vmean"],
+    "video_dino_mean_multinomial": ["vmean", "dmean"],
+    "video_dino_motion_multinomial": ["vmean", "dmean", "motion"],
+    "factorized_posture": ["vmean", "dmean"],
+    "factorized_motion": ["vmean", "motion"],
+    "input_shapes": {"vjepa21_real_clip": [4977,8,9,768], "vjepa21_repeated_center": [4977,8,9,768], "dinov2_native_frames": [4977,16,1,768]},
+    "input_dtype": "float16",
+    "learned_feature_operations": false,
+    "missing_policy": "all 4977 rows of every source arm must be valid and finite; fail closed otherwise, with no deletion or probability fallback",
+    "interpretation": "real-minus-repeated and consecutive-token variation are representation contrasts, not measured physical velocity or proof of causal motion disentanglement"
+  },
+  "probes": {
+    "linear": {
+      "C_values": [0.00001,0.0001,0.001,0.01],
+      "solver": "lbfgs", "class_weight": "balanced", "max_iter": 2000, "tolerance": 0.0001,
+      "standardize": true, "standardizer": "StandardScaler fitted only on the current fitting partition",
+      "inner_folds": 3, "inner_splitter": "StratifiedGroupKFold", "inner_shuffle": true, "inner_seed": 42,
+      "objective": "multinomial logistic regression for each of three direct arms",
+      "selection": "pooled inner-held predictions; descending macro-F1, ascending NLL, ascending C",
+      "convergence": "Any convergence warning or n_iter >= max_iter fails closed; no retrospective iteration increase"
+    },
+    "factorized": {
+      "posture_features": ["vmean", "dmean"], "motion_features": ["vmean", "motion"],
+      "posture_target": "0=sitting; 1=upright (standing or walking_running)",
+      "motion_target": "0=standing; 1=walking_running, fitted only on upright rows",
+      "class_weight": "balanced independently within the actual binary-head fitting subset",
+      "standardizers": "independent StandardScaler for posture on all fitting rows and motion on upright fitting rows only",
+      "decode": "[1-p_upright, p_upright*(1-p_moving_given_upright), p_upright*p_moving_given_upright]",
+      "C_pair_candidates": 16,
+      "selection": "pool decoded three-class inner-held probabilities for every Cartesian C pair; descending macro-F1, ascending NLL, ascending posture C, ascending motion C",
+      "optimization": "same fixed solver, tolerance, max_iter and C grid as linear; refit selected heads on their outer-training subsets"
+    }
+  },
+  "fitting_rules": {
+    "backbone_frozen": true, "all_rows_required_valid": true, "baseline_probabilities_in_fitting_or_selection": false,
+    "p1_probabilities_in_fitting_or_selection": false, "outer_held_baseline_fallback": false,
+    "all_original_rows_in_outer_metrics": true,
+    "held_labels": "metrics only; never optimization, scaling, class weighting, hyperparameter choice or adaptive stopping",
+    "candidate_budget": "3 direct arms x4 C x3 inner folds; factorized 4 C per head x3 inner folds, cached head predictions form16 candidate pairs; then selected outer refits, five existing outer folds, seed42",
+    "workload_count": 20,
+    "maximum_unique_estimator_fits": 325,
+    "threshold_tuning": false,
+    "learned_gating_or_calibration": false
+  },
+  "statistics": {
+    "primary_metric": "macro_f1", "metrics": ["macro_f1", "per_class_f1", "accuracy", "NLL", "multiclass_Brier"],
+    "bootstrap_resamples": 10000, "bootstrap_seed": 20260907,
+    "bootstrap": "same whole-scenario resamples as P1; aggregate confusion/loss sums before metrics; conditional on retained fits; keep all draws",
+    "exact_scenario_swaps": 2048,
+    "scenario_order": ["1.10","1.11","1.2","1.3","1.4","1.5","2.11","2.2","2.5","2.7","2.8"],
+    "zero_division": 0,
+    "comparisons": [
+      {"name":"video_mean_multinomial_vs_baseline","candidate":"video_mean_multinomial","reference":"baseline"},
+      {"name":"video_dino_mean_multinomial_vs_baseline","candidate":"video_dino_mean_multinomial","reference":"baseline"},
+      {"name":"video_dino_motion_multinomial_vs_baseline","candidate":"video_dino_motion_multinomial","reference":"baseline"},
+      {"name":"factorized_specialist_vs_baseline","candidate":"factorized_specialist","reference":"baseline"},
+      {"name":"video_mean_multinomial_vs_p1_real_linear","candidate":"video_mean_multinomial","reference":"p1_real_linear"},
+      {"name":"video_dino_mean_multinomial_vs_p1_real_linear","candidate":"video_dino_mean_multinomial","reference":"p1_real_linear"},
+      {"name":"video_dino_motion_multinomial_vs_p1_real_linear","candidate":"video_dino_motion_multinomial","reference":"p1_real_linear"},
+      {"name":"factorized_specialist_vs_p1_real_linear","candidate":"factorized_specialist","reference":"p1_real_linear"},
+      {"name":"video_dino_mean_multinomial_vs_video_mean_multinomial","candidate":"video_dino_mean_multinomial","reference":"video_mean_multinomial"},
+      {"name":"video_dino_motion_multinomial_vs_video_mean_multinomial","candidate":"video_dino_motion_multinomial","reference":"video_mean_multinomial"},
+      {"name":"factorized_specialist_vs_video_mean_multinomial","candidate":"factorized_specialist","reference":"video_mean_multinomial"},
+      {"name":"factorized_specialist_vs_video_dino_motion_multinomial","candidate":"factorized_specialist","reference":"video_dino_motion_multinomial"}
+    ],
+    "multiplicity": "Holm across all12 prespecified directional macro-F1 comparisons; exploratory development evidence only",
+    "error_flow": "rescue/harm versus both historical baseline and P1 real-linear",
+    "diagnostics": "all original scenarios and classes; occluded/clear, transition/stable; paired subgroup F1 intervals and support fraction; no diagnostic labels as fitting features"
+  },
+  "authorization": {"probe_fitting": true, "raw_image_extraction": false, "feature_extraction": false, "backbone_fitting": false, "protected_data_access": false},
+  "execution_sources": {
+    "protocol": "experiments/okutama_video_p2a_protocol.json", "locker": "tools/lock_okutama_video_p2a.py",
+    "runner": "experiments/run_okutama_video_p2a.py", "fusion_module": "src/hac/video_fusion.py",
+    "p1_protocol": "experiments/okutama_video_p1_protocol.json", "p1_locker": "tools/lock_okutama_video_p1.py",
+    "p1_runner": "experiments/run_okutama_video_probe.py", "p1_probe_module": "src/hac/video_probe.py",
+    "p0_protocol": "experiments/okutama_video_protocol.json", "p0_locker": "tools/lock_okutama_video_protocol.py",
+    "lock_helpers": "tools/lock_hac_continuation_protocols.py", "retained_lock": "src/hac/retained_lock.py",
+    "factorized_module": "src/hac/vcoco_v3_neural.py", "temporal_module": "src/hac/vcoco_v3_temporal.py",
+    "temporal_training_module": "src/hac/vcoco_v3_temporal_training.py",
+    "native_video_module": "src/hac/okutama_native_video.py", "manifest_builder": "experiments/build_okutama_native_clip_manifest.py",
+    "video_encoder_module": "src/hac/video_encoders.py", "image_encoder_module": "src/hac/image_encoders.py",
+    "video_cache": "experiments/cache_okutama_video_features.py", "dino_cache": "experiments/cache_okutama_dinov2_features.py",
+    "requirements": "requirements-video-lock.txt", "base_requirements": "requirements-v3-lock.txt"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_BEFORE_OKUTAMA_P3_LONG_VIDEO_ANNOTATION_OR_IMAGE_ACCESS",
+  "declared_on": "2026-09-07",
+  "study_id": "okutama_native_video_p3_long16_input_groundwork",
+  "scope": "Input-manifest groundwork only; no image extraction or model fitting authorized.",
+  "p0_protocol": {
+    "path": "experiments/okutama_video_protocol.json",
+    "sha256": "bfca9f49a1dc6141e1896f849913e37e2a83ea3bcb76eb59e00f513f71982e19"
+  },
+  "data_contract": {
+    "primary_scope": "grouped_crossfit_oof",
+    "primary_rows": 4977,
+    "primary_scenarios": 11,
+    "primary_videos": 21,
+    "primary_tracks": 444,
+    "class_order": ["sitting", "standing", "walking_running"],
+    "all_original_centers_remain_in_denominator": true,
+    "descriptive_validation_rows_excluded": 1383,
+    "forbidden_roles": ["calibration", "confirmation", "test"],
+    "localization": "same provider stable actor track and per-frame box as P0; conditional-on-localization benchmark",
+    "label_policy": "copy immutable eligible-index center labels; annotation actions never determine times, clipping, padding, masks or track continuation",
+    "diagnostic_policy": "historical transition/occlusion flags retain their original short-window meaning; annotation flags are diagnostics only, never learned inputs or selection gates",
+    "inference_limit": "Reused development scenarios, not independent confirmation; pretrained dataset overlap remains unknown."
+  },
+  "fold_contract": {
+    "fold-0": ["1.4", "2.2", "2.5"],
+    "fold-1": ["1.5", "2.11"],
+    "fold-2": ["1.10", "1.2"],
+    "fold-3": ["2.7", "2.8"],
+    "fold-4": ["1.11", "1.3"]
+  },
+  "scenario_row_counts": {
+    "1.10": 597, "1.11": 60, "1.2": 464, "1.3": 778, "1.4": 488, "1.5": 453,
+    "2.11": 473, "2.2": 376, "2.5": 332, "2.7": 540, "2.8": 416
+  },
+  "historical_inputs": {
+    "eligible_index": {
+      "path": ".runs/research_20260907/cptr_replay_r0/eligible_index.csv",
+      "sha256": "5bf6d0cc11a18d3e986b714f8a3de71cadd9fef3bd233eb9b5f212f701aadbbb"
+    },
+    "fold_map": {
+      "path": ".runs/research_20260907/okutama_temporal_controls_r0/fold_map.csv",
+      "sha256": "5f68a87aa39dfe5f8a30eaaf34416833ee0610faaf73890093ed763b18065547"
+    }
+  },
+  "archive": {
+    "file_name": "TrainSetFrames.zip",
+    "size_bytes": 5770432522,
+    "sha256": "c021ce8a12c84e083f359023ffd41c145561aaedb48b118e7c5416d5ddcecb73",
+    "hash_policy": "opaque byte stream only; never archive-wide CRC/decompression scan",
+    "annotations": "exactly the same 42 text members for the 21 primary provider recordings",
+    "images": "getinfo only for exact nonnegative requested primary JPEG names; no JPEG payload reads"
+  },
+  "sampling": {
+    "source_offsets": [-32,-28,-24,-20,-16,-12,-8,-4,0,4,8,12,16,20,24,28],
+    "fps": 30.0,
+    "frame_count": 16,
+    "center_slot": 8,
+    "source_stride": 4,
+    "endpoint_span_seconds": 2.0,
+    "time_origin": "unchanged center source frame; nominal absolute times are source frame / 30, not measured PTS",
+    "asymmetry": "first offset -32/30 seconds, last offset +28/30 seconds; center is slot 8, not endpoint midpoint",
+    "boundary_policy": "never label-cut, shift, interpolate, clamp, repeat-edge-fill or continue into another track",
+    "negative_frame_policy": "retain negative requested frame/time with empty image_member and explicit invalid mask; never request negative JPEG names"
+  },
+  "preprocessing": {
+    "source_image_size": [1280,720],
+    "annotation_image_size": [3840,2160],
+    "crop": "dynamic per-frame provider box with context_fraction on each side",
+    "context_fraction": 0.25,
+    "output_size": 384,
+    "resize": "aspect-preserving, long side to 384, bilinear",
+    "padding": "mean-colour square letterbox",
+    "channel_order": "RGB",
+    "input_range": [0.0,1.0],
+    "mean": [0.485,0.456,0.406],
+    "std": [0.229,0.224,0.225],
+    "encoder_layout": "B,C,T,H,W",
+    "missing_input_policy": "retain center; represent invalid frames explicitly; extraction may fail closed but must not silently drop rows; probe fallback requires a later fitting lock"
+  },
+  "missing_policy": {
+    "retain_all_centers": true,
+    "invalid_frames_explicit": true,
+    "no_cross_track_fill": true,
+    "no_label_based_boundary_cutting": true,
+    "prospective_prediction_fallback": "short-video anchor for incomplete long clips; exact anchor/receipts/fitting provenance require later execution lock",
+    "fallback_implemented_now": false
+  },
+  "matched_controls_prospective": {
+    "arms": ["vjepa21_short16_reference", "vjepa21_long16_real_clip", "dinov2_long16_native_frames", "vjepa21_repeated_center_reference"],
+    "same_unique_frames_and_dynamic_crops": true,
+    "video_cached_shape_per_clip": [8,9,768],
+    "dino_cached_shape_per_clip": [16,1,768],
+    "repeated_center_reuse": "permitted only after proving identical center pixels, preprocessing, model weights and source receipts in a later extraction lock",
+    "requires_later_extraction_and_fitting_locks": true,
+    "frozen_extraction_authorized_now": false,
+    "fitting_authorized_now": false
+  },
+  "pilot": {
+    "rows": 128,
+    "pilot_domain": "okutama-long-video-p3-20260907:",
+    "selection": "ascending SHA256(pilot_domain + sample_id), tie-break sample_id; selection independent of label and predictions",
+    "label_blind": true,
+    "image_access_authorized_now": false
+  },
+  "execution_sources": {
+    "protocol": "experiments/okutama_video_p3_protocol.json",
+    "long_video_module": "src/hac/okutama_long_video.py",
+    "manifest_builder": "experiments/build_okutama_long_clip_manifest.py",
+    "native_video_module": "src/hac/okutama_native_video.py",
+    "p0_protocol": "experiments/okutama_video_protocol.json"
+  },
+  "materialization_lock": {
+    "status": "OKUTAMA_VIDEO_P3_MANIFEST_LOCKED_BEFORE_ANNOTATION_ACCESS",
+    "requires_clean_committed_repository": true,
+    "authorization": {
+      "annotation_manifest": true,
+      "frozen_extraction": false,
+      "image_payload_access": false,
+      "model_fitting": false,
+      "probe_fitting": false,
+      "protected_data_access": false
+    }
+  }
+}
