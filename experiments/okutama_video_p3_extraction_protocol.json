@@ -1,0 +1,74 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_BEFORE_OKUTAMA_P3_IMAGE_PAYLOAD_ACCESS",
+  "declared_on": "2026-09-07",
+  "study_id": "okutama_native_video_p3_long16_frozen_extraction",
+  "scope": "Frozen V-JEPA 2.1-B and DINOv2-B extraction only; no task fitting, labels, protected roles or archive members outside the exact manifest allowlist.",
+  "materialization_lock": {
+    "path": ".runs/research_20260907/okutama_native_video_p3/materialization_lock.json",
+    "sha256": "9d16415909795d72ba65f931faf54578a060dd5dce6cecc9ad8c5645421620ba",
+    "size_bytes": 13767
+  },
+  "manifest": {
+    "summary": {"path": ".runs/research_20260907/okutama_native_video_p3/manifest/summary.json", "sha256": "7ab3932401e76abe1c87a506299be45298543711b377efa17d16ee8c18d01ed8", "size_bytes": 12615},
+    "clip_index": {"path": ".runs/research_20260907/okutama_native_video_p3/manifest/clip_index.csv", "sha256": "0194f91d363b1a40092f14c9cd7bd384173b0d6c1e7b6c1d587907a44f6d0dc9", "size_bytes": 939228},
+    "frame_manifest": {"path": ".runs/research_20260907/okutama_native_video_p3/manifest/frame_manifest.csv", "sha256": "68a6f62dd0c033fd05421272345587f369da8d5ab04668d1f368477866c9cb9c", "size_bytes": 17126582},
+    "image_allowlist": {"path": ".runs/research_20260907/okutama_native_video_p3/manifest/image_allowlist.csv", "sha256": "114b63a71666fd58a90ce38a9e78b796d81abcc53992774a70fb1f51c98ab503", "size_bytes": 1094040}
+  },
+  "p0_extraction_lock": {
+    "path": ".runs/research_20260907/okutama_native_video_p0_r1/extraction_lock.json",
+    "sha256": "13b4ee646efebd9e96015a71d48c10d1ed2bea1bd610092dfc456403e637daf0",
+    "size_bytes": 28938,
+    "role": "bind identical archive, crop preprocessing, frozen weights and short-cache lineage"
+  },
+  "cohort": {
+    "rows": 4977,
+    "all_long_frames_valid_rows": 4510,
+    "incomplete_long_rows": 467,
+    "center_valid_rows": 4977,
+    "frame_rows": 79632,
+    "valid_frame_rows": 78714,
+    "negative_requested_frame_rows": 99,
+    "unique_present_image_members": 13163,
+    "sample_ids_sha256": "59cfac24af97e4baba569038eb0ca0cd46cd8ec303d0044989115b01898acb26"
+  },
+  "sampling": {
+    "source_offsets": [-32,-28,-24,-20,-16,-12,-8,-4,0,4,8,12,16,20,24,28],
+    "center_slot": 8,
+    "source_fps": 30.0,
+    "endpoint_span_seconds": 2.0,
+    "frame_count": 16
+  },
+  "encoders": {
+    "vjepa21_long16_real_clip": {"shape_per_clip": [8,9,768], "cache_dtype": "float16", "compute_precision": "bfloat16", "valid_rows": 4510},
+    "dinov2_long16_native_frames": {"shape_per_clip": [16,1,768], "cache_dtype": "float16", "compute_precision": "bfloat16", "frame_microbatch": 4, "valid_rows": 4510}
+  },
+  "missing_policy": "Do not decode or encode incomplete long clips; retain their rows as zero plus false validity. A separate pre-fit lock must substitute the exact short cache before fitting.",
+  "pilot": {
+    "rows": 128,
+    "sample_ids_from_materialization_lock": true,
+    "label_blind": true,
+    "promotion_rule": "both encoders complete with declared shapes/dtypes, finite valid rows, zero fits and no unauthorized member access"
+  },
+  "authorization": {
+    "frozen_extraction": true,
+    "image_payload_access": true,
+    "annotation_payload_access": false,
+    "model_fitting": false,
+    "probe_fitting": false,
+    "backbone_fitting": false,
+    "protected_data_access": false
+  },
+  "execution_sources": {
+    "protocol": "experiments/okutama_video_p3_extraction_protocol.json",
+    "locker": "tools/lock_okutama_video_p3_extraction.py",
+    "extractor": "experiments/cache_okutama_long_features.py",
+    "long_video_module": "src/hac/okutama_long_video.py",
+    "native_video_module": "src/hac/okutama_native_video.py",
+    "shared_crop_extractor": "experiments/cache_okutama_video_features.py",
+    "dino_extractor": "experiments/cache_okutama_dinov2_features.py",
+    "video_encoder_module": "src/hac/video_encoders.py",
+    "image_encoder_module": "src/hac/image_encoders.py",
+    "requirements": "requirements-video-lock.txt"
+  }
+}
