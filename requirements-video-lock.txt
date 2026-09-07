@@ -1,0 +1,5 @@
+# Incremental inference-only pins; retain the separately locked base CUDA environment.
+# Inspected base: torch==2.11.0+cu128, torchvision==0.26.0+cu128, Python==3.11.9.
+# Do not install the upstream training requirements or replace the CUDA wheels.
+timm==1.0.29
+einops==0.8.2

@@ -1,0 +1,174 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_BEFORE_OKUTAMA_NATIVE_VIDEO_MATERIALIZATION",
+  "declared_on": "2026-09-07",
+  "study_id": "okutama_native_video_representation_screen",
+  "objective": "Test new frozen video evidence on the unchanged development scenario folds before considering camera-uncertainty motion architecture fitting.",
+  "data_contract": {
+    "primary_scope": "grouped_crossfit_oof",
+    "primary_rows": 4977,
+    "primary_scenarios": 11,
+    "primary_videos": 21,
+    "primary_tracks": 444,
+    "class_order": ["sitting", "standing", "walking_running"],
+    "all_original_centers_remain_in_denominator": true,
+    "descriptive_validation_rows_excluded": 1383,
+    "forbidden_roles": ["calibration", "confirmation", "test"],
+    "forbidden_paths": [
+      ".runs/vcoco_v3/temporal/development_manifest.csv",
+      ".runs/vcoco_v3/okutama/features/dinov2_base/development_metadata.csv"
+    ],
+    "localization": "provider actor tracking boxes; conditional-on-localization benchmark",
+    "annotation_action_and_occlusion_values": "label verification and declared diagnostic strata only; never learned feature inputs or reliability gates",
+    "inference_limit": "Reused development scenarios, not independent confirmation; pretraining overlap with Okutama remains unknown unless independently demonstrated."
+  },
+  "fold_contract": {
+    "fold-0": ["1.4", "2.2", "2.5"],
+    "fold-1": ["1.5", "2.11"],
+    "fold-2": ["1.10", "1.2"],
+    "fold-3": ["2.7", "2.8"],
+    "fold-4": ["1.11", "1.3"]
+  },
+  "scenario_row_counts": {
+    "1.10": 597, "1.11": 60, "1.2": 464, "1.3": 778, "1.4": 488, "1.5": 453,
+    "2.11": 473, "2.2": 376, "2.5": 332, "2.7": 540, "2.8": 416
+  },
+  "historical_inputs": {
+    "eligible_index": {
+      "path": ".runs/research_20260907/cptr_replay_r0/eligible_index.csv",
+      "sha256": "5bf6d0cc11a18d3e986b714f8a3de71cadd9fef3bd233eb9b5f212f701aadbbb"
+    },
+    "fold_map": {
+      "path": ".runs/research_20260907/okutama_temporal_controls_r0/fold_map.csv",
+      "sha256": "5f68a87aa39dfe5f8a30eaaf34416833ee0610faaf73890093ed763b18065547"
+    }
+  },
+  "archive": {
+    "file_name": "TrainSetFrames.zip",
+    "size_bytes": 5770432522,
+    "sha256": "c021ce8a12c84e083f359023ffd41c145561aaedb48b118e7c5416d5ddcecb73",
+    "hash_policy": "opaque byte stream; never archive-wide CRC/decompression scan",
+    "annotations": "only 42 exact text members for the 21 primary provider recordings",
+    "images": "only exact requested primary clip JPEG members bound by the manifest allowlist"
+  },
+  "upstream": {
+    "url": "https://github.com/facebookresearch/vjepa2",
+    "commit": "204698b45b3712590f06245fbfba32d3be539812",
+    "checkpoint_name": "vjepa2_1_vitb_dist_vitG_384.pt",
+    "checkpoint_size_bytes": 1664223428,
+    "checkpoint_sha256": "848a77c33cc9e6649ed2119c9bea1e2c569bcdab9539ff3e7c02ccc2959ddf4d",
+    "pretraining_overlap_status": "unknown; frozen weights are not evidence of zero overlap",
+    "target_dataset_adaptation": false
+  },
+  "image_control": {
+    "model_id": "facebook/dinov2-base",
+    "revision": "f9e44c814b77203eaa57a6bdbbd535f21ede1415",
+    "snapshot_files": {
+      "config.json": {
+        "size_bytes": 548,
+        "sha256": "f7ff4cfa73d2f70647dbf6950541ad25d73082d54c2e7e9bded160c7656b2a70"
+      },
+      "model.safetensors": {
+        "size_bytes": 346345912,
+        "sha256": "d73036b56966966d07975d696bde331762f37297e2f095de8cea0040c3aa0841"
+      },
+      "preprocessor_config.json": {
+        "size_bytes": 436,
+        "sha256": "14e780d86fa1861f8751f868d7f45425b5feb55c38ca26f152ca5097ab30f828"
+      }
+    },
+    "representation": "frozen final-layer CLS token independently for each of the same sixteen normalized 384x384 native-frame crops",
+    "position_interpolation": true,
+    "patch_grid_note": "DINOv2 patch size 14 yields a 27x27 token grid at 384 pixels; six trailing pixels per axis are not patchified. No hidden processor resize or center crop is permitted.",
+    "pretraining_overlap_status": "unknown; frozen weights are not evidence of zero overlap",
+    "target_dataset_adaptation": false
+  },
+  "sampling": {
+    "source_offsets": [-8,-7,-6,-5,-4,-3,-2,-1,0,1,2,3,4,5,6,7],
+    "fps": 30.0,
+    "frame_count": 16,
+    "center_slot": 8,
+    "time_origin": "center source frame; source frame number divided by 30 for nominal absolute time",
+    "temporal_extent_note": "Sixteen distinct native frames, 0.5 seconds between endpoints; explicitly asymmetric by one native frame.",
+    "repeated_center": "repeat the slot-8 preprocessed image exactly sixteen times"
+  },
+  "preprocessing": {
+    "source_image_size": [1280,720],
+    "annotation_image_size": [3840,2160],
+    "crop": "dynamic per-frame provider box with context_fraction on each side",
+    "context_fraction": 0.25,
+    "output_size": 384,
+    "resize": "aspect-preserving, long side to 384, bilinear",
+    "padding": "mean-colour square letterbox",
+    "channel_order": "RGB",
+    "input_range": [0.0,1.0],
+    "mean": [0.485,0.456,0.406],
+    "std": [0.229,0.224,0.225],
+    "encoder_layout": "B,C,T,H,W",
+    "missing_input_policy": "retain center; represent invalid frames explicitly; extraction may fail closed but must not silently drop rows; probe fallback requires a later fitting lock"
+  },
+  "encoder_cache": {
+    "raw_token_shape_per_clip": [4608,768],
+    "raw_grid_shape": [8,24,24,768],
+    "spatial_pooling": "adaptive average pooling to 3x3 per tubelet",
+    "cached_shape_per_clip": [8,9,768],
+    "cached_dtype": "float16",
+    "frozen_eval_mode": true,
+    "autograd_enabled": false
+  },
+  "image_control_cache": {
+    "cached_shape_per_clip": [16,1,768],
+    "cached_dtype": "float16",
+    "frozen_eval_mode": true,
+    "autograd_enabled": false
+  },
+  "pilot": {
+    "rows": 128,
+    "selection": "ascending SHA256 of UTF-8 pilot_domain + sample_id; tie-break sample_id",
+    "pilot_domain": "okutama-native-video-p0-20260907:",
+    "label_blind": true,
+    "allowed_measurements": ["runtime", "peak CUDA memory", "input validity", "native person size", "feature shape and finiteness", "crop-coordinate consistency"],
+    "candidate_score_inspection": false,
+    "fitting": false
+  },
+  "p1_prospective": {
+    "scope": "exploratory representation screen; not authorized by these P0 locks",
+    "arms": ["frozen real-clip video", "same encoder repeated-center clip", "same unique frames and crops frozen image control"],
+    "probes": ["regularized linear", "small attentive"],
+    "outer_folds": [0,1,2,3,4],
+    "seeds": [42],
+    "selection": "all learned preprocessing, fitting, tuning and calibration remain inside outer-training scenario folds",
+    "requires_later_execution_lock": true,
+    "all_fitting_authorized_now": false
+  },
+  "execution_sources": {
+    "protocol": "experiments/okutama_video_protocol.json",
+    "locker": "tools/lock_okutama_video_protocol.py",
+    "lock_helpers": "tools/lock_hac_continuation_protocols.py",
+    "retained_lock": "src/hac/retained_lock.py",
+    "native_video_module": "src/hac/okutama_native_video.py",
+    "manifest_builder": "experiments/build_okutama_native_clip_manifest.py",
+    "encoder_module": "src/hac/video_encoders.py",
+    "extractor": "experiments/cache_okutama_video_features.py",
+    "image_encoder_module": "src/hac/image_encoders.py",
+    "image_extractor": "experiments/cache_okutama_dinov2_features.py",
+    "probe_module": "src/hac/video_probe.py",
+    "probe_runner": "experiments/run_okutama_video_probe.py",
+    "p1_protocol": "experiments/okutama_video_p1_protocol.json",
+    "p1_locker": "tools/lock_okutama_video_p1.py",
+    "smoke_runner": "experiments/smoke_okutama_video_encoder.py",
+    "base_requirements": "requirements-v3-lock.txt",
+    "requirements": "requirements-video-lock.txt"
+  },
+  "lock_stages": {
+    "materialization": {
+      "status": "OKUTAMA_VIDEO_P0_MANIFEST_LOCKED_BEFORE_ANNOTATION_ACCESS",
+      "authorization": {"annotation_manifest": true,"frozen_extraction": false,"full_primary_frozen_extraction": false,"synthetic_smoke": false,"label_blind_pilot": false,"model_fitting": false,"probe_fitting": false}
+    },
+    "extraction": {
+      "status": "OKUTAMA_VIDEO_P0_EXTRACTION_LOCKED_BEFORE_IMAGE_ACCESS",
+      "authorization": {"annotation_manifest": false,"frozen_extraction": true,"full_primary_frozen_extraction": true,"synthetic_smoke": true,"label_blind_pilot": true,"model_fitting": false,"probe_fitting": false}
+    }
+  },
+  "access_history": "Preserve disclosures in docs/HAC_CONTINUATION_PROVENANCE_20260906.md; prior metadata exposure does not authorize protected inputs. This protocol makes no independent holdout claim."
+}

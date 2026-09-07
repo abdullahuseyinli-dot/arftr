@@ -1,0 +1,130 @@
+{
+  "protocol_version": "1.0.0",
+  "status": "DECLARED_BEFORE_OKUTAMA_P1_PROBE_FITTING",
+  "study_id": "okutama_native_video_p1_representation_screen",
+  "scope": "exploratory reuse of 4977 development OOF centers in 11 scenario groups; not independent confirmation",
+  "seed": 42,
+  "primary_rows": 4977,
+  "class_order": ["sitting", "standing", "walking_running"],
+  "arms": ["vjepa21_real_clip", "vjepa21_repeated_center", "dinov2_native_frames"],
+  "fold_contract": {
+    "fold-0": ["1.4", "2.2", "2.5"],
+    "fold-1": ["1.5", "2.11"],
+    "fold-2": ["1.10", "1.2"],
+    "fold-3": ["2.7", "2.8"],
+    "fold-4": ["1.11", "1.3"]
+  },
+  "cache_contracts": {
+    "video": {
+      "status": "OKUTAMA_VIDEO_FROZEN_FEATURE_CACHE_COMPLETE",
+      "arms": {"vjepa21_real_clip": [4977,8,9,768], "vjepa21_repeated_center": [4977,8,9,768]},
+      "validity_shape": [4977,2],
+      "dtype": "float16"
+    },
+    "dino": {
+      "status": "OKUTAMA_DINOV2_FROZEN_FEATURE_CACHE_COMPLETE",
+      "arms": {"dinov2_native_frames": [4977,16,1,768]},
+      "validity_shape": [4977,1],
+      "dtype": "float16"
+    },
+    "completion": "Every original center completed; incomplete/pilot caches rejected",
+    "invalid_rows": "Must match locked native-frame validity; invalid cache entries zero; never fit invalid rows"
+  },
+  "baseline": {
+    "path": ".runs/research_20260907/okutama_temporal_controls/temporal_control_ensemble_predictions.npz",
+    "sha256": "1dd9dbc85ca346c08ff0dc098c71bca7eb5ecc792d9c18e053990904a720a481",
+    "size_bytes": 326096,
+    "probabilities_member": "t2_fixed_distinct_probabilities",
+    "macro_f1": 0.7192376821204284,
+    "role": "frozen historical five-seed OOF reference and outer-held invalid-input fallback only",
+    "selection_restriction": "Baseline probabilities for outer-training rows cannot enter tuning, training, or calibration: their historical OOF estimators may include the current outer-held scenarios",
+    "comparison_limit": "P1 uses one seed per arm; historical baseline uses five seeds. Matched new-arm comparisons share P1 budgets."
+  },
+  "probes": {
+    "linear": {
+      "input": "arithmetic mean over all time and spatial-region tokens",
+      "standardize": true,
+      "standardizer": "StandardScaler fit on current inner-training/outer-training valid rows only",
+      "solver": "lbfgs",
+      "objective": "multinomial logistic regression",
+      "C_values": [0.01,0.1,1.0],
+      "class_weight": "balanced",
+      "max_iter": 2000,
+      "tolerance": 0.0001,
+      "inner_folds": 3,
+      "inner_splitter": "StratifiedGroupKFold",
+      "inner_shuffle": true,
+      "inner_seed": 42,
+      "inner_selection": "pool predictions from valid inner-held rows only; descending three-class macro-F1, ascending NLL, ascending C; no baseline fallback inside selection",
+      "convergence": "Any convergence warning or estimator n_iter >= max_iter fails closed; no retrospective iteration increase"
+    },
+    "attentive": {
+      "model_dim": 192,
+      "layers": 1,
+      "attention_heads": 4,
+      "feedforward_dim": 384,
+      "dropout": 0.1,
+      "maximum_times": 16,
+      "maximum_regions": 9,
+      "optimizer": "AdamW",
+      "learning_rate": 0.0002,
+      "weight_decay": 0.01,
+      "batch_size": 64,
+      "epochs": 15,
+      "scheduler": "constant",
+      "gradient_clip": 1.0,
+      "label_smoothing": 0.0,
+      "precision": "bfloat16",
+      "loss": "temporal_teacher_loss: CE(posture)+CE(motion only on upright examples)",
+      "class_weights": "hierarchical_class_weights computed from current outer-training valid rows only",
+      "position_encoding": "separate learned time and spatial-region embeddings; spatial cells never interpreted as additional time steps",
+      "selection": "fixed final epoch, no early stopping or hyperparameter search"
+    }
+  },
+  "fitting_rules": {
+    "backbone_frozen": true,
+    "valid_rows_only": true,
+    "outer_held_baseline_fallback": true,
+    "all_original_rows_in_outer_metrics": true,
+    "learned_preprocessing_and_class_weights": "fit-partition only",
+    "held_labels": "metrics only, never optimization, hyperparameter choice or adaptive stopping",
+    "candidate_budget": "three linear C values per arm; one attentive configuration per arm; all five outer folds with seed42",
+    "determinism": "seed Python/NumPy/Torch42; deterministic Torch algorithms; CUBLAS_WORKSPACE_CONFIG=:4096:8 before CUDA initialization; no TF32"
+  },
+  "statistics": {
+    "primary_metric": "macro_f1",
+    "metrics": ["macro_f1", "per_class_f1", "accuracy", "NLL", "multiclass_Brier"],
+    "bootstrap_resamples": 10000,
+    "bootstrap_seed": 20260907,
+    "bootstrap": "whole-scenario draws, aggregate confusion counts before macro-F1; loss sums before division; condition on retained fitted folds",
+    "exact_scenario_swaps": 2048,
+    "scenario_order": ["1.10","1.11","1.2","1.3","1.4","1.5","2.11","2.2","2.5","2.7","2.8"],
+    "zero_division": 0,
+    "paired_comparisons": "each of six fitted arm/probe combinations vs fixed baseline; real-vs-repeated and real-vs-DINO within each probe",
+    "multiplicity": "Holm across the ten directional macro-F1 comparisons; exploratory only",
+    "error_flow": "rescued, harmed, both-correct, both-wrong versus fixed distinct baseline",
+    "reporting": "pooled OOF metrics, per-scenario metrics, class support, missing-input fallback counts, all failures and fit/runtime/memory budgets"
+  },
+  "authorization": {"probe_fitting": true,"raw_image_extraction": false,"feature_extraction": false,"backbone_fitting": false,"protected_data_access": false},
+  "execution_sources": {
+    "protocol": "experiments/okutama_video_p1_protocol.json",
+    "locker": "tools/lock_okutama_video_p1.py",
+    "p0_protocol": "experiments/okutama_video_protocol.json",
+    "p0_locker": "tools/lock_okutama_video_protocol.py",
+    "lock_helpers": "tools/lock_hac_continuation_protocols.py",
+    "retained_lock": "src/hac/retained_lock.py",
+    "runner": "experiments/run_okutama_video_probe.py",
+    "probe_module": "src/hac/video_probe.py",
+    "factorized_module": "src/hac/vcoco_v3_neural.py",
+    "temporal_module": "src/hac/vcoco_v3_temporal.py",
+    "temporal_training_module": "src/hac/vcoco_v3_temporal_training.py",
+    "native_video_module": "src/hac/okutama_native_video.py",
+    "manifest_builder": "experiments/build_okutama_native_clip_manifest.py",
+    "video_encoder_module": "src/hac/video_encoders.py",
+    "image_encoder_module": "src/hac/image_encoders.py",
+    "video_cache": "experiments/cache_okutama_video_features.py",
+    "dino_cache": "experiments/cache_okutama_dinov2_features.py",
+    "requirements": "requirements-video-lock.txt",
+    "base_requirements": "requirements-v3-lock.txt"
+  }
+}
