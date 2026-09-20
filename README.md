@@ -1,147 +1,110 @@
-# Human Activity Classification Under Domain and Temporal Shift
+# ARFTR
+
+**Anchor-Restored Factorized Temporal Residual for human activity classification**
 
 [![Quality gates](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/workflows/ci.yml?query=branch%3Amain)
 [![Python](https://img.shields.io/badge/Python-3.11%E2%80%933.12-3776AB.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/Code-MIT-0F766E.svg)](LICENSE)
 
-A research and engineering portfolio investigating what improves human activity
-classification—and when extra visual or temporal evidence makes it worse. The work
-spans source-overlap auditing, person-centric representations, factorized classifiers,
-temporal inference, actor memory and bounded residual correction across POLAR,
-V-COCO and Okutama-Action.
+ARFTR is a research architecture for classifying a tracked person as **sitting**,
+**standing**, or **walking/running**. It combines image/video evidence and actor
+memory through separate posture and locomotion decisions, followed by a constrained
+same-track temporal update.
 
-**Latest development result:** Anchor-Restored Factorized Temporal Residual (ARFTR)
-retains
-**85.383648% macro-F1, 85.895118% accuracy and 702 errors on 4,977 examples**.
-This is adaptively reused internal development, not untouched confirmation. The
-search cycle is closed; the final optional motion-null experiment did not improve it.
+The design centers on **anchor-based factor correction**: start with a strong
+probability estimate, restore complementary posture and motion evidence, and restrict
+the additional template expert's residual to locomotion.
 
-## Explore the project
+| Retained macro-F1 | Accuracy | Evaluation |
+| ---: | ---: | --- |
+| **85.383648%** | **85.895118%** | 4,977 Okutama centers · 11 scenarios · 5 outer folds |
 
-- [Research overview](docs/RESEARCH_OVERVIEW.md): findings, negative results and claim boundaries.
-- [Architecture and knowledge map](docs/ARCHITECTURE.md): components and experimental relationships.
-- [Model card](docs/MODEL_CARD.md): intended use, evaluation and limitations.
-- [Reproduce and verify](docs/REPRODUCIBILITY.md): public checks versus full local replay.
-- [Documentation index](docs/README.md): current guides and historical reports.
+These are adaptive internal-development results, not an untouched confirmation test.
 
-## Results and their evaluation boundaries
+[Architecture](docs/ARCHITECTURE.md) · [Results and evidence](results/arftr_development/README.md) ·
+[Model card](docs/MODEL_CARD.md) · [Reproduce](docs/REPRODUCIBILITY.md)
 
-| Study | Macro-F1 | Population and interpretation |
-| --- | ---: | --- |
-| [POLAR v1](docs/POLAR_PUBLIC_REPORT.md) | 94.0% | Four-class held-out source test; 3,329 images |
-| [V-COCO v2](docs/VCOCO_V2_EXTERNAL_TRANSFER.md) | 86.63% | Person-level official test; 6,077 people |
-| [Temporal v3](docs/VCOCO_V3_MOTION_IDENTIFIABILITY.md) | 78.54% | Separate Okutama confirmation; 1,771 examples |
-| [ARFTR development](results/arftr_development/README.md) | **85.383648%** | Five-fold adaptive development; 4,977 centers / 11 scenarios |
+## How ARFTR works
 
-These are separate studies, not a single leaderboard. Different populations, label
-spaces, modalities and selection histories make direct score comparisons invalid.
+The fusion layer operates on upstream probabilities from frozen-encoder-based models.
+It separates **sitting versus upright posture** from **standing versus locomotion**,
+so each evidence source has an explicit role in the correction.
 
-![Earlier sealed Okutama confirmation: target static 74.58%, temporal 78.54%, and 50% clip routing 78.17% macro-F1.](assets/vcoco_v3_confirmation_comparison.png)
+```mermaid
+flowchart LR
+    M["M4<br/>Actor-memory anchor"] --> F["ARFTR factor residual<br/>Posture + locomotion"]
+    P["P6<br/>Image/video consensus"] -->|restore both factors| F
+    A["A3<br/>Unrestricted-template expert"] -->|motion residual only| F
+    F --> T["One same-track<br/>temporal update"]
+    N["Exact -1 / +1 second<br/>neighbor evidence"] --> T
+    T --> O["Sitting<br/>Standing<br/>Walking / running"]
+    classDef core fill:#e4f3ef,stroke:#00796b,color:#134e4a
+    class F,T core
+```
 
-In the earlier locked temporal study, clips improved over the matched static model
-by **3.96 percentage points** (95% scenario-cluster interval: +2.02 to +5.68 pp).
-A fixed 50% clip policy retained 90.7% of that gain. This is evidence for temporal
-inference in that study, **not external validation of ARFTR**.
-[Report and uncertainty](docs/VCOCO_V3_MOTION_IDENTIFIABILITY.md).
+Four coefficients are selected using inner out-of-fold predictions **inside each
+outer training fold**. Temporal links stay within the same track, recording,
+scenario and fold. An all-zero correction preserves the original M4 probabilities
+exactly. The fusion layer adds no new neural fits; upstream models supply three-seed
+predictions. It uses supplied track metadata and can use future frames, so this is
+an offline/look-ahead setup.
 
-Within the ARFTR development line, saved predictions show a historical improvement
-from **71.923768% to 85.383648%** (+13.459880 percentage points). This combines
-several changes; it is not the causal gain of one isolated component.
+[Implementation](src/hac/arftr.py) · [Locked protocol](experiments/okutama_arftr_protocol.json) ·
+[Equations and component definitions](docs/ARCHITECTURE.md)
 
-## The final experiment—and why it was rejected
+## Results and component evidence
 
-A matched ten-fit study tested a shared motion-null residual trained from
-initialization, holding data, priors, folds, seed, minibatches and optimization fixed.
+The original ARFTR study tested the anchor, individual correction components, their
+combination, and a shuffled-neighbor control on the same evaluation population.
 
-| System | Macro-F1 | Errors | Rescues / harms versus ARFTR |
-| --- | ---: | ---: | ---: |
-| Retained ARFTR | 85.383648% | 702 | — |
-| Matched plain control | 85.467181% | 698 | 40 / 36 |
-| Shared motion-null residual | 85.311396% | 707 | 40 / 45 |
+![Original ARFTR component study: M4 anchor 84.81%, P6 restoration 85.04%, A3 template-motion residual 84.86%, temporal update 84.99%, factor residuals without temporal 85.10%, full ARFTR 85.38%, and shuffled-neighbor control 80.92% macro-F1.](assets/arftr_architecture_results.png)
 
-The new mechanism passed exact checkpoint replay and its architectural null
-invariant, but failed the fixed performance gates. Neither correction justified
-replacing ARFTR. The [portable evidence](results/arftr_development/README.md) retains
-the gate decision, fold results, uncertainty and approved numerical exceptions.
+| Comparison | Observed change | Interpretation |
+| --- | --- | --- |
+| Matched M4 anchor → ARFTR | **84.811129% → 85.383648%**; 33 fewer errors | Original architecture comparison; NLL and Brier also improve |
+| Early T2 system → retained ARFTR | **71.923768% → 85.383648%**; 710 fewer errors | Historical development gain of **+13.46 pp**, combining representation, source, memory and fusion changes |
 
-![ARFTR's historical gain from 71.92% to 85.38% macro-F1, followed by inconsistent fold corrections: plain control +7, +2, -2, +4, -7; paired-null +1, +1, -1, -2, -4.](assets/arftr_development_summary.png)
+The component ablations reuse the full model's selected coefficients. The incremental
+gain over M4 is uncertain: its 95% scenario-bootstrap interval is **−0.12 to +1.35 pp**.
+The larger T2-to-ARFTR gain is not the isolated effect of this fusion layer.
+[Complete component results and statistical controls](docs/ARCHITECTURE.md#original-component-study).
 
-Both final corrections harm more predictions than they rescue in at least two
-outer folds. A higher aggregate point estimate alone is not enough to replace the
-retained model. [Figure sources and regeneration](assets/README.md).
+Per-class scores and the confusion matrix are in the [model card](docs/MODEL_CARD.md).
+ARFTR remains the retained system; subsequent extensions and their outcomes are
+documented in the [research history](docs/RESEARCH_OVERVIEW.md).
 
-## Engineering work demonstrated
+## Inspect and reproduce
 
-- **Data integrity:** source-overlap audits, grouped splits, label-access controls,
-  ancestry-safe cross-fitting and hash-bound execution records.
-- **Modeling:** frozen visual encoders, person-centric multiview features,
-  factorized posture/locomotion targets, temporal readers and actor memory.
-- **Evaluation:** paired grouped uncertainty, calibration, rescue-versus-harm analysis,
-  exact-retain controls and explicit rejection of fragile improvements.
-- **Reproducibility:** synthetic tests, aggregate evidence, checkpoint replay,
-  original experiment recipes and a machine-readable result map.
-
-Oracle bounds and annotation-derived diagnostics are not deployable results.
-No state-of-the-art claim or production-readiness claim is made.
-
-## Reports and walkthrough
-
-| Read or run | Scope |
-| --- | --- |
-| [Executed notebook](human_activity_classification.ipynb) | Historical POLAR, V-COCO and temporal studies; reads tracked evidence, no training |
-| [Temporal study PDF](output/pdf/vcoco_v3_motion_identifiability_v3.0.0.pdf) | Locked confirmation, distillation and budgeted inference |
-| [V-COCO study PDF](output/pdf/vcoco_v2_external_transfer_v2.0.0.pdf) | Person-centric transfer and controlled representation comparisons |
-| [POLAR study PDF](output/pdf/polar_public_report_v1.0.0.pdf) | Source-audited benchmark, calibration and attribution |
-| [ARFTR overview and map](docs/RESEARCH_OVERVIEW.md) | Latest development outcome, failed corrections and links to code/evidence |
-
-The notebook and versioned PDFs predate the September ARFTR continuation; they
-remain unchanged historical artifacts. [All reports, including CPTR](output/pdf/README.md).
-
-## Quick verification
-
-No data download, GPU, model weights or third-party Python packages are needed:
+Verify the public result arithmetic, evidence hashes, figures and documentation
+without a dataset, GPU or third-party Python packages:
 
 ```bash
 python tools/check_project.py
 ```
 
-For code-level tests, use Python 3.11 or 3.12 in a virtual environment:
+For installation, synthetic tests and full-replay requirements, use the
+[reproduction guide](docs/REPRODUCIBILITY.md). Model weights, source media and private
+feature caches are not distributed; aggregate validation is not checkpoint replay.
 
-```bash
-python -m pip install -e ".[dev,notebook,report,research]"
-python -m pytest
-python tools/check_style.py
-```
+| Resource | Contents |
+| --- | --- |
+| [Architecture guide](docs/ARCHITECTURE.md) | Design, equations, original ablations and source map |
+| [Public evidence](results/arftr_development/README.md) | Component study, retained metrics, experiment ledger and knowledge graph |
+| [Model card](docs/MODEL_CARD.md) | Inputs, per-class behavior, intended use and limitations |
+| [Validation record](docs/VALIDATION.md) | Checkout checks, CI, preservation and reproducibility scope |
 
-The [reproduction guide](docs/REPRODUCIBILITY.md) explains installation, legacy
-style diagnostics and assets needed for historical replay. Aggregate metric checks
-are not a substitute for replaying checkpoints or retraining models.
+## Research background
 
-## Repository structure
+ARFTR grew out of earlier work on person-centric representations, image/video fusion,
+and actor memory. The [development lineage](docs/HAC_EXPERIMENT_REVIEW_20260912.md)
+traces those contributions. Earlier POLAR, V-COCO and temporal-confirmation studies,
+their PDFs, and the historical notebook are available in the
+[research archive](docs/README.md#historical-studies); they evaluate different systems
+and populations.
 
-```text
-src/hac/       Reusable components and research implementations
-experiments/   Versioned protocols, historical runners and audits
-tests/         Unit, synthetic-data and evidence-contract tests
-tools/         Data utilities, exporters and current checkout checks
-results/       Compact public evidence; no model weights or dataset media
-docs/          Current guides, dated research records and release history
-assets/        Research figures
-.runs/         Local-only evidence and caches (not distributed)
-```
+## Project information
 
-Historical reports and locked research source remain in place to preserve their
-references. Dated plans are archival, not instructions to launch more training.
-
-## Citation, license and maintenance
-
-Author: **Abdulla Huseyinli**. See [CITATION.cff](CITATION.cff).
-Working version **3.1.0.dev0** is unreleased; no new DOI or publication is claimed.
-Earlier reports remain available through the documentation index.
-
-Original code and documentation use the [MIT License](LICENSE). Dataset media and
-pretrained checkpoints are not redistributed and retain their upstream terms;
-see [third-party notices](THIRD_PARTY_NOTICES.md).
-
-[Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md) ·
-[Repository and release policy](docs/REPOSITORY_MAINTENANCE.md)
+Author: **Abdulla Huseyinli**. Working version **3.1.0.dev0** is unreleased.
+[Citation](CITATION.cff) · [MIT License](LICENSE) ·
+[Third-party data/model terms](THIRD_PARTY_NOTICES.md) · [Contributing](CONTRIBUTING.md) ·
+[Changelog](CHANGELOG.md) · [Documentation index](docs/README.md)

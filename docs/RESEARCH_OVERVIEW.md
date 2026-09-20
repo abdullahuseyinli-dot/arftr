@@ -1,4 +1,10 @@
-# Research overview
+# Research history and follow-up experiments
+
+This is the supporting research archive. For the retained architecture's mechanism,
+original component study and results, start with the
+[ARFTR architecture guide](ARCHITECTURE.md) and [project overview](../README.md).
+The earlier studies and later corrections below provide context; they are not
+additional parts of the retained ARFTR architecture.
 
 Status: development search closed; retained result unchanged. Package version
 `3.1.0.dev0` is an unreleased working revision, not a published release or DOI.

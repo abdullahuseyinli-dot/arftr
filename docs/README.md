@@ -1,16 +1,20 @@
-# Documentation guide
+# ARFTR documentation and research archive
 
-## Start here
+## ARFTR: start here
+
+The current project centerpiece is **Anchor-Restored Factorized Temporal Residual**.
+Begin with its design and original component study; earlier studies and later
+follow-up experiments are supporting research records.
 
 | Document | What it answers |
 | --- | --- |
-| [Research overview](RESEARCH_OVERVIEW.md) | What was learned, which results are comparable, and why the search closed |
-| [Architecture and knowledge map](ARCHITECTURE.md) | What the retained system does and where later mechanisms failed |
+| [ARFTR architecture and component evidence](ARCHITECTURE.md) | The mechanism, equations, original controls and result interpretation |
+| [Portable ARFTR evidence](../results/arftr_development/README.md) | Original component study, retained metrics and machine-readable evidence |
 | [Model card](MODEL_CARD.md) | Intended use, evaluation, inputs, limits, and misuse risks |
 | [Reproducibility](REPRODUCIBILITY.md) | What a public checkout can verify and what requires local research assets |
 | [Repository maintenance](REPOSITORY_MAINTENANCE.md) | Public/local separation, evidence preservation, and release preparation |
 | [Validation record](VALIDATION.md) | Exact checks performed, skip reasons, environment and remaining limits |
-| [Portable development evidence](../results/arftr_development/README.md) | Numbers, hashes, and a machine-readable result graph |
+| [Research history and follow-up experiments](RESEARCH_OVERVIEW.md) | Broader lineage, subsequent corrections and their outcomes |
 
 ## Historical studies
 

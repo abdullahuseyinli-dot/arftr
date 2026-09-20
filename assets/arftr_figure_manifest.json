@@ -9,8 +9,11 @@
     "results/arftr_development/experiment_ledger.csv": {
       "sha256": "c52f49974d70f7a778d7e22a00d32a6ccd9da72ade2541b3b7a81c6f85db25c5"
     },
+    "results/arftr_development/architecture_study.json": {
+      "sha256": "1f530e1314f74625b57d32e783cad288902b2ec9769a13fc7823178bed1ad060"
+    },
     "tools/render_arftr_figures.py": {
-      "sha256": "9d5739ea8c0155a5ae49ea3cc472a05cce1c82371bb4aaac6d91303c2f75e936"
+      "sha256": "6dfd2dbdf0f6d1acd685bea8137f76846bbc2db1a5897a3bc11de9c961468e75"
     }
   },
   "matplotlib_version": "3.11.2",
@@ -26,6 +29,12 @@
     },
     "arftr_confusion_matrix.svg": {
       "sha256": "9e0de4fb89baee565a2a39f4d2f4548f2f3d61f23405ef0c3aac9a1dd970f28a"
+    },
+    "arftr_architecture_results.png": {
+      "sha256": "6fc5968196923df86bf11728ba8aeacd5e95c1c861e48b2d2f987aa6f4ae0f45"
+    },
+    "arftr_architecture_results.svg": {
+      "sha256": "c5e6f51bbd4c8bd2cfb28920563f663e88d014f27a724194c1fe06ec84d21849"
     }
   }
 }

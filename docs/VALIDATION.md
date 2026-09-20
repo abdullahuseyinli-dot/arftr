@@ -97,5 +97,34 @@ This validation record and whitespace-only normalization of generated SVG paths
 were completed after the full test run; the final navigation, evidence-preservation,
 style and focused tests were rerun before committing.
 
+## ARFTR-centered landing-page revision
+
+Following the presentation review, the landing page was reorganized around ARFTR's
+design, retained result and original component study. Earlier studies and detailed
+follow-up corrections remain in linked supporting documentation. No scientific
+result, historical report or original evidence export was removed or rewritten.
+
+The new architecture supplement exports the seven original ARFTR arms from their
+preserved September 12 summary, with a source hash and protocol binding. Its primary
+confusion matrix, macro-F1, accuracy, NLL and Brier agree with retained ARFTR. The
+original uncertain interval and unsuccessful strict significance screen remain
+explicit; this export is not a new experiment or a stronger performance claim.
+
+Validation used a new 1,002-file public-only copy in the existing Windows CPU
+environment: **1,528 tests passed, 13 skipped, zero failures**, in 84.21 seconds.
+The skips remain seven private-artifact and six CUDA-dependent tests. Checks also
+passed for seven component confusion matrices, 142 current local links, six figure
+files, metadata, style and compilation. The 220 historical public artifacts and
+all previously protected local research files/dependencies remained intact.
+
+The new component figure was inspected visually. Its values and interval are read
+from the aggregate export. Local export provenance, public-copy inventory and test
+results are under `.runs/research_20260920/arftr_landing_page_v1/`. This validation
+record and the final display labels were refined after the full run. Source review
+corrected the earlier A3 description: A3 is the unrestricted-template expert; M4 is
+the actor-memory anchor. Numerical data did not change. Navigation, preservation,
+style and focused checks were rerun before committing. The live main-branch CI badge identifies the
+remote check for the published revision.
+
 See [reproduction instructions](REPRODUCIBILITY.md) and
 [release-readiness boundaries](REPOSITORY_MAINTENANCE.md).

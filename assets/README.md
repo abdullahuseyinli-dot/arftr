@@ -4,6 +4,7 @@
 
 | Figure | What it shows | Public input |
 | --- | --- | --- |
+| [ARFTR component study](arftr_architecture_results.png) ([SVG](arftr_architecture_results.svg)) | The retained architecture, its original component ablations and shuffled-neighbor control | [Original component export](../results/arftr_development/architecture_study.json) |
 | [Historical gain and fold stability](arftr_development_summary.png) ([SVG](arftr_development_summary.svg)) | T2 to ARFTR, then the inconsistent final matched corrections | [Ledger](../results/arftr_development/experiment_ledger.csv) and [fold results](../results/arftr_development/metrics.json) |
 | [Retained confusion matrix](arftr_confusion_matrix.png) ([SVG](arftr_confusion_matrix.svg)) | Counts and true-class-normalized error concentration | [Aggregate confusion matrix](../results/arftr_development/metrics.json) |
 

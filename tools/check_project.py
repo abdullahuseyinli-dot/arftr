@@ -252,18 +252,63 @@ def historical_evidence(root: Path) -> int:
     return checked
 
 
+def architecture_evidence(root: Path) -> int:
+    """Check the original ARFTR component export without opening private artifacts."""
+    folder = root / "results/arftr_development"
+    manifest = read_json(folder / "architecture_manifest.json")
+    for name, item in manifest["artifacts"].items():
+        if sha256(within(folder, name), normalized=True) != item["sha256"]:
+            raise ValueError(f"Architecture evidence hash changed: {name}")
+    recipe = manifest["protocol"]
+    protocol_path = within(root, recipe["path"])
+    if sha256(protocol_path, normalized=True) != recipe["sha256"]:
+        raise ValueError("Architecture protocol changed")
+    protocol = read_json(protocol_path)
+    study = read_json(folder / "architecture_study.json")
+    if (
+        set(study["scores"]) != set(protocol["arms"])
+        or study["classes"] != protocol["population"]["classes"]
+        or study["rows"] != protocol["population"]["rows"]
+        or study["prediction_seeds"] != protocol["population"]["prediction_seeds"]
+        or study["ablation_contract"] != protocol["control_contract"]
+    ):
+        raise ValueError("Architecture comparison contract differs")
+    for score in study["scores"].values():
+        check_scores(score, study["rows"])
+    primary = study["scores"][study["primary_arm"]]
+    retained = read_json(folder / "metrics.json")["scores"]["ARFTR"]
+    for key in ("macro_f1", "accuracy", "errors", "confusion", "nll", "brier_sum"):
+        if primary[key] != retained[key]:
+            raise ValueError(f"Architecture primary differs from retained ARFTR: {key}")
+    anchor = study["scores"]["r0_exact_m4"]
+    transitions = study["transitions_vs_exact_m4"]
+    if (
+        transitions["rescues"] - transitions["harms"] != transitions["net_corrections"]
+        or anchor["errors"] - primary["errors"] != transitions["net_corrections"]
+        or not math.isclose(
+            100 * (primary["macro_f1"] - anchor["macro_f1"]),
+            study["effects"]["macro_f1_gain_points"],
+            abs_tol=1e-12,
+            rel_tol=0,
+        )
+    ):
+        raise ValueError("Architecture transition/effect arithmetic differs")
+    return len(study["scores"])
+
+
 def figures(root: Path) -> int:
     """Bind the current development figures to their public sources and renderer."""
     folder = root / "assets"
     manifest = read_json(folder / "arftr_figure_manifest.json")
     expected = {
         f"arftr_{name}.{suffix}"
-        for name in ("development_summary", "confusion_matrix")
+        for name in ("development_summary", "confusion_matrix", "architecture_results")
         for suffix in ("png", "svg")
     }
     if set(manifest["artifacts"]) != expected or set(manifest["sources"]) != {
         "results/arftr_development/metrics.json",
         "results/arftr_development/experiment_ledger.csv",
+        "results/arftr_development/architecture_study.json",
         "tools/render_arftr_figures.py",
     }:
         raise ValueError("Current figure inventory differs")
@@ -287,6 +332,7 @@ def main() -> None:
         "version": metadata(root),
         "current_links_checked": navigation(root),
         "evidence": evidence(root),
+        "architecture_arms_recomputed": architecture_evidence(root),
         "historical_evidence_files": historical_evidence(root),
         "current_figure_files": figures(root),
         "scope": "portable aggregate validation; not model execution",

@@ -5,6 +5,10 @@ version in `pyproject.toml`.
 
 ## Unreleased — 3.1.0.dev0
 
+- Centered the landing page on ARFTR's design, retained results and original component
+  study; moved older studies and detailed follow-up outcomes to supporting guides.
+- Added the original seven-arm ARFTR aggregate export and component-comparison
+  figure, preserving its uncertainty and original significance-screen outcome.
 - Added the September ARFTR development closeout: 85.383648% macro-F1 on
   4,977 adaptively reused development examples, separate from earlier test results.
 - Preserved the failed matched motion-null experiment, its numerical exceptions,

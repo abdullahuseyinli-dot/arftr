@@ -1,0 +1,335 @@
+{
+  "schema_version": 1,
+  "study_id": "okutama_arftr_adaptive_cached_v1",
+  "evaluation_scope": "adaptive_internal_development_not_independent_confirmation",
+  "classes": [
+    "sitting",
+    "standing",
+    "walking_running"
+  ],
+  "rows": 4977,
+  "scenarios": 11,
+  "outer_folds": 5,
+  "prediction_seeds": [
+    42,
+    43,
+    44
+  ],
+  "new_neural_fits": 0,
+  "primary_arm": "r5_arftr_full",
+  "ablation_contract": {
+    "zero_residual": "r0 must preserve exact cached M4 bytes for every seed",
+    "component_ablations": "r1-r4 reuse the primary fold coefficients with omitted components set exactly to zero",
+    "shuffle_seed": 20260912,
+    "shuffled_neighbor": "preserve each row's exact-neighbor count, sample pseudo-neighbours within scenario only, and exclude self and true neighbours",
+    "seed_aggregation": "apply each arm independently to aligned M4/A3 seed probabilities, then arithmetic-mean probabilities",
+    "fallback": "a row with no valid exact neighbour receives no temporal update"
+  },
+  "scores": {
+    "r0_exact_m4": {
+      "rows": 4977,
+      "macro_f1": 0.8481112896223015,
+      "accuracy": 0.8523206751054853,
+      "nll": 0.3900418488395964,
+      "per_class_f1": [
+        0.8327825512227363,
+        0.8323836657169991,
+        0.8791676519271695
+      ],
+      "confusion": [
+        [
+          630,
+          97,
+          7
+        ],
+        [
+          127,
+          1753,
+          238
+        ],
+        [
+          22,
+          244,
+          1859
+        ]
+      ],
+      "brier_sum": 0.22072990163477407,
+      "support": [
+        734,
+        2118,
+        2125
+      ],
+      "errors": 735
+    },
+    "r1_p6_restoration_only": {
+      "rows": 4977,
+      "macro_f1": 0.850356925242317,
+      "accuracy": 0.8545308418726141,
+      "nll": 0.3808527378999943,
+      "per_class_f1": [
+        0.8350033400133601,
+        0.8350247816851546,
+        0.8810426540284361
+      ],
+      "confusion": [
+        [
+          625,
+          105,
+          4
+        ],
+        [
+          117,
+          1769,
+          232
+        ],
+        [
+          21,
+          245,
+          1859
+        ]
+      ],
+      "brier_sum": 0.21564305180683485,
+      "support": [
+        734,
+        2118,
+        2125
+      ],
+      "errors": 724
+    },
+    "r2_a3_motion_only": {
+      "rows": 4977,
+      "macro_f1": 0.8485649242903923,
+      "accuracy": 0.8535262206148282,
+      "nll": 0.3867578254410986,
+      "per_class_f1": [
+        0.8306878306878307,
+        0.8336110449892883,
+        0.881395897194058
+      ],
+      "confusion": [
+        [
+          628,
+          99,
+          7
+        ],
+        [
+          127,
+          1751,
+          240
+        ],
+        [
+          23,
+          233,
+          1869
+        ]
+      ],
+      "brier_sum": 0.21902843705850425,
+      "support": [
+        734,
+        2118,
+        2125
+      ],
+      "errors": 729
+    },
+    "r3_temporal_only": {
+      "rows": 4977,
+      "macro_f1": 0.8499454277359382,
+      "accuracy": 0.8539280691179425,
+      "nll": 0.386981693785607,
+      "per_class_f1": [
+        0.8354430379746836,
+        0.8338068181818182,
+        0.8805864270513124
+      ],
+      "confusion": [
+        [
+          627,
+          101,
+          6
+        ],
+        [
+          121,
+          1761,
+          236
+        ],
+        [
+          19,
+          244,
+          1862
+        ]
+      ],
+      "brier_sum": 0.21896249272499269,
+      "support": [
+        734,
+        2118,
+        2125
+      ],
+      "errors": 727
+    },
+    "r4_residual_no_temporal": {
+      "rows": 4977,
+      "macro_f1": 0.8510243238224918,
+      "accuracy": 0.8559373116335142,
+      "nll": 0.3796055060169015,
+      "per_class_f1": [
+        0.8331108144192256,
+        0.836329233680227,
+        0.8836329233680227
+      ],
+      "confusion": [
+        [
+          624,
+          107,
+          3
+        ],
+        [
+          118,
+          1768,
+          232
+        ],
+        [
+          22,
+          235,
+          1868
+        ]
+      ],
+      "brier_sum": 0.21504389696559606,
+      "support": [
+        734,
+        2118,
+        2125
+      ],
+      "errors": 717
+    },
+    "r5_arftr_full": {
+      "rows": 4977,
+      "macro_f1": 0.8538364807373623,
+      "accuracy": 0.8589511754068716,
+      "nll": 0.37734901395307213,
+      "per_class_f1": [
+        0.8352387357094821,
+        0.8392730705687986,
+        0.8869976359338061
+      ],
+      "confusion": [
+        [
+          621,
+          109,
+          4
+        ],
+        [
+          115,
+          1778,
+          225
+        ],
+        [
+          17,
+          232,
+          1876
+        ]
+      ],
+      "brier_sum": 0.21350492452064215,
+      "support": [
+        734,
+        2118,
+        2125
+      ],
+      "errors": 702
+    },
+    "r6_shuffled_neighbor_control": {
+      "rows": 4977,
+      "macro_f1": 0.8092123401694052,
+      "accuracy": 0.818766325095439,
+      "nll": 0.4494367958280793,
+      "per_class_f1": [
+        0.7776096822995462,
+        0.7982354306942188,
+        0.8517919075144509
+      ],
+      "confusion": [
+        [
+          514,
+          199,
+          21
+        ],
+        [
+          62,
+          1719,
+          337
+        ],
+        [
+          12,
+          271,
+          1842
+        ]
+      ],
+      "brier_sum": 0.2604059597228399,
+      "support": [
+        734,
+        2118,
+        2125
+      ],
+      "errors": 902
+    }
+  },
+  "transitions_vs_exact_m4": {
+    "rescues": 98,
+    "harms": 65,
+    "net_corrections": 33,
+    "prediction_changes": 174
+  },
+  "effects": {
+    "macro_f1_gain_points": 0.5725191115060757,
+    "accuracy_gain_points": 0.6630500301386344,
+    "nll_delta": -0.012692834886524285,
+    "brier_delta": -0.00722497711413192,
+    "outer_fold_wins": 4
+  },
+  "paired_scenario_bootstrap": {
+    "unit": "scenario",
+    "scenario_groups": 11,
+    "resamples": 10000,
+    "seed": 20260912,
+    "delta_quantiles_2_5_50_97_5": [
+      -0.001229859844424727,
+      0.005856792929491761,
+      0.013495697242538957
+    ],
+    "probability_delta_not_positive": 0.0497
+  },
+  "exact_scenario_swap": {
+    "scenario_groups": 11,
+    "assignments": 2048,
+    "enumeration_complete": true,
+    "alternative": "ARFTR macro-F1 exceeds exact M4",
+    "observed_macro_f1_delta": 0.005725191115060757,
+    "one_sided_p_value": 0.06494140625,
+    "null_minimum": -0.010185569539439165,
+    "null_maximum": 0.010185569539439165,
+    "random_sampling": false
+  },
+  "adaptive_screen": {
+    "checks": {
+      "primary_macro_f1_minimum": true,
+      "primary_minus_exact_m4_macro_f1_minimum": true,
+      "net_corrected_decisions_minimum": true,
+      "outer_fold_wins_minimum": true,
+      "nll_must_not_exceed_anchor": true,
+      "brier_must_not_exceed_anchor": true,
+      "per_class_f1_loss_cap": true,
+      "shuffled_control_must_not_exceed_primary": true,
+      "exact_scenario_swap_one_sided_p_maximum": false,
+      "official_m4_replay_required": true,
+      "official_p6_replay_required": true,
+      "official_a3_replay_required": true
+    },
+    "passed": false,
+    "interpretation": "Exploratory/adaptive screen only; independent confirmation remains required."
+  },
+  "limitations": [
+    "Component ablations reuse the full arm's selected coefficients, not separate tuning",
+    "Point estimates do not establish statistically significant superiority",
+    "Confidence intervals and proper scores are exported, not recomputed from aggregates",
+    "The T2-to-ARFTR historical gain is not the isolated gain of this layer"
+  ]
+}

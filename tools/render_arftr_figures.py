@@ -12,9 +12,10 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCES = (
     "results/arftr_development/metrics.json",
     "results/arftr_development/experiment_ledger.csv",
+    "results/arftr_development/architecture_study.json",
 )
 GENERATOR = "tools/render_arftr_figures.py"
-FIGURES = ("arftr_development_summary", "arftr_confusion_matrix")
+FIGURES = ("arftr_development_summary", "arftr_confusion_matrix", "arftr_architecture_results")
 
 
 def digest(path: Path) -> str:
@@ -28,9 +29,11 @@ def load_data(root: Path) -> dict:
     """Read hash-verified, aggregate-only evidence used by both plots."""
     folder = root / "results/arftr_development"
     manifest = json.loads((folder / "evidence_manifest.json").read_text(encoding="utf-8"))
+    supplement = json.loads((folder / "architecture_manifest.json").read_text(encoding="utf-8"))
     for relative in SOURCES:
         path = root / relative
-        if digest(path) != manifest["artifacts"][path.name]["sha256"]:
+        source_manifest = supplement if path.name == "architecture_study.json" else manifest
+        if digest(path) != source_manifest["artifacts"][path.name]["sha256"]:
             raise ValueError(f"Figure source differs from the evidence manifest: {relative}")
     metrics = json.loads((folder / "metrics.json").read_text(encoding="utf-8"))
     with (folder / "experiment_ledger.csv").open(encoding="utf-8", newline="") as stream:
@@ -53,6 +56,9 @@ def load_data(root: Path) -> dict:
         "confusion": confusion,
         "errors": metrics["scores"]["ARFTR"]["errors"],
         "upright_confusions": confusion[1][2] + confusion[2][1],
+        "architecture": json.loads(
+            (folder / "architecture_study.json").read_text(encoding="utf-8")
+        ),
     }
 
 
@@ -196,6 +202,80 @@ def confusion_figure(data: dict):
     return fig
 
 
+def architecture_figure(data: dict):
+    import matplotlib.pyplot as plt
+
+    study = data["architecture"]
+    arms = (
+        ("r0_exact_m4", "M4 anchor"),
+        ("r1_p6_restoration_only", "+ P6 restoration only"),
+        ("r2_a3_motion_only", "+ A3 template motion only"),
+        ("r3_temporal_only", "+ Temporal update only"),
+        ("r4_residual_no_temporal", "+ Factor residuals, no temporal update"),
+        ("r5_arftr_full", "ARFTR: full architecture"),
+        ("r6_shuffled_neighbor_control", "Shuffled-neighbor control"),
+    )
+    fig, axis = plt.subplots(figsize=(11.2, 5.5))
+    fig.subplots_adjust(left=0.34, right=0.96, top=0.78, bottom=0.21)
+    fig.suptitle("ARFTR: original component study", y=0.97, weight="bold", fontsize=17)
+    fig.text(
+        0.5,
+        0.88,
+        f"{study['rows']:,} centers / {study['outer_folds']} scenario-grouped folds / "
+        f"{len(study['prediction_seeds'])}-seed predictions",
+        ha="center",
+        color="#475569",
+    )
+    anchor = 100 * study["scores"]["r0_exact_m4"]["macro_f1"]
+    axis.axvline(anchor, linestyle="--", linewidth=1, color="#94a3b8", zorder=1)
+    axis.axhspan(4.55, 5.45, color="#e4f3ef", zorder=0)
+    for row, (arm, _) in enumerate(arms):
+        score = 100 * study["scores"][arm]["macro_f1"]
+        full = arm == "r5_arftr_full"
+        control = arm == "r6_shuffled_neighbor_control"
+        color = "#00796b" if full else "#9b5900" if control else "#0072b2"
+        axis.scatter(
+            score, row, color=color, s=95 if full else 60, marker="D" if full else "o", zorder=3
+        )
+        axis.annotate(
+            f"{score:.2f}%",
+            (score, row),
+            xytext=(9, 0),
+            textcoords="offset points",
+            va="center",
+            color=color,
+            weight="bold" if full else "normal",
+        )
+    axis.set_yticks(range(len(arms)), [label for _, label in arms])
+    axis.invert_yaxis()
+    axis.set_xlim(80, 86.35)
+    axis.set_xticks(range(80, 87))
+    axis.set_xlabel("Macro-F1 (%) — point estimates; zoomed scale", labelpad=10)
+    axis.grid(axis="x", alpha=0.18)
+    axis.tick_params(length=0, pad=10)
+    axis.spines[["top", "right", "left"]].set_visible(False)
+    fig.text(
+        0.5,
+        0.07,
+        "Dashed line: M4 anchor. Component ablations reuse the full model's selected coefficients.",
+        ha="center",
+        fontsize=10,
+        color="#475569",
+    )
+    quantiles = study["paired_scenario_bootstrap"]["delta_quantiles_2_5_50_97_5"]
+    gain = study["effects"]["macro_f1_gain_points"]
+    fig.text(
+        0.5,
+        0.025,
+        f"Adaptive development; full vs anchor: {gain:+.2f} pp "
+        f"(95% interval [{100 * quantiles[0]:+.2f}, {100 * quantiles[2]:+.2f}] pp).",
+        ha="center",
+        fontsize=10,
+        color="#475569",
+    )
+    return fig
+
+
 def render(root: Path, output: Path) -> dict:
     import matplotlib
 
@@ -217,7 +297,9 @@ def render(root: Path, output: Path) -> dict:
             "savefig.dpi": 180,
         }
     ):
-        for name, builder in zip(FIGURES, (development_figure, confusion_figure), strict=True):
+        for name, builder in zip(
+            FIGURES, (development_figure, confusion_figure, architecture_figure), strict=True
+        ):
             figure = builder(data)
             try:
                 for suffix in ("png", "svg"):

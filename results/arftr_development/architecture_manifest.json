@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "scope": "Supplement to the original public export; historical exports unchanged",
+  "hash_convention": "SHA-256; normalized source/artifact hashes convert CRLF to LF",
+  "source": {
+    "local_artifact": ".runs/research_20260912/arftr_v1/results/v0001/summary.json",
+    "sha256": "26b709791c46838671738729b81bfaf782c24e26e798c63fb477ba5a347d26ae"
+  },
+  "protocol": {
+    "path": "experiments/okutama_arftr_protocol.json",
+    "sha256": "365c6edbfdcd5c78ad4d2783bf59f3841a6386d2c123eef4e1a29ec8c11eceaa"
+  },
+  "artifacts": {
+    "architecture_study.json": {
+      "sha256": "1f530e1314f74625b57d32e783cad288902b2ec9769a13fc7823178bed1ad060"
+    }
+  }
+}
