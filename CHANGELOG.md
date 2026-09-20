@@ -15,7 +15,13 @@ version in `pyproject.toml`.
   historical reports and release records without rewriting their scientific claims.
 - Excluded named local environments and added portable checkout/evidence validation.
 - Made the source/posture queue test independent of local training progress.
-- No new training, model promotion, dataset deletion, remote push, or publication.
+- Merged the research continuation into `main`; its Linux quality-gates run passed.
+- Restored direct notebook/PDF navigation and selected historical visuals; added
+  evidence-backed ARFTR fold-stability and confusion figures with integrity checks.
+- Added the actual factor-residual computation diagram and explicit look-ahead
+  limitation; historical figures, reports, results and model code remain unchanged.
+- No new training, model promotion, dataset deletion, or publication in the cleanup
+  or presentation review.
 
 ## Study 3.0.0 release candidate - 2026-08-24
 

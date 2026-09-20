@@ -17,6 +17,27 @@ selection histories differ. The [documentation index](README.md) links the origi
 reports for the first three tracks. The final track is backed by the
 [portable metric export](../results/arftr_development/metrics.json).
 
+## Where useful gains came from
+
+The older studies provide controlled evidence worth preserving alongside the
+continuation's negative results. Effects below are macro-F1 **percentage points**;
+they concern different comparisons and must not be added together.
+
+| Comparison | Change (95% paired interval) | What the evidence supports |
+| --- | ---: | --- |
+| V-COCO selected multiview stack versus best single-view DINO | +1.18 [+0.37, +2.01] | The combined system helped on development; not a view-only ablation |
+| V-COCO factorized versus flat head, same features | +1.11 [+0.56, +1.66] | Separating posture and locomotion helped in the matched development comparison |
+| Okutama temporal teacher versus matched static | +3.96 [+2.02, +5.68] | Temporal evidence improved the earlier sealed confirmation result |
+| T2 to retained ARFTR | +13.46 historical change | Many interventions across adaptive development; no single-component attribution |
+
+Sources: [V-COCO comparison lock](../results/vcoco_v2/final_selection_lock.json),
+[temporal confirmation report](VCOCO_V3_MOTION_IDENTIFIABILITY.md), and
+[ARFTR ledger](../results/arftr_development/experiment_ledger.csv).
+The first two intervals resample source-image groups; the temporal interval resamples
+scenarios. These controls support narrower claims than a raw score increase alone.
+
+![Earlier sealed Okutama comparison: temporal clips and fixed-budget routing improve over the matched static system; static distillation is neutral.](../assets/vcoco_v3_confirmation_comparison.png)
+
 ## What the continuation established
 
 The saved earliest T2 result was 71.923768% macro-F1; retained ARFTR reached
@@ -58,6 +79,12 @@ The new arm lost 0.072252 pp versus ARFTR; its 95% scenario-bootstrap interval w
 [-0.279515, +0.148178] pp. Fold nets were +1, +1, -1, -2, -4. NLL and Brier worsened.
 It failed the fixed continuation gates. This is a negative result for the tested
 recipe, not proof that all future motion models are unhelpful.
+
+![Historical T2 to ARFTR gain and final matched corrections by outer fold; both correction arms have negative folds.](../assets/arftr_development_summary.png)
+
+The fold plot exposes the instability hidden by the plain control's slightly better
+aggregate score. It shows counts, not fold macro-F1 or uncertainty estimates.
+The [model card](MODEL_CARD.md) visualizes the retained system's residual errors.
 
 Numerical-only control exceptions were approved before opening new outcome scores;
 class predictions, inputs and provenance still had to match. All ten saved

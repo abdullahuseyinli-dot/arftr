@@ -1,6 +1,6 @@
 # Human Activity Classification Under Domain and Temporal Shift
 
-[![Quality gates](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/workflows/ci.yml/badge.svg)](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/workflows/ci.yml)
+[![Quality gates](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/workflows/ci.yml?query=branch%3Amain)
 [![Python](https://img.shields.io/badge/Python-3.11%E2%80%933.12-3776AB.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/Code-MIT-0F766E.svg)](LICENSE)
 
@@ -10,11 +10,11 @@ spans source-overlap auditing, person-centric representations, factorized classi
 temporal inference, actor memory and bounded residual correction across POLAR,
 V-COCO and Okutama-Action.
 
-**Current status:** the Anchor-Restored Factorized Temporal Residual (ARFTR)
-development search is closed. Its retained result is
+**Latest development result:** Anchor-Restored Factorized Temporal Residual (ARFTR)
+retains
 **85.383648% macro-F1, 85.895118% accuracy and 702 errors on 4,977 examples**.
-This is adaptively reused internal development, not untouched confirmation. The final
-optional motion-null experiment did not improve it.
+This is adaptively reused internal development, not untouched confirmation. The
+search cycle is closed; the final optional motion-null experiment did not improve it.
 
 ## Explore the project
 
@@ -36,6 +36,14 @@ optional motion-null experiment did not improve it.
 These are separate studies, not a single leaderboard. Different populations, label
 spaces, modalities and selection histories make direct score comparisons invalid.
 
+![Earlier sealed Okutama confirmation: target static 74.58%, temporal 78.54%, and 50% clip routing 78.17% macro-F1.](assets/vcoco_v3_confirmation_comparison.png)
+
+In the earlier locked temporal study, clips improved over the matched static model
+by **3.96 percentage points** (95% scenario-cluster interval: +2.02 to +5.68 pp).
+A fixed 50% clip policy retained 90.7% of that gain. This is evidence for temporal
+inference in that study, **not external validation of ARFTR**.
+[Report and uncertainty](docs/VCOCO_V3_MOTION_IDENTIFIABILITY.md).
+
 Within the ARFTR development line, saved predictions show a historical improvement
 from **71.923768% to 85.383648%** (+13.459880 percentage points). This combines
 several changes; it is not the causal gain of one isolated component.
@@ -56,6 +64,12 @@ invariant, but failed the fixed performance gates. Neither correction justified
 replacing ARFTR. The [portable evidence](results/arftr_development/README.md) retains
 the gate decision, fold results, uncertainty and approved numerical exceptions.
 
+![ARFTR's historical gain from 71.92% to 85.38% macro-F1, followed by inconsistent fold corrections: plain control +7, +2, -2, +4, -7; paired-null +1, +1, -1, -2, -4.](assets/arftr_development_summary.png)
+
+Both final corrections harm more predictions than they rescue in at least two
+outer folds. A higher aggregate point estimate alone is not enough to replace the
+retained model. [Figure sources and regeneration](assets/README.md).
+
 ## Engineering work demonstrated
 
 - **Data integrity:** source-overlap audits, grouped splits, label-access controls,
@@ -69,6 +83,19 @@ the gate decision, fold results, uncertainty and approved numerical exceptions.
 
 Oracle bounds and annotation-derived diagnostics are not deployable results.
 No state-of-the-art claim or production-readiness claim is made.
+
+## Reports and walkthrough
+
+| Read or run | Scope |
+| --- | --- |
+| [Executed notebook](human_activity_classification.ipynb) | Historical POLAR, V-COCO and temporal studies; reads tracked evidence, no training |
+| [Temporal study PDF](output/pdf/vcoco_v3_motion_identifiability_v3.0.0.pdf) | Locked confirmation, distillation and budgeted inference |
+| [V-COCO study PDF](output/pdf/vcoco_v2_external_transfer_v2.0.0.pdf) | Person-centric transfer and controlled representation comparisons |
+| [POLAR study PDF](output/pdf/polar_public_report_v1.0.0.pdf) | Source-audited benchmark, calibration and attribution |
+| [ARFTR overview and map](docs/RESEARCH_OVERVIEW.md) | Latest development outcome, failed corrections and links to code/evidence |
+
+The notebook and versioned PDFs predate the September ARFTR continuation; they
+remain unchanged historical artifacts. [All reports, including CPTR](output/pdf/README.md).
 
 ## Quick verification
 

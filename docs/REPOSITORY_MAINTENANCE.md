@@ -14,8 +14,9 @@
 
 No dataset, checkpoint, cache or historical result was deleted or moved by this
 cleanup. Named virtual environments are excluded from Git but still present locally.
-Previously untracked research source files remain in the working tree; a release
-must include the intended source files, not just the current committed HEAD.
+The research continuation was committed and fast-forwarded to `main` at `a10075e`.
+Before a future release, still inspect untracked files so intended source is not
+silently omitted and local research data is not accidentally included.
 The existing local `uv.lock` is not a validated project lock and is excluded; the
 documented dependency declarations and historical environment snapshots remain
 the explicit installation records. Do not infer a fully pinned environment from them.

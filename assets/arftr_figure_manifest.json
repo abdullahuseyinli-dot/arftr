@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "scope": "Figures of existing aggregate development evidence; no new model evaluation",
+  "hash_convention": "SHA-256; CRLF normalized to LF except for PNG bytes",
+  "sources": {
+    "results/arftr_development/metrics.json": {
+      "sha256": "cdcb90b391e49530e13bc9d75f204b769e5e10639dca160803eb33168813f5e5"
+    },
+    "results/arftr_development/experiment_ledger.csv": {
+      "sha256": "c52f49974d70f7a778d7e22a00d32a6ccd9da72ade2541b3b7a81c6f85db25c5"
+    },
+    "tools/render_arftr_figures.py": {
+      "sha256": "9d5739ea8c0155a5ae49ea3cc472a05cce1c82371bb4aaac6d91303c2f75e936"
+    }
+  },
+  "matplotlib_version": "3.11.2",
+  "artifacts": {
+    "arftr_development_summary.png": {
+      "sha256": "9a3c2b5975ac86117cf1acb3aebeb59096f74bed78e4b84838172756e496c6b4"
+    },
+    "arftr_development_summary.svg": {
+      "sha256": "22061f2423a9ffd27b86760b05759527759418e04b5571328caa0e4a9e0248ce"
+    },
+    "arftr_confusion_matrix.png": {
+      "sha256": "03355997ea3d554917493a6dc3bb297e85ff000bc4b44b6a0401143d9c3bbfd6"
+    },
+    "arftr_confusion_matrix.svg": {
+      "sha256": "9e0de4fb89baee565a2a39f4d2f4548f2f3d61f23405ef0c3aac9a1dd970f28a"
+    }
+  }
+}

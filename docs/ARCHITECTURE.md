@@ -23,6 +23,39 @@ three-seed refits. These details follow the
 [retained protocol](../experiments/okutama_arftr_protocol.json) and
 [implementation](../src/hac/arftr.py).
 
+```mermaid
+flowchart TD
+    M["M4 probabilities: anchor"] --> F["Convert to posture and motion log-odds"]
+    P["P6 probabilities: restoration"] --> F
+    A["A3 probabilities: actor memory"] --> F
+    F --> R["Restore P6 factors; add A3 motion residual"]
+    S["Four coefficients selected from inner OOF predictions<br/>Outer-training data only"] -.-> R
+    S -.-> T
+    R --> T["One temporal averaging pass in factor space"]
+    N["Exact -1 / +1 second neighbors<br/>Same scenario, fold, recording and track"] --> T
+    T --> D["Decode sitting / standing / walking-running probabilities"]
+```
+
+For posture log-odds `s` and conditional-motion log-odds `m`, the residual step is:
+
+```text
+s = s_M4 + a * (s_P6 - s_M4)
+m = m_M4 + b * (m_P6 - m_M4) + c * (m_A3 - m_M4)
+```
+
+For each factor `z`, the temporal pass uses
+`z_final = z + beta * (mean(valid_neighbor_z) - z)`; a row without a valid neighbor
+is unchanged by that pass. Decode `p_sitting = sigmoid(s_final)`, then split the
+remaining upright probability with `sigmoid(m_final)` into walking/running and
+standing. All-zero coefficients return the original M4 probabilities byte-for-byte.
+The protocol applies each arm per aligned upstream seed, then averages probabilities.
+
+No class labels enter these inference functions. The recorded setup **does require
+person/track metadata and may use future (+1 second) evidence**; it is not a tested
+causal, zero-latency raw-video classifier. See the [model card](MODEL_CARD.md).
+
+## Experimental knowledge map
+
 The retained point estimate should not be overstated: the original architecture
 review reports that ARFTR's last incremental gain did not pass its strict
 scenario-significance screen. The full historical gain is a different comparison.

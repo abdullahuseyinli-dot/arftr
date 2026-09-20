@@ -22,6 +22,11 @@ CURRENT_DOCS = (
     "docs/REPRODUCIBILITY.md",
     "docs/REPOSITORY_MAINTENANCE.md",
     "docs/VALIDATION.md",
+    "assets/README.md",
+    "data/README.md",
+    "experiments/README.md",
+    "output/pdf/README.md",
+    "results/README.md",
     "results/arftr_development/README.md",
 )
 
@@ -247,6 +252,30 @@ def historical_evidence(root: Path) -> int:
     return checked
 
 
+def figures(root: Path) -> int:
+    """Bind the current development figures to their public sources and renderer."""
+    folder = root / "assets"
+    manifest = read_json(folder / "arftr_figure_manifest.json")
+    expected = {
+        f"arftr_{name}.{suffix}"
+        for name in ("development_summary", "confusion_matrix")
+        for suffix in ("png", "svg")
+    }
+    if set(manifest["artifacts"]) != expected or set(manifest["sources"]) != {
+        "results/arftr_development/metrics.json",
+        "results/arftr_development/experiment_ledger.csv",
+        "tools/render_arftr_figures.py",
+    }:
+        raise ValueError("Current figure inventory differs")
+    for name, item in manifest["sources"].items():
+        if sha256(within(root, name), normalized=True) != item["sha256"]:
+            raise ValueError(f"Figure source changed; regenerate current figures: {name}")
+    for name, item in manifest["artifacts"].items():
+        if sha256(within(folder, name), normalized=Path(name).suffix == ".svg") != item["sha256"]:
+            raise ValueError(f"Figure artifact changed: {name}")
+    return len(expected)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repository", type=Path, default=ROOT)
@@ -259,6 +288,7 @@ def main() -> None:
         "current_links_checked": navigation(root),
         "evidence": evidence(root),
         "historical_evidence_files": historical_evidence(root),
+        "current_figure_files": figures(root),
         "scope": "portable aggregate validation; not model execution",
     }
     if args.local_preservation:

@@ -1,6 +1,18 @@
 # Versioned technical reports
 
-`vcoco_v3_motion_identifiability_v3.0.0.pdf` is the current versioned report. It presents
+These are unchanged **historical v1/v2/v3 reports**, not PDFs of the September
+ARFTR continuation. The latest outcome is in the
+[current research overview](../../docs/RESEARCH_OVERVIEW.md) and
+[ARFTR evidence package](../../results/arftr_development/README.md).
+
+| Report | Scope |
+| --- | --- |
+| [POLAR v1](polar_public_report_v1.0.0.pdf) | Source-audited image benchmark |
+| [V-COCO v2](vcoco_v2_external_transfer_v2.0.0.pdf) | Person-level transfer and representation comparisons |
+| [Temporal v3](vcoco_v3_motion_identifiability_v3.0.0.pdf) | Sealed Okutama confirmation and budgeted routing |
+| [CPTR development](okutama_cptr_development_v3.0.0.pdf) | Architecture extension and negative grouped-OOF result |
+
+`vcoco_v3_motion_identifiability_v3.0.0.pdf` presents
 the V-COCO mechanism study and the locked Okutama-Action static, temporal,
 distillation, and fixed-budget routing experiments.
 
@@ -8,7 +20,9 @@ distillation, and fixed-budget routing experiments.
 report. It records the component sequence, five-seed validation result,
 recording-grouped cross-fit, faithfulness interventions, and retained failure modes.
 
-Both PDFs are rendered directly from their Markdown sources:
+Both PDFs were rendered directly from their Markdown sources. The commands below
+document historical builds: use a separate checkout for each tagged version, not
+the active research worktree, and do not overwrite archived PDFs while exploring:
 
 ```bash
 python tools/build_study_papers.py docs/VCOCO_V3_MOTION_IDENTIFIABILITY.md \

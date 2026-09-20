@@ -1,5 +1,35 @@
 # Figures
 
+## Current ARFTR development figures
+
+| Figure | What it shows | Public input |
+| --- | --- | --- |
+| [Historical gain and fold stability](arftr_development_summary.png) ([SVG](arftr_development_summary.svg)) | T2 to ARFTR, then the inconsistent final matched corrections | [Ledger](../results/arftr_development/experiment_ledger.csv) and [fold results](../results/arftr_development/metrics.json) |
+| [Retained confusion matrix](arftr_confusion_matrix.png) ([SVG](arftr_confusion_matrix.svg)) | Counts and true-class-normalized error concentration | [Aggregate confusion matrix](../results/arftr_development/metrics.json) |
+
+Regenerate only these new figures with:
+
+```bash
+python tools/render_arftr_figures.py
+python tools/check_project.py
+```
+
+The renderer needs Matplotlib and NumPy, but no GPU, dataset, checkpoint or local run
+directory. It reads hash-verified public evidence, does not run a model, and does not
+change historical figures. The [figure manifest](arftr_figure_manifest.json) binds
+inputs, renderer, output hashes and Matplotlib version. Rendering bytes can differ
+across library versions; the statistical content is taken directly from the inputs.
+
+These are adaptively reused **development** results, not confirmation. The historical
+gain combines multiple changes. Fold nets are counts, not macro-F1 differences or
+confidence intervals. The confusion heatmap normalizes by true class (rows).
+
+## Historical study figures
+
+Existing v1/v2/v3 figures remain unchanged and are bound by historical manifests.
+The commands below document their original builders; render to a separate directory
+when exploring a rebuild rather than replacing the archived assets.
+
 POLAR charts are generated from tracked, locked evidence with:
 
 ```bash

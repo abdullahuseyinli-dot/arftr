@@ -10,8 +10,8 @@ python tools/check_project.py
 
 This standard-library check verifies current navigation, metadata consistency,
 public evidence hashes, confusion-matrix macro-F1/accuracy/error counts, rescue/harm
-arithmetic and the fixed final-study decision. It does not install anything or
-download data. It cannot recompute NLL/Brier or scenario-bootstrap intervals without
+arithmetic, current figure/source hashes and the fixed final-study decision. It does
+not install anything or download data. It cannot recompute NLL/Brier or scenario-bootstrap intervals without
 the original per-example probabilities; those are explicitly exported quantities.
 
 ## Tier 2 — install and run code-level tests
@@ -42,6 +42,16 @@ python -m pytest -m local_artifacts --require-local-artifacts
 
 The optional `research` extra supplies graph tooling; notebook and PDF dependencies
 are only required for their corresponding historical tooling.
+
+To regenerate the new aggregate-only ARFTR figures (no model execution):
+
+```bash
+python tools/render_arftr_figures.py
+python tools/check_project.py
+```
+
+This updates only the named ARFTR figures and their manifest. The original study
+figures, notebook and PDFs remain untouched; see the [figure guide](../assets/README.md).
 
 `check_style.py` compares Ruff diagnostics with an explicit legacy baseline. New
 issues fail; an improvement is allowed. The baseline is not a claim that all

@@ -1,7 +1,10 @@
 # Validation record — 20 September 2026
 
-This records local validation of the portfolio cleanup, not a new scientific
-evaluation or a remote CI run.
+This records the original portfolio cleanup and its subsequent presentation review.
+Neither is a new scientific evaluation. Local checks and remote CI are distinguished
+below.
+
+## Original cleanup validation
 
 | Check | Outcome |
 | --- | --- |
@@ -29,12 +32,70 @@ historical environment; no training environment was modified.
 After the public-only full test run, architecture/validation documentation and the
 navigation check's document list were updated. Evidence, style, navigation and the
 nine focused project/queue tests were rerun successfully; no model code changed.
-No publication, DOI, new training, promotion, commit or remote push was performed.
+No publication, DOI, new training or promotion was performed during cleanup.
+The subsequent authorized commit and main-branch push are recorded below.
 
 Detailed inventories, JUnit records, original-document snapshots and the build
 artifact are stored locally under
 `.runs/research_20260920/repo_polish_20260920_v1/`. These are local recovery/validation
 copies, not an independently backed-up research archive.
+
+## Main-branch integration
+
+The research continuation and cleanup were fast-forwarded into `main` at
+`a10075ee03f5459930a6ee9a92fff7b4850251cb`. The
+[Linux quality-gates run](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/runs/35525764564)
+passed installation, style regression, compilation, tests and public evidence checks.
+GitHub's default branch was verified as `main`. This CI result applies to that exact
+commit; it does not validate revisions made after it. The README's main-specific
+CI badge links to the current remote status.
+
+## Comparison with the earlier main
+
+The review compared previous `main` (`2697126`) with the integrated revision
+(`a10075e`) and checked the landing page, documentation entry points, reports,
+notebook, figures, public evidence, metadata, installation commands and CI.
+It was not a new line-by-line audit of every historical training implementation.
+
+| Area | Comparison finding | Follow-up |
+| --- | --- | --- |
+| Landing page | Newer scope and claim boundaries were clearer, but useful visuals had disappeared | Restored a selected confirmation figure; added development gain and fold-stability plots |
+| Reports and notebook | Original artifacts were preserved, but harder to discover | Direct README/index links and explicit historical scope |
+| Architecture | Newer research map lacked the actual computation | Factor-residual diagram, equations and look-ahead/metadata limitations |
+| Latest results | Portable evidence existed but residual errors were not visualized | Row-normalized confusion matrix, counts and per-class metrics |
+| Status | Cleanup-only statements predated the subsequent merge and remote CI | Separate dated validation stages and commit-specific CI evidence |
+| Evidence integrity | Earlier numerical exports, figures and PDFs were unchanged | Retained hashes and added checks binding new figures to public inputs and renderer |
+
+No model architecture, training recipe, checkpoint, raw data or scientific result
+was changed by this review. A better repository presentation is not a claim of a
+new model-performance gain.
+
+## Presentation-review validation
+
+| Check | Outcome |
+| --- | --- |
+| Public-only copy: 998 source/evidence files, no private runs or datasets | 1,527 passed, 13 skipped, zero failures; 81.77 seconds |
+| Skip breakdown | Seven private-artifact integration tests; six CUDA-dependent tests |
+| Required private integration checks on the research workstation | Six passed; 1,534 deselected |
+| Expanded current documentation navigation | 132 local links checked |
+| New figure tests | Input integrity, plotted values, confusion orientation, rendering and output tampering checked |
+| Figure output integrity | Four PNG/SVG files bound to public inputs and renderer |
+| Historical and local preservation | 220 public artifacts, 218 protected records, 59 final-study files and 907 locked dependencies verified |
+| Style and compilation | No new Ruff findings; compilation passed; 533 legacy findings remain disclosed |
+| Public-only package build | `human_activity_classification-3.1.0.dev0-py3-none-any.whl`, 402,879 bytes |
+
+The public copy used the same existing Windows CPU environment described above,
+not a fresh dependency installation. Both new figures were inspected visually.
+The full suite included all four new figure tests; the six private integration checks
+ran separately with `--require-local-artifacts`. No GPU training or model evaluation
+was launched. The notebook and all historical figures/PDFs remain byte-preserved.
+
+Local inventories, the public copy, JUnit results and wheel are under
+`.runs/research_20260920/presentation_review_v1/`. The wheel's SHA-256 is
+`2b479e1e6f486b344b47be3503edaae4cf964377cc3835816d294bf158bc36a5`.
+This validation record and whitespace-only normalization of generated SVG paths
+were completed after the full test run; the final navigation, evidence-preservation,
+style and focused tests were rerun before committing.
 
 See [reproduction instructions](REPRODUCIBILITY.md) and
 [release-readiness boundaries](REPOSITORY_MAINTENANCE.md).
