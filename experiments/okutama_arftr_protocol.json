@@ -1,0 +1,84 @@
+{
+  "study_id": "okutama_arftr_adaptive_cached_v1",
+  "title": "Anchor-Restored Factorized Temporal Residual",
+  "status": "adaptive_internal_development_not_independent_confirmation",
+  "population": {
+    "rows": 4977,
+    "classes": ["sitting", "standing", "walking_running"],
+    "outer_folds": [0, 1, 2, 3, 4],
+    "outer_group": "scenario",
+    "prediction_seeds": [42, 43, 44]
+  },
+  "inputs": {
+    "anchor": "selected new-source M4 inner OOF and three-seed outer refits",
+    "restoration": "strictly nested new-source P6 probabilities",
+    "motion_residual": "selected A3 unrestricted-template inner OOF and three-seed outer refits",
+    "temporal_metadata": "canonical source-swap memory_data exact +/-1 second same-track edges",
+    "new_neural_fits": 0
+  },
+  "factorization": {
+    "posture_score": "log(p_sitting/(p_standing+p_walking))",
+    "motion_score": "log(p_walking/p_standing)",
+    "epsilon": 1e-9,
+    "temporal_passes": 1,
+    "neighbor_slots": [-1, 1],
+    "exact_frame_displacement": 30,
+    "require_same": ["scenario", "outer_fold", "recording", "track"]
+  },
+  "selection": {
+    "posture_restoration": [0.0, 0.1, 0.2, 0.3, 0.4],
+    "motion_restoration": [0.1, 0.2, 0.3, 0.4, 0.5],
+    "a3_motion_residual": [0.0, 0.1, 0.2, 0.3],
+    "temporal_strength": [0.1, 0.2, 0.3],
+    "candidates_per_outer_fold": 300,
+    "fit_source": "selected scenario-held inner OOF predictions inside outer training only",
+    "ordering": [
+      "descending_macro_f1",
+      "ascending_nll",
+      "ascending_coefficient_sum",
+      "ascending_lexicographic_coefficients"
+    ],
+    "outer_metric_embargo": "No outer-held label may be indexed until all five fold receipts and prediction artifacts are complete and independently replayed."
+  },
+  "arms": [
+    "r0_exact_m4",
+    "r1_p6_restoration_only",
+    "r2_a3_motion_only",
+    "r3_temporal_only",
+    "r4_residual_no_temporal",
+    "r5_arftr_full",
+    "r6_shuffled_neighbor_control"
+  ],
+  "primary_arm": "r5_arftr_full",
+  "statistics": {
+    "paired_scenario_bootstrap_resamples": 10000,
+    "paired_scenario_bootstrap_seed": 20260912,
+    "exact_scenario_swap_assignments": 2048,
+    "exact_scenario_swap_alternative": "ARFTR macro-F1 exceeds exact M4",
+    "one_sided_significance_alpha": 0.05
+  },
+  "control_contract": {
+    "zero_residual": "r0 must preserve exact cached M4 bytes for every seed",
+    "component_ablations": "r1-r4 reuse the primary fold coefficients with omitted components set exactly to zero",
+    "shuffle_seed": 20260912,
+    "shuffled_neighbor": "preserve each row's exact-neighbor count, sample pseudo-neighbours within scenario only, and exclude self and true neighbours",
+    "seed_aggregation": "apply each arm independently to aligned M4/A3 seed probabilities, then arithmetic-mean probabilities",
+    "fallback": "a row with no valid exact neighbour receives no temporal update"
+  },
+  "adaptive_success_criteria": {
+    "primary_macro_f1_minimum": 0.8531,
+    "primary_minus_exact_m4_macro_f1_minimum": 0.005,
+    "net_corrected_decisions_minimum": 25,
+    "outer_fold_wins_minimum": 4,
+    "nll_must_not_exceed_anchor": true,
+    "brier_must_not_exceed_anchor": true,
+    "per_class_f1_loss_cap": 0.005,
+    "shuffled_control_must_not_exceed_primary": true,
+    "exact_scenario_swap_one_sided_p_maximum": 0.05
+  },
+  "interpretation": {
+    "claim_scope": "adaptive internal evidence on repeatedly used Okutama scenarios",
+    "confirmation_required": "Freeze code, coefficients/selection and endpoints before testing untouched scenarios or an external dataset.",
+    "forbidden_claim": "This cached study alone is not independent confirmation or publication-grade generalization evidence."
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "study_id": "okutama_cached_frame_supervised_anchor_residual_v2",
+  "declared_on": "2026-09-12",
+  "scope": "Adaptive repeated development on the same 4977 Okutama centers; an external scenario set is required for confirmation",
+  "research_question": "Does supervision at the already cached physical actor frames teach a local evidence residual that improves the M4/A3 anchor across unseen scenarios?",
+  "primary_rows": 4977,
+  "class_order": ["sitting", "standing", "walking_running"],
+  "primary_arm": "f3_all_cached_frame_supervision",
+  "arms": {
+    "f0_exact_m4": "bit-exact new-source M4 anchor",
+    "f1_fixed_geometric_m4_a3": "fixed 0.10 per-seed log-space A3 residual; adaptive screen sentinel",
+    "f2_center_only_supervision": "anchored residual with auxiliary supervision only at the immutable center frame",
+    "f3_all_cached_frame_supervision": "same anchored residual with auxiliary supervision at all valid known cached frames",
+    "f4_center_only_standalone": "standalone local probabilities from the f2 checkpoint",
+    "f5_all_cached_frame_standalone": "standalone local probabilities from the f3 checkpoint"
+  },
+  "inputs": {
+    "short_dino": "4977 x 16 x 768 frozen DINOv2-base frame CLS cache",
+    "long_dino": "4977 x 16 x 768 frozen DINOv2-base long-window frame CLS cache",
+    "anchor": "selected inner OOF and three outer-refit seeds from new-source M4 and A3",
+    "annotation_source": "the same 21 permitted provider-training recordings already used to derive memory supervision",
+    "new_pixels_read": 0,
+    "new_video_frames_decoded": 0,
+    "new_backbone_fits": 0,
+    "new_backbone_forward_passes": 0
+  },
+  "frame_supervision": {
+    "target": "unique mapped base activity at each exact cached provider frame",
+    "unknown_policy": "missing, lost, unsupported or multi-base-action frames are masked",
+    "physical_identity": ["provider_recording_id", "provider_track_id", "source_frame"],
+    "crop_variant_policy": "retain nonidentical cached crop variants but divide their total weight by the physical-frame multiplicity",
+    "per_track_effective_frame_cap": 128,
+    "training_scenario_policy": "all auxiliary observations must belong to a center row in the current outer-training scenarios; physical identities crossing the held scenario are forbidden",
+    "center_index": 8,
+    "candidate_sources": ["short_dino", "long_dino"],
+    "control_source": "short_dino center index only, repeated to match candidate optimizer steps"
+  },
+  "architecture": {
+    "name": "Frame-Supervised Anchored Residual (FSAR)",
+    "input_dim": 768,
+    "width": 128,
+    "classes": 3,
+    "dropout": 0.1,
+    "residual_scale": 0.25,
+    "a3_anchor_weight": 0.10,
+    "encoder": "LayerNorm, Linear, GELU, Dropout",
+    "local_classifier": "zero-initialized Linear(width, 3)",
+    "anchor_equation": "softmax(log(p_fixed_anchor + 1e-12) + 0.25 * local_logits)",
+    "fixed_anchor": "per-seed softmax(log(p_M4) + 0.10 * (log(p_A3) - log(p_M4)))",
+    "exact_fallback": "f0 copies M4; a zero local residual copies f1 byte-for-byte",
+    "parameter_limit": 110000
+  },
+  "training": {
+    "outer_folds": [0, 1, 2, 3, 4],
+    "outer_seeds": [42, 43, 44],
+    "model_fits": 30,
+    "epochs": 8,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "batch_size": 2048,
+    "gradient_clip_norm": 1.0,
+    "center_loss_weight": 1.0,
+    "auxiliary_loss_weight": 0.5,
+    "anchor_kl_weight": 0.1,
+    "class_loss": "class-balanced from the current outer-training population only; center and auxiliary weighted means both divide by the sum of effective selected class weights",
+    "optimizer_step_matching": "both arms take the candidate all-frame number of steps; the center-only auxiliary stream cycles deterministically",
+    "selection": "none; architecture and all optimization values fixed before fitting",
+    "outer_labels_used_for_fitting_or_selection": false,
+    "outer_metric_embargo": "individual fits save probabilities without held labels or metrics; scores release only after the exact30-fit inventory validates",
+    "required_device": "cuda",
+    "deterministic_algorithms": true,
+    "cublas_workspace_config": ":4096:8",
+    "tf32": false
+  },
+  "statistics": {
+    "primary_contrasts": [
+      ["f3_all_cached_frame_supervision", "f0_exact_m4"],
+      ["f3_all_cached_frame_supervision", "f2_center_only_supervision"]
+    ],
+    "scenario_bootstrap_resamples": 10000,
+    "exact_scenario_swaps": 2048,
+    "one_sided_alpha": 0.05,
+    "seed": 20260912,
+    "intersection_union_success": "Both predeclared primary contrasts must pass their exact one-sided scenario-swap alpha gates; no multiplicity adjustment is needed for this conjunction claim",
+    "calibration_safety": "NLL and Brier noninferiority use the one-sided 95% upper scenario-bootstrap delta versus exact M4",
+    "interpretation": "uncertainty remains exploratory under adaptive dataset reuse"
+  },
+  "screen_gates": {
+    "minimum_primary_macro_f1": 0.8531,
+    "minimum_gain_over_m4_points": 0.5,
+    "minimum_gain_over_center_control_points": 0.25,
+    "minimum_net_corrections_over_m4": 25,
+    "scenario_swap_vs_m4_one_sided_p_maximum": 0.05,
+    "scenario_swap_vs_center_control_one_sided_p_maximum": 0.05,
+    "maximum_nll_delta_over_m4_one_sided_upper95": 0.0,
+    "maximum_brier_delta_over_m4_one_sided_upper95": 0.0,
+    "maximum_worst_class_f1_loss_points": 0.5,
+    "minimum_improved_scenarios": 7,
+    "maximum_scenario_accuracy_loss_points": 2.0,
+    "maximum_seed_macro_f1_sd_points": 0.75,
+    "exact_m4_replay": true
+  },
+  "stop_rules": {
+    "candidate_not_better_than_center_control": "additional cached labels, not the architecture, fail this trial",
+    "standalone_heads_weak_and_anchor_unchanged": "do not expand this CLS-only branch to dense per-frame patches",
+    "candidate_improves_anchor_safely": "advance to actor-relative transported dense parts with this supervision shared by all controls",
+    "reporting": "use screen_gate_passed, never promotion_passed; confirmation remains external"
+  }
+}

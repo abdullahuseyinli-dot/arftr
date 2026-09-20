@@ -1,0 +1,71 @@
+{
+  "protocol_name": "okutama_fine_density_counterfactual_residual_gate_v1",
+  "status": "EXECUTED_FAILED_PROMOTION_GATES",
+  "date": "2026-09-17",
+  "name": "Fine-Density Counterfactual Residual Gate (FDCRG)",
+  "rationale": "The genuine fine reader is slightly better than a repeated-coarse control in standalone macro-F1 and materially better in NLL/Brier, yet a fixed blend harms ARFTR. The density contrast is therefore treated as a counterfactual evidence witness, not as a replacement model.",
+  "new_mechanism": "Compute a bounded factor residual from the fine-versus-repeated-coarse logit contrast. Apply it only when ARFTR uncertainty, density-contrast direction, and multi-resolution consistency predict positive utility. Retain ARFTR is an explicit action.",
+  "inference_inputs": [
+    "ARFTR logits/probabilities and margin/entropy",
+    "fine_both and repeated-coarse probabilities",
+    "FineLocalMotion spatial and temporal moments, correspondence entropy, validity and observable crop quality",
+    "no support purity, annotation fields, or held labels"
+  ],
+  "actions": ["retain_ARFTR", "apply_bounded_posture", "apply_bounded_motion", "apply_both"],
+  "residual_parameterization": "anchor_logits + 0.25*tanh(r_posture)*posture_direction + 0.25*tanh(r_motion)*motion_direction",
+  "training_and_leakage": {
+    "outer_folds": 5,
+    "inner_folds": 5,
+    "rule": "fresh five-way inner coefficient/application cross-fitting is mandatory for gate utility targets; ARFTR M4/A3/P6 components must come from the verified nested scenario-held caches, while existing global OOF arrays may be used for descriptive diagnostics only",
+    "arftr_component_ancestry": "verified nested three-way base caches from the retained ARFTR lineage; no new ARFTR neural fit was introduced",
+    "utility": "cross-fitted loss_before - loss_after_action with an explicit zero-action class",
+    "outer_labels_read_during_fit": 0,
+    "human_review_fields_read": 0,
+    "annotation_support_used": false
+  },
+  "decisive_gates": {
+    "inner": "do not launch outer gate fits unless the fixed action family has positive net utility in >=4/5 inner populations and retain action is selected on >=70% of rows",
+    "outer_macro_f1": 0.8588364807373623,
+    "outer_net_corrections": 25,
+    "positive_net_every_fold": true,
+    "paired_scenario_bootstrap_lower_bound": ">0",
+    "class_f1_loss_cap": 0.005,
+    "proper_losses": "NLL and Brier not worse than ARFTR",
+    "intervention_rate": "<=0.15",
+    "audit": "independent exact replay and zero outer-label reads"
+  },
+  "compute": {
+    "preflight": "one outer fold plus one inner split; no labels used for timing",
+    "fit_budget": "at most 50 small reader/gate fits; projected wall time must be <=20 minutes or shard and stop",
+    "data": "existing dense grid12/grid3 caches; no new human review or video extraction"
+  },
+  "stop_condition": "If no positive inner utility, any outer fold has non-positive net, or the lower bootstrap bound crosses zero, close FDCRG and keep ARFTR unchanged.",
+  "primary_risk": "The prior transition-risk router already found rare complementary cases; FDCRG is retained only because its counterfactual density witness is new. A negative result closes broad router variants.",
+  "artifacts": {
+    "fine_probe": ".runs/research_20260917/fine_detail_probe_v2_retry/summary.json",
+    "fine_audit": ".runs/research_20260917/fine_detail_probe_v2_retry/independent_audit.json",
+    "anchor": ".runs/research_20260912/arftr_v1/results/v0001/oof_probabilities.npz",
+    "module_to_add": "src/hac/fine_density_residual_gate.py",
+    "runner_to_add": "experiments/run_okutama_fdcrg.py",
+    "audit_to_add": "experiments/audit_okutama_fdcrg.py"
+  },
+  "result": {
+    "run": ".runs/research_20260917/fdcrg_v1_full",
+    "summary": ".runs/research_20260917/fdcrg_v1_full/summary.json",
+    "audit": ".runs/research_20260917/fdcrg_v1_full/independent_audit.json",
+    "status": "PROMOTION_FAILED",
+    "macro_f1": 0.854276299199945,
+    "accuracy": 0.8593530239099859,
+    "nll": 0.3774763184527237,
+    "brier": 0.07118450612414413,
+    "rescues": 2,
+    "harms": 0,
+    "net_corrections": 2,
+    "interventions": 135,
+    "outer_positive_net_folds": 1,
+    "scenario_bootstrap_lower": 0.0,
+    "independent_replay": "PASS",
+    "retained_arftr_changed": false,
+    "closure": "cached density correction branch closed; do not broaden router family"
+  }
+}

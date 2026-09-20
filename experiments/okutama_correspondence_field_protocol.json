@@ -1,0 +1,101 @@
+{
+  "study_id": "okutama_signed_correspondence_field_v1",
+  "declared_on": "2026-09-12",
+  "status": "PREREGISTERED_STAGE1_INFORMATION_SCREEN",
+  "scope": "Adaptive repeated development on the fixed 4977-center Okutama cohort. Stage 1 tests representation value only; it does not fit an intervention router.",
+  "class_order": ["sitting", "standing", "walking_running"],
+  "arms": ["c0", "c1", "c2"],
+  "arm_descriptions": {
+    "c0": "collapsed P8 control",
+    "c1": "unordered spatial field",
+    "c2": "time-aware signed field"
+  },
+  "primary_arm": "c2",
+  "inputs": {
+    "correspondence_source": ".runs/research_20260907/okutama_ccac_full_v2/results",
+    "field_cache": ".runs/research_20260912/correspondence_field_v1/data/correspondence_field.npz",
+    "field_cache_sha256": "f81c8ca7d1f14a60caaf07f2b6aaa25462558d33b580ece1e17619a453ae639b",
+    "field_receipt": ".runs/research_20260912/correspondence_field_v1/data/receipt.json",
+    "field_receipt_sha256": "3b389c8142a5ecec5d6822680c7082eaf86aa938fa02b647e911f83f4a14c812",
+    "field_audit": ".runs/research_20260912/correspondence_field_v1/data/workload_audit.json",
+    "field_audit_sha256": "63c812df7c848aa3da78969aea94bbea0ce7362dadb503d32f2c0cc4e74c9325",
+    "video_context": ".runs/research_20260908/source_swap_v1/data/memory_data.npz",
+    "video_context_sha256": "0bfadd5f080b162ab4ccfce76affbde4779d9fb61757124029b159adec4079e9",
+    "video_columns": [0, 1536],
+    "center_dino": ".runs/research_20260907/okutama_native_video_p0_r1/dinov2_full/dinov2_native_frames.npy",
+    "center_dino_sha256": "b40cfea1659795bf7554b0e77f7f6d95226c1745038baca884460065546ec2f2",
+    "center_dino_index": [8, 0],
+    "arftr_oof": ".runs/research_20260912/arftr_v1/results/v0001/oof_probabilities.npz",
+    "arftr_oof_sha256": "ec9957a9393e6f1803d274d281549c20290ed59343b308c5be3446be37cec720",
+    "historical_residual_diagnostic": ".runs/research_20260912/invention_audit_20260912_220926/residual_opportunity_map.csv",
+    "historical_residual_diagnostic_sha256": "f874140f288064134f6fa3cd4a333b740ca6d5fbd381bcae0e36ca2709009ff3",
+    "max_points_per_pair": 32,
+    "pairs_per_center": 15,
+    "point_channels": 10,
+    "pair_channels": 5,
+    "collapsed_channels": 31,
+    "new_pixels_read": 0,
+    "new_backbone_fits": 0
+  },
+  "architecture": {
+    "context_dim": 2304,
+    "width": 64,
+    "heads": 4,
+    "attention_blocks": 2,
+    "feedforward_dim": 128,
+    "dropout": 0.1,
+    "parameter_limit": 1000000,
+    "maximum_parameter_difference_fraction": 0.1,
+    "c1_time_inputs": false,
+    "c2_center_attends_all_pairs": true
+  },
+  "training": {
+    "outer_folds": [0, 1, 2, 3, 4],
+    "initial_seed": 42,
+    "confirmation_seeds": [43, 44],
+    "initial_model_fits": 15,
+    "confirmation_model_fits": 30,
+    "optimizer_steps_per_fit": 800,
+    "batch_size": 128,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip_norm": 1.0,
+    "loss": "training-upright weighted binary cross-entropy",
+    "sampler": "uniform within-recording actor, then uniform center within actor",
+    "log_interval_steps": 100,
+    "held_labels_used_by_fit": false,
+    "required_device": "cuda",
+    "deterministic_algorithms": true,
+    "tf32": false
+  },
+  "preflight": {
+    "maximum_optimizer_steps": 100,
+    "steps_per_arm": 10,
+    "uses_synthetic_targets": true,
+    "releases_task_metrics": false,
+    "maximum_peak_allocated_bytes": 4294967296
+  },
+  "stage1_gates": {
+    "c2_minus_c0_upright_balanced_accuracy_points": 1.0,
+    "c2_minus_c0_nonnegative_folds": 4,
+    "c2_minus_c1_upright_balanced_accuracy_points": 0.25,
+    "c2_minus_c1_positive_folds": 3,
+    "minimum_c2_arftr_rescues": 60,
+    "minimum_c2_rescues_per_fold": 5,
+    "minimum_c2_rescues_in_historical_unresolved_304": 20,
+    "all_integrity_checks_required": true
+  },
+  "fixed_diagnostics": {
+    "point_order_permutation": "must be invariant",
+    "spatial_assignment_permutation": "fixed label-blind hac-field-v1-spatial",
+    "pair_timestamp_reassignment": "fixed label-blind hac-field-v1-time",
+    "no_result_dependent_permutation": true
+  },
+  "execution_boundary": {
+    "maximum_unattended_expected_minutes": 20,
+    "fit_metrics_embargoed_until_complete_inventory": true,
+    "stage2_forbidden_before_stage1_pass": true,
+    "historical_artifacts_immutable": true
+  }
+}

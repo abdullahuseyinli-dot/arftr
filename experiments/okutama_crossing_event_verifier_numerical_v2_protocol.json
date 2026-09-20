@@ -1,0 +1,70 @@
+{
+  "name": "okutama_crossing_event_verifier_numerical_v2",
+  "specification": ".runs/research_20260919/post_pdi_aerial_review_v1/NEXT_TRIAL_PROTOCOL.md",
+  "specification_json": ".runs/research_20260919/post_pdi_aerial_review_v1/NEXT_TRIAL_PROTOCOL.json",
+  "primary_reader": "paired_spatial_temporal",
+  "primary_verifier": "V3_crossing_multinomial",
+  "readers": [
+    "coarse_residual",
+    "paired_spatial",
+    "paired_spatial_temporal"
+  ],
+  "new_verifiers": [
+    "V1_all_event_ridge",
+    "V2_crossing_ridge",
+    "V3_crossing_multinomial"
+  ],
+  "outer_folds": 5,
+  "gate_fits": 45,
+  "feature_count": 35,
+  "ridge_alpha_weighted_sum_objective": 10,
+  "multinomial_weight_penalty": 0.025,
+  "multinomial_bias_penalty": 0.00005,
+  "multinomial_optimizer": {
+    "algorithm": "float64_L_BFGS",
+    "initialization": "all_zero",
+    "max_iterations": 1000,
+    "gradient_tolerance": 1e-7
+  },
+  "minimum_training_support": {
+    "crossing_centers": 50,
+    "rescue_centers": 20,
+    "harm_centers": 20,
+    "scenarios": 4
+  },
+  "promotion": {
+    "macro_f1_minimum": 0.8588364807373623,
+    "net_corrections_minimum": 25,
+    "strictly_positive_net_every_outer_fold": true,
+    "minimum_f1_delta_vs_coarse_same_verifier": 0.0025,
+    "scenario_bootstrap_lower_above_zero": true,
+    "bootstrap_draws": 10000,
+    "bootstrap_seed": 20260919,
+    "nll_maximum": 0.3773500139530721,
+    "brier_sum_maximum": 0.21350592452064215,
+    "maximum_class_f1_drop": 0.005,
+    "independent_replay_and_ancestry_required": true
+  },
+  "decision": "crossing AND utility>0 AND frozen_NLL_score>0; highest utility, lowest action on ties; else exact ARFTR",
+  "failure_action": "close_frozen_bank_family_then_corrected_learned_tracking_measurement",
+  "evaluation_status": "adaptive_internal_development_not_untouched_confirmation",
+  "numerical_amendment": {
+    "parent_invalid_run": ".runs/research_20260919/crossing_event_verifier_v1/numerical_abort.json",
+    "curvature_history": 108,
+    "history_rule": "number of free softmax parameters =3*35+3",
+    "previous_history": 10,
+    "unchanged": [
+      "feature_schema",
+      "training_populations",
+      "scaler",
+      "objective",
+      "zero_initialization",
+      "max_iterations1000",
+      "gradient_tolerance1e-7",
+      "thresholds",
+      "promotion_gates"
+    ],
+    "no_outer_outcomes_released_from_parent": true,
+    "no_parameter_grid": true
+  }
+}

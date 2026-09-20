@@ -1,6 +1,6 @@
 {
   "title": "Human Activity Classification Under Domain and Temporal Shift",
-  "description": "Versioned code, technical reports, and portable evidence for linked POLAR, V-COCO, and Okutama-Action studies. This version adds a sealed tracked-video evaluation in which an eight-frame temporal model reaches 0.7854 macro-F1, compared with 0.7458 for the matched static model, together with fixed-budget routing, paired scenario-cluster uncertainty, and a documented execution lineage. It also includes the camera-compensated part-trajectory residual (CPTR) architecture study, whose positive fixed-validation result did not persist under recording-grouped cross-fitting, and retains the earlier source-overlap and person-level transfer releases. Dataset media, pretrained checkpoints, and qualitative source-image composites are not included.",
+  "description": "Unreleased development revision of a research and engineering portfolio spanning POLAR, V-COCO, and Okutama-Action. It preserves the earlier versioned confirmation studies and adds the completed ARFTR development phase: 85.383648% macro-F1 on 4,977 adaptively reused examples, not independent confirmation. The final matched shared motion-null experiment failed its fixed continuation gates and ARFTR remains retained. Includes source code, negative results, model limitations, an aggregate-only evidence package and current reproducibility checks. Dataset media, pretrained checkpoints and qualitative source-image composites are not included. This metadata does not indicate that a new release or deposit has been published.",
   "creators": [
     {
       "name": "Huseyinli, Abdulla"
@@ -9,7 +9,7 @@
   "access_right": "open",
   "license": "mit",
   "upload_type": "software",
-  "version": "3.0.0",
+  "version": "3.1.0.dev0",
   "language": "eng",
   "keywords": [
     "human activity recognition",

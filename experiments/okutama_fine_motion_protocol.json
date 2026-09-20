@@ -1,0 +1,63 @@
+{
+  "study_id": "okutama_fine_detail_density_proposal_v1",
+  "declared_on": "2026-09-08",
+  "current_stage": "CODE_AND_SYNTHETIC_RESOURCE_PILOT_ONLY",
+  "classifier_fits_authorized_in_this_stage": false,
+  "real_data_reads_in_pilot": false,
+  "labels_or_prior_predictions_in_pilot": false,
+  "question": "Can nonlinear detail statistics computed before spatial pooling exploit information absent from the retained3x3 grids?",
+  "paired_resolution_conditions": {
+    "coarse_control": "Repeat each actual retained3x3 cell into a4x4block, giving12x12 without interpolation or new evidence",
+    "fine_candidate": "Genuine retained12x12 tokens from the same frozen V-JEPA pass, source pixels,16frame timestamps, crop recipe and exact short fallback",
+    "first_order_reference": "Supply the identical retained3x3 tensor to bothconditions for the first-order trunk; this also isolates float16 re-averaging differences",
+    "future_normalization": "Estimate per-channel mean/std from retained3x3 trainingtokens and apply the identical transform to fineinputs, repeatedcoarseinputs and sharedcoarsereference; quality scaling also uses trainingrows only",
+    "model_parameters": "Identical architecture and parameter count within each pairedcomparison",
+    "extra_DINO_or_duration": false,
+    "quality": "Same six audited geometry/validity features inbothconditions, when a later classifiertrial is locked"
+  },
+  "operator": {
+    "projection": "Shared linear768-to-rank projection before grouping; no patchwise nonlinear projection can alter matched coarse means",
+    "macroregions": "Fixed3x3 macroregions, eachcontaining16finecells",
+    "spatial_detail": "At the center-containing tubelet, weighted mean squared deviation of finecells from their macroregion mean",
+    "temporal_detail": "For each adjacent tubelet pair, subtract macroregion mean featurechange from eachfinecell change; form squared and lag1/lag2signedproducts before finecell/time averaging",
+    "physical_time": "Positive learned gain uses edge durations and inter-edge lag in seconds; denominator normalizes observation support only",
+    "matching": "Optional five-neighbor softmatching restricted within each4x4macroregion, with unmatched option and static self-match subtraction",
+    "physical_motion_claim": false,
+    "anatomical_track_claim": false,
+    "forecasting_claim": false
+  },
+  "future_ablations_not_a_new_training_matrix": {
+    "primary_detail_mode": "both",
+    "static_detail_control": "spatial_only masks temporal momentblocks, preserving architecture shape",
+    "temporal_detail_control": "motion_only masks spatial momentblock",
+    "interpretation": "Fine resolution may improve sitting/standing posture on static clips; a density gain alone must not be attributed to temporal motion"
+  },
+  "model": {
+    "ranks_for_resource_audit": [32,64],
+    "default_rank": 32,
+    "width": 128,
+    "layers": 2,
+    "heads": 4,
+    "dropout": 0.1,
+    "max_parameters": 1000000
+  },
+  "synthetic_resource_pilot": {
+    "seed": 20260908,
+    "batches": [8,16,32],
+    "matching_modes": ["fixed","local_soft"],
+    "warmup_iterations": 1,
+    "measured_iterations": 2,
+    "maximum_allocated_bytes": 2147483648,
+    "optimizer_steps": 0,
+    "record_parameter_hash_before_after": true,
+    "loss": "Squared synthetic logits solely for a backward resource measurement; no action labels",
+    "training_scores": false
+  },
+  "mathematical_checks": [
+    "For scalar fine changes(+a,-a,0,...), macrochange is0 while mean squared residual is2a^2/16; nonlinear moments therefore do not collapse to coarse means",
+    "Inputs constant within every macroregion equal their repeated coarsecontrol, so all outputs mustmatch in deterministic evaluation",
+    "Static spatial detail can have positive spatialdispersion and zero temporaldispersion",
+    "Identical sharedcoarse first-order features can stillproduce different finaloutputs when fine temporaldispersion differs"
+  ],
+  "future_execution_requirement": "Review resource receipts and initial memory/ordered results before declaring any classifiertrial; keep original scenario folds, training-onlystatistics and exact fallback. Do not silently widen the running3x3 ordered protocol."
+}

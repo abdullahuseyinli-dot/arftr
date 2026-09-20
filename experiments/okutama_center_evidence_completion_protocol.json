@@ -1,0 +1,308 @@
+{
+  "schema_version": 8,
+  "study_id": "okutama_center_evidence_completion_v1",
+  "declared_on": "2026-09-13",
+  "status": "LABEL_BLIND_128_CENTER_EXTRACTION_AUTHORIZED_NO_TASK_FIT",
+  "adaptive_development_disclosure": "The same 11 scenario groups have been inspected repeatedly. This screen is an engineering falsification test, not an untouched-test generalization claim.",
+  "activation_reason": {
+    "decision": "Reviewer A is sufficient to continue the independent non-pose completion branch. Reviewer B is optional corroboration and is not on this branch's critical path; the Body Witness final pose-capability gate remains unclaimed.",
+    "body_witness_facts": {
+      "reviewer_a_anatomical_ceiling": 92,
+      "required_whole_crop_passes": 103,
+      "v5_raw_coordinate_result": "7/128 arithmetic over horizontally compressed reference x coordinates; invalid as a pose-capability conclusion",
+      "css_inverse_diagnostic": "65/128 under an unverified stable-browser-geometry assumption; not a gate result",
+      "target_sensitivity": "365/368 provisional witnesses exceed total-variation threshold",
+      "task_fits_authorized": false
+    },
+    "why_not_another_sequence_head": "Independent all-frame, pooling, timestamp TCN and actor-relative TCN screens remained far below ARFTR; the new mechanism predicts missing center evidence and never averages neighbor action logits.",
+    "why_not_reopen_correspondence_field": "The time-aware signed field regressed 0.542498 points versus its collapsed control and 0.189557 points versus its unordered control; its spatial association perturbation left balanced accuracy unchanged. This protocol uses independently encoded dense patches, center-target exclusion, completion, and a dustbin action."
+  },
+  "pinned_evidence": {
+    "body_protocol_schema5": {
+      "path": "experiments/okutama_body_witness_protocol.json",
+      "sha256": "57be856aaf7f2e4829dba0b88e68d7560829b77a80941315f27eb9bb4fd2b5ea"
+    },
+    "body_pilot_selection": {
+      "path": ".runs/research_20260913/body_witness_pilot_v1/pilot_selection.json",
+      "sha256": "a26c81e19db77bf2775ec6a50b196e7eab374da4c6a86b489cbafde4d580817a"
+    },
+    "body_crop_manifest": {
+      "path": ".runs/research_20260913/body_witness_pilot_v1/crop_manifest.json",
+      "sha256": "cfa13f42254bd79e0fccad67d5eb4bc0db40efcbf34beedefb1736e036033501"
+    },
+    "clip_index": {
+      "path": ".runs/research_20260907/okutama_native_video_p0_r1/manifest/clip_index.csv",
+      "sha256": "e6615554327508fb4100bdb65915cc92ca133ed6584b54649f2fe3442346118b"
+    },
+    "frame_manifest": {
+      "path": ".runs/research_20260907/okutama_native_video_p0_r1/manifest/frame_manifest.csv",
+      "sha256": "b69fe9e00057ff535698afb02cb3e9031ce3f53246c7e7ba64f061d1d557427f"
+    },
+    "image_allowlist": {
+      "path": ".runs/research_20260907/okutama_native_video_p0_r1/manifest/image_allowlist.csv",
+      "sha256": "548e0c999618282d4f4e75a277cf16e5ad37e7e66f9f1c19309e4bc74e6238c4"
+    },
+    "provider_frame_archive": {
+      "path": "C:\\Users\\DELL\\hac_external_data\\OkutamaAction\\TrainSetFrames.zip",
+      "sha256": "c021ce8a12c84e083f359023ffd41c145561aaedb48b118e7c5416d5ddcecb73",
+      "size_bytes": 5770432522,
+      "source_condition": "provider-supplied 1280x720 JPEG frames, not original video decode"
+    },
+    "dino_model_receipt": {
+      "path": ".runs/research_20260907/okutama_native_video_p0_r1/dinov2_full/model_receipt.json",
+      "sha256": "8c3a4e5479bdd82128e0d11b0331b085dca88a960c7f3c6a96844aff16581974",
+      "checkpoint_sha256": "d73036b56966966d07975d696bde331762f37297e2f095de8cea0040c3aa0841",
+      "revision": "f9e44c814b77203eaa57a6bdbbd535f21ede1415"
+    },
+    "correspondence_failure": {
+      "path": ".runs/research_20260912/correspondence_field_stage1_v1/results/v0001/summary.json",
+      "sha256": "ea738630aa014eaa0c0978670ff139d189859c55943f24df5d4a346707d7cead"
+    },
+    "operational_preflight_v1": {
+      "summary_path": ".runs/research_20260913/center_evidence_completion_preflight_v1/summary.json",
+      "summary_sha256": "5278b7ea8bd8da0ac4eb6a27a8e85eff29899d709b6a55a5a9c6e29b976a68d5",
+      "transport_path": ".runs/research_20260913/center_evidence_completion_preflight_v1/transport_smoke.json",
+      "transport_sha256": "a6dba12b90ed4b922c6fc384e6c04f27c25b5414ba5aa1cf57845bfae280faec",
+      "interpretation": "source/mask/DINO passed and 126/128 affine fits were valid, but a hard donor-identity entropy rule selected dustbin for all 32 mask rows; no scientific gate was evaluated",
+      "design_response": "remove donor-identity entropy as a hard rejection because uniform weight over agreeing donors is redundancy, not uncertainty; replace it prospectively with a label-blind learned retain/transport gate driven by donor validity and feature disagreement"
+    },
+    "operational_preflight_v2": {
+      "summary_path": ".runs/research_20260913/center_evidence_completion_preflight_v2/summary.json",
+      "summary_sha256": "4058f6b1a02705b8c461d8416ae33338c85faf71e5db131080e3f19de6640566",
+      "transport_path": ".runs/research_20260913/center_evidence_completion_preflight_v2/transport_smoke.json",
+      "transport_sha256": "7802fc24e8326d26b989ee30c1592686c44cbdeddb417da6aa1919eb66ac74fc",
+      "result": "112 true-track inputs; 126/128 valid affine fits; donor consensus exercised on 32/32 mask rows; projected primary-only 128-center path 225.81 seconds; independently replayed byte-exact",
+      "remaining_correction": "the earlier 896-forward cost excluded 496 wrong-track control crops; add all 64 preflight wrong-track crops before authorizing the 128-center screen"
+    },
+    "operational_preflight_v4": {
+      "summary_path": ".runs/research_20260913/center_evidence_completion_preflight_v4/summary.json",
+      "summary_sha256": "90e97baf8d92f7c5073328704a4893ef14db8b3ea4a71085b7c10c6ed39aae4d",
+      "audit_path": ".runs/research_20260913/center_evidence_completion_preflight_v4_audit/audit_receipt.json",
+      "audit_sha256": "679f74bfe0301cbec424e0743c04691cce0366e8745b89f94f87eb0de96f97fc",
+      "result": "176-input control-inclusive operational preflight passed and independently replayed byte-exact across eight arrays and four substantive receipts; true-track consensus covered 32/32 mask rows and all 3413 targets, while wrong-track consensus covered any target in 30/32 rows and used explicit retain for 306 targets",
+      "interpretation": "source, masking, frozen DINO, transport, negative-control and exact-replay mechanics are operationally validated; no reconstruction comparison, learned gate, task fit, router fit, macro-F1 claim or scientific gate was evaluated",
+      "projected_full_128_center_seconds": 402.35869119968265
+    },
+    "ccac_measurement_feasibility": {
+      "path": ".runs/research_20260907/okutama_ccac_pilot/results/summary.json",
+      "sha256": "6fc723c776b3efad2a6048980da3cd154876fe13ce464bd8ae026fc1b091b9e5",
+      "scope": "camera and actor-region correspondence feasibility only; not evidence that its failed task reader should be reused"
+    },
+    "retained_arftr": {
+      "path": ".runs/research_20260912/arftr_v1/results/v0001/oof_probabilities.npz",
+      "sha256": "ec9957a9393e6f1803d274d281549c20290ed59343b308c5be3446be37cec720",
+      "macro_f1": 0.8538364807373623,
+      "accuracy": 0.8589511754068716,
+      "errors": 702
+    }
+  },
+  "primary_hypothesis": "A same-track partial-transport model with an explicit dustbin can reconstruct deliberately hidden center-time actor features at least 10 percent better than an equal-input unaligned neighbor pool on at least eight of eleven scenarios, at least 5 percent better than center-only and same-grid controls overall, and the advantage depends on true neighbor content, correct actor association, and correct spatial structure.",
+  "inference_contract": {
+    "endpoint": "offline supplied-box within-recording track; future-frame lookahead is explicit",
+    "available_inputs": [
+      "recorded RGB frames",
+      "provided actor track and boxes",
+      "physical frame offsets and decode validity",
+      "image-derived patch correspondence and uncertainty",
+      "ARFTR prediction only in the later retained-system evaluation"
+    ],
+    "forbidden_inputs": [
+      "action label at inference",
+      "annotation support category",
+      "annotation occlusion flag",
+      "historical error membership",
+      "known action transition",
+      "neighbor action label",
+      "cross-drone track-number identity"
+    ],
+    "missing_or_low_confidence_action": "no_transport; later integrated system copies exact ARFTR probabilities",
+    "latency": "uses up to 7/30 seconds of future lookahead; any streaming claim requires a separately locked past-only control"
+  },
+  "pilot": {
+    "population": "the existing 128 scenario-balanced, label-blind body-pilot sample IDs in their frozen order",
+    "rows": 128,
+    "task_labels_read": 0,
+    "arftr_outputs_read": 0,
+    "pose_outputs_read": 0,
+    "neighbor_offsets_frames_at_30fps": [-8, -4, 4, 7],
+    "physical_views_per_center": 5,
+    "encoder_inputs_per_center": 7,
+    "wrong_track_control_views": "four additional fixed-map crops per center when available; 64/64 in preflight and 496/512 in the full pilot paired support",
+    "full_pilot_encoder_inputs": {
+      "teacher_center": 128,
+      "masked_centers": 256,
+      "true_track_neighbors": 512,
+      "wrong_track_controls": 496,
+      "total": 1392
+    },
+    "crop_extent": 1.25,
+    "crop_context_fraction_each_side": 0.125,
+    "crop_source": "exact image_member bytes from the pinned provider-supplied 1280x720 JPEG archive and same-track boxes; no original-video decode, nearest-frame, alternate-member, or other-track fallback",
+    "image_encoder": {
+      "model": "facebook/dinov2-base",
+      "frozen": true,
+      "input_size": [384, 384],
+      "patch_grid": [27, 27],
+      "patch_dim": 768,
+      "precision": "bfloat16 forward, float16 immutable cache",
+      "preprocessing": "integer expanded crop with raw RGB [124,116,104] out-of-frame padding; aspect-preserving PIL bilinear letterbox to 384x384; ImageNet normalization; no processor defaults",
+      "independent_encoding": "each center or neighbor crop is encoded separately; no video-context token may have seen the hidden center pixels"
+    },
+    "center_masks": {
+      "count": 2,
+      "definitions": [
+        "upper: fill actor-box pixels with normalized y in [0.00,0.525), score only [0.00,0.475), and use fully supported [0.525,1.00] patches as visible anchors",
+        "lower: fill actor-box pixels with normalized y in [0.475,1.00], score only [0.525,1.00], and use fully supported [0.00,0.475) patches as visible anchors"
+      ],
+      "excluded_middle_band_fraction": 0.05,
+      "mask_before": ["resize", "encoder"],
+      "fill": "fixed raw RGB [124,116,104] before resize and normalization",
+      "spatial_scope": "mask only raw pixels whose centers lie inside the supplied actor-box x range and the named actor-relative y band; pixels outside actor x or outside the band remain visible",
+      "target": "detached unmasked-center DINO patch features at target-grid cells",
+      "target_cell_membership": "propagate a binary raw mask through the exact PIL-bilinear letterbox; a target cell is scored only when every one of its 14x14 DINO input pixels has value 255, proving its complete resize/patch receptive footprint lies inside the raw masked region",
+      "visible_anchor_cell_membership": "a center cell is an anchor candidate only when every one of its 14x14 input pixels has full valid-source support and lies outside the filled actor band; boundary, middle-band, and padding-contaminated cells are neither targets nor anchors",
+      "target_forbidden_from": ["alignment queries", "completion inputs", "confidence inputs"]
+    },
+    "partial_transport": {
+      "name": "Visible-Anchor Partial Transport Completion",
+      "visible_anchor_matches": "L2-normalize float32 tokens with denominator floor 1e-12; mutual maximum-cosine matches between valid non-target center cells and valid neighbor cells inside Chebyshev radius 4 on the 27x27 grid; exact ties choose lowest row-major index",
+      "geometry": "fit the direction center-grid xy -> neighbor-grid xy from visible anchors, then bilinearly sample neighbor tokens at mapped hidden-center xy; a sample is valid only when its complete four-cell interpolation support is valid",
+      "robust_fit": "initialize identity linear part plus median matched displacement; run exactly five Euclidean-residual Huber IRLS iterations with delta 1.5 grid cells; require rank 3 and weighted-design condition number <=10000; report sum(weight*Euclidean residual)/sum(weight)",
+      "dustbin": "one explicit no-transport state per target token",
+      "dustbin_triggers": [
+        "fewer than 12 mutual visible-anchor matches",
+        "weighted fit residual above 2 grid cells",
+        "decode or box invalid"
+      ],
+      "donor_weights": "for donor d and target t, logit is median cosine of the four nearest matched visible anchors minus 0.25 times affine weighted residual minus 0.10 times target-to-nearest-anchor grid distance; softmax temperature is 0.25 over valid donors only; donor-weight entropy is logged as a feature and never used as a hard rejection",
+      "consensus": "take a componentwise weighted median of up to four valid transported donor vectors (lowest donor offset breaks exact weighted-median ties); all-invalid donors expose no consensus",
+      "retain_transport_gate": "hard retain when no donor is valid; otherwise g=H*sigmoid(Linear32to1(GELU(Linear21to32(LayerNorm of the fixed 21 inference features)))); output=(1-g)*P0_prediction+g*transport_prediction, so retain/no-transport is explicit at every target",
+      "gate_features_21": "valid-donor fraction; for each offset [-8,-4,+4,+7]: valid bit, residual/2 clipped to [0,1], local median anchor cosine clipped to [-1,1], nearest-anchor distance/4 clipped to [0,1]; median and maximum pairwise cosine distance among valid transported vectors (zero when fewer than two); past-valid fraction; future-valid fraction",
+      "no_action_logits": true
+    },
+    "self_supervised_arms": {
+      "P0_center_only": "masked-center visible context and target positions; no neighbors",
+      "P1_unordered_pool": "P0 plus equal-input global unordered neighbor patch pool",
+      "P2_same_grid_pool": "P0 plus same normalized-grid neighbor features; no correspondence refinement",
+      "P3_partial_transport": "explicit learned convex choice between the P0 prediction and a visible-anchor transported-consensus prediction; the 21-feature gate sees no hidden target or action signal"
+    },
+    "matched_decoder": {
+      "architecture": "LayerNorm then two-layer 256-wide GELU residual MLP per target token",
+      "inputs": "arm-specific evidence, target position, mask ID, four physical offsets, observation-valid bits",
+      "loss": "center-mean of 1-cosine plus 0.25 times LayerNorm-space Huber, plus 0.01 times mean transport gate g as an intervention cost; center is the primary error unit and unavailable targets contribute zero without denominator deletion",
+      "splits": "five existing outer scenario folds; fit on four folds and predict only held scenarios",
+      "training": "one seed 42, at most 400 updates per arm/fold, AdamW 3e-4, batch 64 centers, no held-target early stopping",
+      "capacity": "P1/P2/P3 active trainable parameter counts within 10 percent; P0 reported as an information ablation"
+    },
+    "negative_controls": {
+      "wrong_track": "at the identical recording/frame slot, enumerate different supplied tracks with zero pixel-edge box intersection; select the SHA256-minimum canonical tuple under salt center-completion-wrong-track-v1, where tuple is sample_id|time_index|track_id|bbox values formatted to 12 significant digits; score only the fixed paired common support of 124 centers/496 slots and never change the denominator",
+      "repeated_masked_center": "at evaluation, replace all four donors with copies of the masked-center representation while retaining the fitted P3 checkpoint and identical active paths; no extra fit",
+      "spatial_reassignment": "fixed hash permutation of transported target positions within each crop",
+      "time_reversal": "swap past and future offset metadata without changing feature tensors",
+      "center_target_leakage": "alter every hidden center pixel and require every pre-target input tensor to remain bit-exact"
+    },
+    "metrics": [
+      "mean target-token cosine error",
+      "LayerNorm-space Huber error",
+      "per-center and per-scenario relative improvement",
+      "dustbin rate and coverage",
+      "correct-track versus wrong-track improvement",
+      "spatial and time perturbation sensitivity",
+      "runtime and peak GPU memory"
+    ],
+    "all_gates_required": {
+      "exact_source_and_hash_replay": true,
+      "usable_centers_min": 103,
+      "usable_center_each_scenario_min": 8,
+      "P3_relative_cosine_error_reduction_vs_P0_min": 0.05,
+      "P3_relative_cosine_error_reduction_vs_P1_min": 0.10,
+      "scenario_groups_meeting_10_percent_reduction_min": 8,
+      "P3_relative_cosine_error_reduction_vs_P2_min": 0.05,
+      "P3_scenario_groups_strictly_better_than_P2_min": 7,
+      "repeated_masked_center_explains_less_than_fraction_of_P3_gain": 0.5,
+      "wrong_track_explains_less_than_fraction_of_P3_gain": 0.5,
+      "spatial_reassignment_removes_fraction_of_P3_gain_min": 0.5,
+      "target_dependency_audit_bit_exact": true
+    },
+    "stop": "If any pilot gate fails, do not extract the full bank or fit action labels; retain ARFTR. A short-window failure falsifies only this short-window formulation; a wider-window test may be planned later only when the diagnosed failure is near-duplicate donors rather than failed association or transport."
+  },
+  "conditional_action_screen": {
+    "authorized_only_if": "every pilot gate passes and a new versioned execution lock measures projected runtime below the handoff boundary",
+    "population": 4977,
+    "outer_folds": 5,
+    "initial_seed": 42,
+    "arms": {
+      "A0_center": "actual unmasked center plus common context",
+      "A1_pool": "A0 plus equal-input unordered neighbor tokens",
+      "A2_align": "A0 plus aligned transported tokens and confidence, no completion objective or completed feature",
+      "A3_completion": "A2 plus completed center target, observed-minus-completed residual, uncertainty, and explicit no-transport representation"
+    },
+    "common_requirements": [
+      "identical center and neighbor pixels for A1/A2/A3",
+      "all active task-trained parameters below one million",
+      "A1/A2/A3 parameter range at most 10 percent using useful paths only",
+      "all fitting and model selection strictly within each outer training fold",
+      "alignment and completion parameters are fit label-blind and frozen before class-balanced action cross-entropy",
+      "all 4977 held predictions released together after independent checkpoint replay"
+    ],
+    "primary_gate": {
+      "A3_macro_f1_minus_best_of_A1_A2_points_min": 0.5,
+      "A3_nonnegative_folds_vs_each_A1_A2_min": 4,
+      "A3_rescues_vs_ARFTR_min": 40,
+      "A3_rescues_each_fold_min": 3,
+      "A3_extra_harms_vs_best_control_max": 5,
+      "reconstruction_gain_without_action_gain": "STOP_COMPLETION_MECHANISM"
+    },
+    "confirmation": "Only a passed initial gate authorizes seeds 43 and 44; apply the same gates to probability means and require seed macro-F1 SD <=0.0075."
+  },
+  "retained_system_gate": {
+    "architecture": "ARFTR-preserving abstaining expert with retain as an explicit action; a weaker completion expert can never overwrite broadly",
+    "decision_training": "strictly inside each outer training fold with complete ancestor exclusions; held labels never train a router, calibrate confidence, or select a threshold",
+    "structural_feasibility": "No integration run is authorized until the prior nested-ancestor infeasibility is resolved without relaxing exclusions. A representation pass alone is not deployment performance.",
+    "macro_f1_min": 0.8588364807373623,
+    "net_corrections_min": 25,
+    "each_outer_fold_net_corrections_min": 1,
+    "scenario_wins_min": 7,
+    "per_class_f1_loss_max": 0.005,
+    "nll_max": 0.37734901395307213,
+    "brier_max": 0.21350492452064215,
+    "exact_retained_probability_bytes": true,
+    "oracle_qualifies": false
+  },
+  "compute_boundary": {
+    "preflight_centers": 16,
+    "preflight_encoder_inputs": 176,
+    "preflight_wrong_track_inputs": 64,
+    "preflight_selection": "first frozen pilot-selection row per scenario, followed by SHA256-minimum remaining rows under salt center-completion-preflight-v1 until 16; sort selected rows back into frozen pilot order",
+    "preflight_scenarios_min": 11,
+    "preflight_self_supervised_updates_per_arm": 0,
+    "preflight_scientific_gate_evaluation": false,
+    "preflight_scope": "source hash/member validation, exact crop/mask/dependency replay, DINO shape/finiteness/runtime, synthetic affine transport, true-track and fixed-map wrong-track transport-consensus code-path smoke only; the learned gate is not fit and no reconstruction comparison or pilot gate may be claimed",
+    "full_unattended_job_expected_seconds_max": 1200,
+    "if_projection_exceeds_boundary": "prepare command and new run directory, verify bounded startup, then stop for user handoff",
+    "currently_authorized": [
+      "protocol and implementation planning",
+      "source/hash inventory",
+      "synthetic unit tests",
+      "completed independently replayed 16-center label-blind operational preflight",
+      "one immutable 128-center label-blind feature extraction containing teacher, two masked-center, four true-track-neighbor and fixed-map wrong-track-control streams",
+      "the preregistered label-blind reconstruction screen after cache replay and dependency audit"
+    ],
+    "currently_forbidden": [
+      "any task-label fit",
+      "any intervention router fit",
+      "any ARFTR probability-array access during extraction or reconstruction screening",
+      "threshold, mask, arm or gate changes after observing pilot outputs"
+    ]
+  },
+  "implementation_roadmap": [
+    "src/hac/center_completion_data.py: exact neighbor decode, boxes, raw masking, provenance and no-fallback validity",
+    "src/hac/center_evidence_completion.py: visible-anchor partial transport, dustbin and matched completion heads",
+    "experiments/pilot_okutama_center_evidence_completion.py: completed operational preflight",
+    "experiments/extract_okutama_center_evidence_completion.py: immutable 128-center label-blind cache with exact source and execution receipts",
+    "experiments/screen_okutama_center_evidence_completion.py: preregistered fold-held reconstruction arms and negative controls",
+    "experiments/audit_okutama_center_evidence_completion.py: target-exclusion, wrong-track, structure perturbation and checkpoint replay",
+    "experiments/run_okutama_center_evidence_completion.py: conditional task screen only after pilot authorization",
+    "tests/test_center_evidence_completion.py and tests/test_okutama_center_evidence_completion.py: geometry, missingness, target exclusion, capacity and ancestry"
+  ]
+}

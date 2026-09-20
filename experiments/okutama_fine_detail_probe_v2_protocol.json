@@ -1,0 +1,84 @@
+{
+  "protocol_id": "okutama_fine_detail_probe_v2",
+  "declared_on": "2026-09-17",
+  "supersedes": "okutama_fine_detail_probe_v1",
+  "purpose": "Decisive low-budget probe of whether genuine pre-pooling 12x12 V-JEPA detail adds activity information beyond a matched repeated 3x3 control.",
+  "scientific_status": "prospective_two_arm_one_seed_outer_probe",
+  "anchor": {
+    "name": "ARFTR",
+    "macro_f1": 0.8538364807373623,
+    "errors": 702,
+    "retain_default": true
+  },
+  "population": {
+    "rows": 4977,
+    "classes": ["sitting", "standing", "walking_running"],
+    "outer_folds": 5,
+    "split": "locked scenario/recording grouped folds from memory_data.npz",
+    "outer_held_labels_during_fit": 0
+  },
+  "inputs": {
+    "fine_tokens": ".runs/research_20260908/dense_tokens_full/tokens_grid12.npy",
+    "coarse_tokens": ".runs/research_20260908/dense_tokens_full/tokens_grid3.npy",
+    "source_frames": ".runs/research_20260908/dense_tokens_full/source_frames.npy",
+    "metadata": ".runs/research_20260908/evidence_memory/data/memory_data.npz",
+    "time_contract": "tubelet midpoints are the means of consecutive source-frame pairs, centered on the metadata frame at nominal 30 fps",
+    "quality": "six observable geometry/validity values, standardized from outer-training rows only"
+  },
+  "representation": {
+    "module": "src/hac/fine_local_motion.py",
+    "rank": 32,
+    "width": 128,
+    "layers": 2,
+    "heads": 4,
+    "match_mode": "fixed",
+    "coarse_control": "repeat each 3x3 token into its 4x4 block and pass the same 3x3 coarse_reference",
+    "fine_candidate": "genuine 12x12 tokens with the identical 3x3 coarse_reference",
+    "detail_mode": "both",
+    "parameter_count": 584148,
+    "no_new_backbone": true,
+    "no_human_review_inputs": true
+  },
+  "training": {
+    "arms": ["coarse_control", "fine_both"],
+    "seed": 20260917,
+    "epochs": 2,
+    "batch_size": 128,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "loss": "center-label cross-entropy with inverse-square-root outer-training class weights, normalized to mean one",
+    "selection": "no inner selection; all values frozen before outer fitting",
+    "normalization": "per-channel mean/std from outer-training coarse tokens, reused for fine, repeated-coarse and coarse_reference inputs; epsilon 1e-5",
+    "augmentation": "none"
+  },
+  "evaluation": {
+    "primary": "fine_both versus coarse_control standalone macro-F1 on outer-held rows",
+    "secondary": ["NLL", "Brier", "accuracy", "per-class F1", "confusion", "unique rescues/harms versus ARFTR", "fixed 0.5 ARFTR/fine-both diagnostic blend"],
+    "blend": "descriptive arithmetic mean only; no weight or threshold selection",
+    "promotion": "not authorized; a positive probe only authorizes a fresh nested ARFTR-preserving integration design",
+    "oracle": "none"
+  },
+  "go_no_go": {
+    "advance": [
+      "fine_both beats coarse_control by at least 0.005 macro-F1",
+      "fine_both improves in at least 4 of 5 outer folds",
+      "fine_both contributes at least 25 unique ARFTR-error rescues with no more than 1.5 harms/rescue",
+      "fixed blend is no worse than ARFTR by 0.002 macro-F1",
+      "exact independent replay audit"
+    ],
+    "close": "otherwise close the fine-density branch and do not widen epochs, ranks, seeds, matching or ablations"
+  },
+  "leakage_controls": [
+    "outer-held labels are not indexed by optimizer updates",
+    "normalization and class weights use outer-training rows only",
+    "ARFTR probabilities are opened after all candidate fits solely for fixed-blend/error accounting",
+    "no annotation-derived support, human-review field, scenario or track identity enters the model",
+    "all saved probabilities are joined by exact sample IDs and held-row indices"
+  ],
+  "compute_boundary": {
+    "timing_smoke": "one fold, one arm, 128 training rows, one optimizer update; no scientific score",
+    "full_probe": "10 fixed outer fits, two epochs, projected below 20 minutes",
+    "device": "cuda when available"
+  }
+}

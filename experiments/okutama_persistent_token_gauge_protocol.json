@@ -1,0 +1,125 @@
+{
+  "protocol_name": "okutama_persistent_token_gauge_v1",
+  "status": "DISCOVERY_FAILED_CLOSED",
+  "date": "2026-09-17",
+  "objective": "Test whether persistent high-resolution token identities and a token-grid gauge expose action-discriminative change that the failed CLS sequence and pair-local correspondence branches could not preserve.",
+  "invention_root": "Persistent Token Gauge (PTG)",
+  "observed_evidence": [
+    "ARFTR retains 85.383648% macro-F1 with 702 errors; 457 are standing/locomotion swaps.",
+    "Timestamp and actor-relative standalone sequence readers regress to 68.48%, 71.78%, 69.30%, 64.16%, and 64.22% macro-F1.",
+    "PCAR v5 improves an affine reconstruction proxy by only 0.0116% and has outer net corrections [-5,-6,+29,-6,-31].",
+    "The raw-point GIPA Phase-A smoke passed replay/cycle checks but failed survival (0.75/0.5625), actor-residual retention (0.345/0.319), held reduction, and wrong-track specificity; a new identity carrier must be tested rather than silently reusing LK tracks.",
+    "The verified 12x12 dense-token cache contains spatial detail absent from the 3x3 ARFTR inputs; FineLocalMotion improves NLL/Brier versus a repeated-coarse control but cannot be globally blended (199 rescues, 494 harms)."
+  ],
+  "information_available_at_inference": [
+    "verified dense token cache tokens_grid12.npy",
+    "source frame timestamps and availability",
+    "optional frozen ARFTR context/logits only in the later residual integration",
+    "observable token validity, matching entropy, crop/track quality"
+  ],
+  "forbidden_inputs": [
+    "true labels during measurement or outer fit",
+    "annotation-derived pure/mixed/unknown support categories",
+    "human review fields",
+    "oracle action choice or oracle candidate selection",
+    "outer-fold predictions reused as meta-training data"
+  ],
+  "representation": {
+    "input_shape": "[batch,8,144,768]",
+    "projection_rank": 32,
+    "anchor_time_index": 4,
+    "persistent_slots": "144 actor-crop grid slots initialized at the anchor frame",
+    "transport": "adjacent-frame entropic balanced local OT with dustbin; compose assignments forward and backward instead of re-detecting independently",
+    "gauge": "weighted 2D similarity fit on expected token coordinates to remove common crop translation/scale; retain residual token values and coordinate residuals",
+    "channels": [
+      "time-even persistent shape residual",
+      "time-odd token velocity and acceleration",
+      "cyclic forward/backward disagreement",
+      "survival and assignment entropy",
+      "absolute ARFTR context in integration only"
+    ],
+    "reader": "<=1M-parameter two-factor head; zero-initialized bounded posture and motion residuals; explicit retain_ARFTR action"
+  },
+  "phase_a_label_blind_measurement": {
+    "selection": "first 16 sample-ID-hash centers from the existing fixed 128-center witness; no class/error/support selection",
+    "then_expand": "expand to all 128 witness centers only if every smoke gate passes",
+    "controls": [
+      "persistent forward/backward paths",
+      "pair-local re-detection control",
+      "identity permutation",
+      "wrong-track/token permutation",
+      "time reversal",
+      "repeated anchor token control",
+      "native cache versus repeated-coarse cache"
+    ],
+    "required_gates": {
+      "finite_replay": "all arrays finite; exact sample/timestamp alignment",
+      "survival": "at least 0.80 of anchor slots survive both directions on median center and >=0.65 on every smoke center",
+      "cycle": "median forward/backward coordinate closure <=1.5 grid cells and 95th percentile <=4.0",
+      "identity": "permuting frame identities increases held-token one-step prediction error by >=25% on expanded witness set",
+      "nontriviality": "persistent paths differ from repeated-anchor control on >=50% of valid slots",
+      "source_consistency": "native/downsample cache paired statistics agree within predeclared 20% relative tolerance"
+    },
+    "failure_action": "close PTG measurement branch; do not fit a task classifier and do not enlarge the reader"
+  },
+  "phase_b_task_probe": {
+    "authorization": "conditional on Phase A passing; one seed only until discovery gate",
+    "population": "all 4,977 centers; same 11 scenarios and five grouped outer folds",
+    "arms": [
+      "G0 frozen ARFTR context plus availability control",
+      "G1 deterministic repeated-coarse temporal-moment control (matched to the PTG feature budget)",
+      "G2 G0 plus raw persistent token paths without gauge",
+      "G3 G0 plus PTG gauge, parity, and cycle channels (primary)"
+    ],
+    "training": {
+      "epochs": 2,
+      "batch_size": 128,
+      "optimizer": "AdamW",
+      "learning_rate": 0.0003,
+      "weight_decay": 0.0001,
+      "class_loss": "inverse-square-root class-weighted cross entropy",
+      "parameter_limit": 1000000,
+      "maximum_fits": 20,
+      "runtime_rule": "label-blind timing smoke must project <=20 minutes; otherwise shard and stop"
+    },
+    "discovery_gates": [
+      "G3 minus G0 >=0.005 macro-F1",
+      "G3 minus G2 >0 in every outer fold",
+      "positive paired scenario-bootstrap lower bound",
+      "NLL and Brier no worse than G0",
+      "independent replay exact to saved outputs"
+    ],
+    "result": {
+      "run": ".runs/research_20260917/ptg_task_probe_v1",
+      "status": "DISCOVERY_GATE_FAILED",
+      "g3_minus_g0_macro_f1": -0.02199603239306258,
+      "g3_minus_g2_outer_fold_deltas": [0.0012952094945034576,-0.0008545494411447141,0.002212904211082223,-0.007663013427717802,-0.003274882213356145],
+      "independent_replay": "PASS",
+      "integration_authorized": false
+    }
+  },
+  "integration_if_discovery_passes": {
+    "actions": ["retain_ARFTR", "apply_bounded_posture", "apply_bounded_motion", "apply_both"],
+    "residual": "anchor logits + 0.35*tanh(posture_delta) + 0.35*tanh(motion_delta)",
+    "selection": "all gate/threshold fitting strictly inside each outer training fold using fresh inner cross-fitted ARFTR and PTG predictions",
+    "promotion_gates": {
+      "macro_f1": 0.8588364807373623,
+      "minimum_net_corrections": 25,
+      "positive_net_every_outer_fold": true,
+      "paired_scenario_bootstrap_lower_bound": ">0",
+      "class_f1_loss_cap": 0.005,
+      "nll_brier": "neither worse than ARFTR",
+      "intervention_rate": "<=0.15 unless predeclared cost evidence justifies lower"
+    },
+    "stop": "any outer fold net <=0, failed lower bound, failed audit, or no positive inner utility closes PTG integration and leaves ARFTR default"
+  },
+  "artifacts": {
+    "phase_a_receipt": ".runs/research_20260917/ptg_preflight_v1/preflight.json",
+    "phase_a_audit": ".runs/research_20260917/ptg_preflight_v1/independent_audit.json",
+    "dense_cache": ".runs/research_20260908/dense_tokens_full/verification.json",
+    "module_to_add": "src/hac/persistent_token_gauge.py",
+    "measurement_script_to_add": "experiments/pilot_okutama_persistent_token_gauge.py",
+    "audit_script_to_add": "experiments/audit_okutama_persistent_token_gauge.py",
+    "tests_to_add": ["tests/test_persistent_token_gauge.py"]
+  }
+}

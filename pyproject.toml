@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "human-activity-classification"
-version = "3.0.0"
+version = "3.1.0.dev0"
 description = "Reproducible human activity classification benchmarks for still images and short clips"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
@@ -34,7 +34,8 @@ notebook = [
   "nbclient>=0.10,<1",
   "nbformat>=5.10,<6",
 ]
-dev = ["pytest>=8.3,<10", "ruff>=0.9,<1"]
+dev = ["pytest>=8.3,<10", "ruff==0.16.6"]
+research = ["networkx>=3,<4"]
 report = [
   "pdfplumber>=0.11,<1",
   "pypdf>=6,<7",
@@ -50,6 +51,7 @@ where = ["src"]
 [tool.pytest.ini_options]
 addopts = "-q"
 testpaths = ["tests"]
+markers = ["local_artifacts: integration checks requiring non-distributed historical run evidence"]
 
 [tool.ruff]
 line-length = 100

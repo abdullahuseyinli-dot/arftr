@@ -37,7 +37,12 @@ __pycache__/
 .coverage
 htmlcov/
 .venv/
+.venv-*/
 venv/
+build/
+dist/
+*.whl
+uv.lock
 
 # Notebooks and editors
 .ipynb_checkpoints/

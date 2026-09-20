@@ -1,0 +1,22 @@
+{
+  "arftr_in_fit": false,
+  "arms": ["coarse_control", "fine_both"],
+  "batch_size": 128,
+  "dense_verification_sha256": "338a2e283fe232e02ef2c9f0c65c328a97ee4736ff75f205a32a8c941e07a1a6",
+  "epochs": 2,
+  "human_review_inputs": false,
+  "lock_id": "okutama_fine_detail_execution_v2_lock_v1",
+  "memory_data_sha256": "e3853662296562a6fea311f5348b4c3d6919eb12ce66aa7e83702cf0ff198495",
+  "module_sha256": "f2dd470ec52b4e7dd7a7aebfe2811bc7c09db04e81b08448898892bd6bdba10b",
+  "outer_folds": 5,
+  "population_rows": 4977,
+  "protocol_id": "okutama_fine_detail_probe_v2",
+  "protocol_sha256": "2fa953f1aac7ec48cb207c01d2081119db7a9c232af8db66aa65571722b2d332",
+  "runner_sha256": "c97da68e6a3cc5969bd21613667d4b66db0a865d6a710baa3f729179821f6e05",
+  "status": "FROZEN_PROSPECTIVE_TWO_ARM_PROBE",
+  "tests_sha256": "f3cad85283242db6302fcc8fdf9a2f921d3ca43825f87f5c1f1d68971752124b",
+  "tokens_grid12_sha256": "f97d582ddfe0fcc42a7476aa1af60a6317d427bccf3ffcefb27dbb19e9e85f97",
+  "tokens_grid3_sha256": "da6af8f2fd879fe06dee36e9991f499ab6f6fac48b44f0f5679538d8d64687c5",
+  "training_authorized": "only after timing smoke projects <=1200 seconds",
+  "wrapper_sha256": "2226ccba259b9ede7390cf0c52b2cab07fbd6a36bb7247c174d8088114d213bf"
+}

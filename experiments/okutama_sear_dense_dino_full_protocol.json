@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "status": "IMMUTABLE_FULL_COHORT_DENSE_DINO_CENTER_EXTRACTION",
+  "cohort_rows": 4977,
+  "historical_short_fallback_rows": 467,
+  "source_condition": "historical_supplied_720_jpeg",
+  "shape_per_row": [729, 768],
+  "center_cls_shape_per_row": [768],
+  "cache_dtype": "float16",
+  "precision": "bfloat16",
+  "image_size": 384,
+  "patch_size": 14,
+  "center_slot": 8,
+  "microbatch": 4,
+  "final_batch_policy": "repeat_last_valid_center_to_exactly_four_inputs;discard_padding_outputs",
+  "commit_chunk_rows": 64,
+  "cls_max_absolute_difference": 0.0,
+  "preprocessing": "unchanged_verified_pilot_center_pixels;one_locked_center_crop_only",
+  "resume_policy": "hash_verified_immutable_chunk_receipts;completion_after_payload_flush_and_receipt",
+  "authorization": {
+    "full_frozen_center_extraction": true,
+    "classifier_fitting": false,
+    "optimizer_steps": false,
+    "backbone_updates": false,
+    "protected_payload_access": false,
+    "external_downloads": false
+  },
+  "verified_pilot": {
+    "source": "experiments/pilot_okutama_sear_dense_dino.py",
+    "source_sha256": "10ec10eca50000afac40608ab985ff90655361ebcf2fefe01e3af839a1e1e6c0",
+    "protocol": "experiments/okutama_sear_dense_dino_protocol.json",
+    "protocol_sha256": "73f7c75953b62e2b5699ce00c100be0bb96d9a72d690fcbfb4b45bf14b20206d",
+    "summary": ".runs/research_20260908/sear_dense_dino_pilot_v1/summary.json",
+    "summary_sha256": "1b8f0e22a4603ad669a0521dc8caeda272e1140884b646cd99cd4161949ca5af"
+  }
+}

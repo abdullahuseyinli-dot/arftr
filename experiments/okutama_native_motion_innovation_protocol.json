@@ -1,0 +1,75 @@
+{
+  "name": "okutama_camera_compensated_native_motion_innovation_v1",
+  "status": "PROTOCOL_FROZEN_BEFORE_EXTRACTION_OR_TASK_FITS",
+  "population_rows": 4977,
+  "outer_folds": 5,
+  "inner_folds": 5,
+  "arms": ["appearance", "signed_motion", "phase_destroyed"],
+  "primary": "signed_motion",
+  "source": {
+    "native_offsets": [-4, 0, 4],
+    "nominal_fps": 30,
+    "physical_time_from_verified_native_fps": true,
+    "crop_extent": 1.5,
+    "crop_size": 64,
+    "camera_grid": [320, 180],
+    "actor_mask_extent": 3.0,
+    "camera_estimator": "masked_grayscale_phase_correlation_hann",
+    "camera_sanity_fraction": 0.25,
+    "missing_policy": "retain_ARFTR_no_nearby_substitute",
+    "shard_size": 32
+  },
+  "representation": {
+    "phase_order": ["past_to_center", "center_to_future"],
+    "appearance": "concat(pair_mean,pair_mean)",
+    "signed_motion": "concat(pair_mean,later_minus_earlier)",
+    "phase_destroyed": "concat(pair_mean,absolute_later_minus_earlier)",
+    "geometry_fields": 12,
+    "delta_bound": 0.5,
+    "action": "redistribute_standing_walking_mass_and_preserve_sitting"
+  },
+  "network": {
+    "shared_phase_encoder": [[6,16,5,2],[16,32,3,2],[32,48,3,2]],
+    "adaptive_pool": [4,4],
+    "head_width": 64,
+    "final_layer_zero_initialized": true,
+    "matched_parameters_across_arms": true
+  },
+  "training": {
+    "seed": 42,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.01,
+    "batch_size": 128,
+    "updates": 256,
+    "gradient_clip": 5.0,
+    "loss": "task_nll + 0.1*anchor_kl + 0.01*eligible_abs_delta"
+  },
+  "eligibility": "both_phases_available AND ARFTR_top2_are_standing_and_walking",
+  "policy": {
+    "feature_count": 19,
+    "minimum_event_rows": 50,
+    "minimum_rescues": 20,
+    "minimum_harms": 20,
+    "minimum_scenarios": 4,
+    "utility": "P_rescue - 2*P_harm",
+    "accept": "class_change AND utility>0 AND predicted_nll_gain>0",
+    "fallback": "exact_ARFTR"
+  },
+  "screen": {"producer_fits": 90, "policy_bundles_max": 15},
+  "mechanism_gate": {
+    "signed_minus_appearance_macro_f1_min": 0.002,
+    "adjusted_interval_lower_above_zero": ["signed_motion-appearance", "signed_motion-phase_destroyed"]
+  },
+  "promotion": {
+    "macro_f1_min": 0.8588364807373623,
+    "net_min": 25,
+    "positive_each_outer_fold": true,
+    "scenario_interval_lower_above_zero": true,
+    "nll_max": 0.3773500139530721,
+    "brier_sum_max": 0.21350592452064215,
+    "maximum_class_f1_drop": 0.005,
+    "independent_replay_and_ancestry": true
+  },
+  "failure": "close_fixed_motion_design; do_not_tune_offsets_mask_response_threshold_capacity_or_policy"
+}

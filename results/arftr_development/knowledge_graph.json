@@ -1,0 +1,269 @@
+{
+  "edges": [
+    {
+      "causal_scope": "Multiple changes; not a single-component causal attribution",
+      "effect_pp": 13.45987986169338,
+      "relation": "historical_bundle_gain",
+      "source": "T2",
+      "target": "ARFTR"
+    },
+    {
+      "continuation_pass": false,
+      "effect_pp": -0.15578549003503195,
+      "relation": "matched_architectural_intervention",
+      "source": "matched_plain",
+      "target": "matched_paired_null"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": 10,
+      "relation": "compared_with_not_promoted",
+      "source": "crossing_primary",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": -3,
+      "relation": "compared_with_not_promoted",
+      "source": "motion_appearance_raw",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": 0,
+      "relation": "compared_with_not_promoted",
+      "source": "motion_appearance_routed",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": -4,
+      "relation": "compared_with_not_promoted",
+      "source": "motion_phase_destroyed_raw",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": 0,
+      "relation": "compared_with_not_promoted",
+      "source": "motion_phase_destroyed_routed",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": 4,
+      "relation": "compared_with_not_promoted",
+      "source": "motion_signed_motion_raw",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": 0,
+      "relation": "compared_with_not_promoted",
+      "source": "motion_signed_motion_routed",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": -2,
+      "relation": "compared_with_not_promoted",
+      "source": "rgb_conditional_raw",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": -1,
+      "relation": "compared_with_not_promoted",
+      "source": "rgb_direct_raw",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": -4,
+      "relation": "compared_with_not_promoted",
+      "source": "rgb_template_raw",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": -3,
+      "relation": "compared_with_not_promoted",
+      "source": "rgb_unconditional_raw",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": 1,
+      "relation": "compared_with_not_promoted",
+      "source": "missing_contrast_DIAGNOSTIC_ONLY",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": 4,
+      "relation": "compared_with_not_promoted",
+      "source": "matched_plain",
+      "target": "ARFTR"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "net_corrections": -5,
+      "relation": "compared_with_not_promoted",
+      "source": "matched_paired_null",
+      "target": "ARFTR"
+    }
+  ],
+  "full_local_graph": {
+    "edges": 1496,
+    "nodes": 793,
+    "sha256": "04a24bc6429e47751740fea3b5093175afde5df3e1469cde7bec27bcc2684b00"
+  },
+  "nodes": [
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 702,
+      "id": "ARFTR",
+      "kind": "experiment",
+      "macro_f1_percent": 85.38364807373623,
+      "retained": true,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 1412,
+      "id": "T2",
+      "kind": "experiment",
+      "macro_f1_percent": 71.92376821204284,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 692,
+      "id": "crossing_primary",
+      "kind": "experiment",
+      "macro_f1_percent": 85.61164813182998,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 705,
+      "id": "motion_appearance_raw",
+      "kind": "experiment",
+      "macro_f1_percent": 85.3591232861016,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 702,
+      "id": "motion_appearance_routed",
+      "kind": "experiment",
+      "macro_f1_percent": 85.38364807373623,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 706,
+      "id": "motion_phase_destroyed_raw",
+      "kind": "experiment",
+      "macro_f1_percent": 85.34551863139002,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 702,
+      "id": "motion_phase_destroyed_routed",
+      "kind": "experiment",
+      "macro_f1_percent": 85.38513588222398,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 698,
+      "id": "motion_signed_motion_raw",
+      "kind": "experiment",
+      "macro_f1_percent": 85.46718149345108,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 702,
+      "id": "motion_signed_motion_routed",
+      "kind": "experiment",
+      "macro_f1_percent": 85.38364807373623,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 704,
+      "id": "rgb_conditional_raw",
+      "kind": "experiment",
+      "macro_f1_percent": 85.32308067337763,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 703,
+      "id": "rgb_direct_raw",
+      "kind": "experiment",
+      "macro_f1_percent": 85.35816829480206,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 706,
+      "id": "rgb_template_raw",
+      "kind": "experiment",
+      "macro_f1_percent": 85.29161186683211,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 705,
+      "id": "rgb_unconditional_raw",
+      "kind": "experiment",
+      "macro_f1_percent": 85.28320736641459,
+      "retained": false,
+      "scope": "saved_internal_development_predictions"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 701,
+      "id": "missing_contrast_DIAGNOSTIC_ONLY",
+      "kind": "experiment",
+      "macro_f1_percent": 85.3862049829449,
+      "retained": false,
+      "scope": "posthoc_diagnostic_not_candidate"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 698,
+      "id": "matched_plain",
+      "kind": "experiment",
+      "macro_f1_percent": 85.46718149345108,
+      "retained": false,
+      "scope": "matched_optional_experiment_not_promoted"
+    },
+    {
+      "artifact": "experiment_ledger.csv",
+      "errors": 707,
+      "id": "matched_paired_null",
+      "kind": "experiment",
+      "macro_f1_percent": 85.31139600341605,
+      "retained": false,
+      "scope": "matched_optional_experiment_not_promoted"
+    }
+  ],
+  "schema_version": 1,
+  "scope": "curated_public_result_map_not_full_experimental_history"
+}

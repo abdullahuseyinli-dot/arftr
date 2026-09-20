@@ -1,5 +1,12 @@
 # Result lineage
 
+The current September continuation is indexed in the
+[research overview](RESEARCH_OVERVIEW.md) and its
+[portable evidence](../results/arftr_development/README.md). The final paired-null
+comparison is complete and ARFTR remains retained. The release chains below are
+historical studies with different datasets and evaluation boundaries; their scores
+must not be combined into a single leaderboard.
+
 The promoted POLAR result has one evidence chain from the pre-fit data audit to the
 portable release. Every selection decision was made on the clean development split.
 The official test manifest was opened once, after all final fits and their artifact

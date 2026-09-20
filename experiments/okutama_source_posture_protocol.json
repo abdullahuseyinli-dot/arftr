@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "study_id": "HAC_SOURCE_RESOLVED_POSTURE_WITNESS_FIXED_V1",
+  "status": "IMPLEMENTATION_PREFLIGHT_ONLY_NO_TASK_FIT_AUTHORIZED",
+  "design_authority": {
+    "path": ".runs/research_20260913/renewal_council_20260913_194044/NEXT_PHASE_PROTOCOL.json",
+    "sha256": "fd1fc0b4cfc72aca59a84945cb7a927979c04a7638b9e3ffb9c316a55bde97f0"
+  },
+  "population": {
+    "rows": 4977,
+    "classes": ["sitting", "standing", "walking_running"],
+    "outer_folds": [0, 1, 2, 3, 4],
+    "outer_group": "scenario",
+    "metadata_path": ".runs/research_20260908/source_swap_v1/data/memory_data.npz",
+    "metadata_sha256": "0bfadd5f080b162ab4ccfce76affbde4779d9fb61757124029b159adec4079e9"
+  },
+  "anchor": {
+    "path": ".runs/research_20260912/arftr_v1/results/v0001/oof_probabilities.npz",
+    "sha256": "ec9957a9393e6f1803d274d281549c20290ed59343b308c5be3446be37cec720",
+    "arm": "r5_arftr_full",
+    "macro_f1": 0.8538364807373623,
+    "errors": 702,
+    "must_remain_unchanged": true
+  },
+  "observations": {
+    "sources": ["J_supplied720_JPEG", "R_exact_native_downsample720", "N_exact_native_crop_before_resize"],
+    "regions": ["whole_1.25", "upper_horizontal1.25_vertical[-0.05,0.60]", "lower_horizontal1.25_vertical[0.40,1.05]"],
+    "primary": "R_parts",
+    "primary_fixed_before_outer_metrics": true,
+    "encoder": "pinned local facebook/dinov2-base revision f9e44c814b77203eaa57a6bdbbd535f21ede1415",
+    "input": "378x378 letterbox; complete27x27 stride14 patch coverage",
+    "representation": "final normalized CLS,768D per independently encoded physical crop",
+    "source_processor_defaults": false,
+    "missing": "exact retain; no row exclusion, alternate source, alternate time or fabricated feature",
+    "forbidden": ["annotation support", "manual review fields", "known errors", "true error pair", "hard-track identity", "scenario as predictor"]
+  },
+  "arms": ["A0_retain", "C0_anchor_calibration", "J_whole", "J_parts", "R_whole", "R_parts", "N_whole", "N_parts", "R_multiscale_whole"],
+  "architecture": {
+    "projection": "train-population-only deterministic full-SVD PCA48 plus train-only scaler",
+    "head": "48weights+1bias posture offset",
+    "continuous_delta": "2*tanh((w.h+b)/2)",
+    "training": "continuous bounded delta; fixed class-weighted three-class NLL plus0.01L2; L-BFGS-B maxiter500",
+    "inference": "exact retain if missing or abs(delta)<=0.25; otherwise posture-only",
+    "motion": "preserve original p_walking/(p_standing+p_walking) directly",
+    "selection": "none; source, region, cap, deadzone, penalty and optimizer are fixed prospectively"
+  },
+  "ancestry": {
+    "topology": "fixed recipe, three scenario blocks, no additional learned policy-selection layer",
+    "training_prior": "row in block B receives full historical F(T-minus-B)",
+    "outer_prior": "full historical F(T), exact parity with retained ARFTR required",
+    "unique_F_populations": 19,
+    "unique_base_training_populations": 183,
+    "M4_A3_neural_fits_before_certified_reuse": 570,
+    "base_estimators_before_certified_reuse": 9084,
+    "global_OOF_substitution": "forbidden",
+    "task_fit_reuse_certified": 0
+  },
+  "preflight": {
+    "centers": 16,
+    "selection": "first16 IDs in existing128 label-blind pilot order",
+    "task_labels": 0,
+    "ARFTR_outputs": 0,
+    "checks": ["exact source timestamp", "continuous crop coordinate parity", "crop-before-resize", "DINO snapshot and27x27 shape", "deterministic source/crop/feature replay", "missingness", "timing and peak GPU memory"],
+    "accuracy_gate": "none; this is mechanics and resource measurement"
+  },
+  "go_gate": {
+    "macro_f1_min": 0.8588364807373623,
+    "net_corrections_min": 25,
+    "net_corrections_each_outer_fold": "positive",
+    "scenario_bootstrap_delta_95_lower": "positive",
+    "class_f1_max_loss": 0.005,
+    "NLL_and_Brier": "not worse",
+    "exact_replay_and_ancestry": "pass"
+  },
+  "stopping": "A failed fixed primary closes this source/crop/head/policy recipe; no post-hoc arm, threshold, width or seed rescue.",
+  "long_job_rule": "Do not launch any training job projected above1200seconds; prepare command/run directory and hand off after bounded startup."
+}

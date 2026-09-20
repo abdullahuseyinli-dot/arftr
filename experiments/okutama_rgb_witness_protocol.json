@@ -1,0 +1,53 @@
+{
+  "name": "okutama_pose_free_conditional_rgb_witness_v1",
+  "design_authority": ".runs/research_20260920/aerial_council_v1/NEXT_PHASE_PROTOCOL.json",
+  "status": "IMPLEMENTATION_PROTOCOL_BEFORE_FEATURE_EXTRACTION_OR_TASK_FITS",
+  "population_rows": 4977,
+  "outer_folds": 5,
+  "inner_folds": 5,
+  "arms": ["direct", "template", "conditional", "unconditional"],
+  "primary": "conditional",
+  "feature_cache": {
+    "views_per_center": 2,
+    "extent": 1.25,
+    "gap_fraction": 0.05,
+    "hidden_rgb": [124, 116, 104],
+    "encoder_revision": "f9e44c814b77203eaa57a6bdbbd535f21ede1415",
+    "input_size": 378,
+    "feature_dim": 768,
+    "shard_size": 32
+  },
+  "projection": {
+    "solver": "float64 symmetric covariance eigh",
+    "dimensions_per_slot": 96,
+    "eigenvector_sign": "largest_absolute_coordinate_positive",
+    "whitening_floor": 0.0001,
+    "clip": [-8, 8],
+    "geometry_std_zero_replacement": 1
+  },
+  "training": {
+    "seed": 42,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.01,
+    "batch_size": 128,
+    "updates": 256,
+    "dropout": 0,
+    "gradient_clip": 5.0
+  },
+  "policy": {
+    "feature_count": 19,
+    "minimum_event_rows": 50,
+    "minimum_rescues": 20,
+    "minimum_harms": 20,
+    "minimum_scenarios": 4,
+    "utility": "P_rescue - 2*P_harm",
+    "nll_ridge_alpha": 10,
+    "accept": "class_change AND utility>0 AND predicted_nll_gain>0",
+    "fallback": "exact ARFTR"
+  },
+  "screen": {"producer_fits": 120, "policy_bundles_max": 20, "policy_estimators_max": 40},
+  "mechanism_gate": {"conditional_minus_direct_macro_f1_min": 0.002, "adjusted_interval_lower_above_zero": ["conditional-direct", "conditional-template", "conditional-unconditional"]},
+  "promotion": {"macro_f1_min": 0.8588364807373623, "net_min": 25, "positive_each_outer_fold": true, "scenario_interval_lower_above_zero": true, "nll_max": 0.3773500139530721, "brier_sum_max": 0.21350592452064215, "maximum_class_f1_drop": 0.005, "independent_replay_and_ancestry": true},
+  "failure": "close fixed design; do not widen cap, eligibility, thresholds, model widths or support rules"
+}

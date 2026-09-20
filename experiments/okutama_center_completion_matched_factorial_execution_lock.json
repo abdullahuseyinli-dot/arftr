@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "study_id": "okutama_center_completion_matched_factorial_v1",
+  "locked_on": "2026-09-13",
+  "status": "MATCHED_FACTORIAL_EXECUTION_LOCKED_BEFORE_RESULTS",
+  "authorization": {
+    "decoder_free_full_768d_reconstruction_evaluation": true,
+    "task_label_access": false,
+    "arftr_probability_access": false,
+    "pose_output_access": false,
+    "support_category_access": false,
+    "optimizer_updates": 0,
+    "task_fits": 0,
+    "router_fits": 0
+  },
+  "pinned_sources": {
+    "experiments/okutama_center_completion_matched_factorial_protocol.json": "818ab9e2d7c808e13509c0155142881c5d5d5edf48ea478df33f5040ca38f133",
+    "experiments/run_okutama_center_completion_matched_factorial.py": "2ef8f3d27f2a319e4347a7376968a715fb011d9e4734745b98fb7b340eaa8a87",
+    "src/hac/center_completion_factorial.py": "5d9220b6fe8adac5fb66a16a67c5e67831118cfcbc8227753711aec6d361d1b9",
+    "src/hac/center_evidence_completion.py": "3e284fefbc1150744212427a86cb9308e0ba137f6ac2cf3b7b706de87994256b"
+  },
+  "pinned_inputs": {
+    ".runs/research_20260913/center_evidence_completion_cache_v1/summary.json": "5eec07a433c189de949abeff70e1987fb8fbfb873cb4c0f308921b5833d4f201",
+    ".runs/research_20260913/center_evidence_completion_cache_v1_audit/audit_receipt.json": "269eccee054f3313ed254445e5fb5a9cf71a581bf14dc1b4f1cd9306c3e6b1e2",
+    ".runs/research_20260913/center_evidence_completion_transport_v1/summary.json": "1e2d3f1af9a096b80283a8d30cd00d06199d6e439064a62639eee3f0d6f7e401",
+    ".runs/research_20260913/center_evidence_completion_transport_v1_audit/audit_receipt.json": "2d3719fc2e8473da5a64a56d40af352b5ef6d324f501761c17c66adfbaa94859",
+    ".runs/research_20260913/body_witness_pilot_v1/pilot_selection.json": "a26c81e19db77bf2775ec6a50b196e7eab374da4c6a86b489cbafde4d580817a"
+  },
+  "locked_cells": {
+    "A": "same-grid plus uniform",
+    "B": "same-grid plus robust",
+    "C": "affine plus uniform",
+    "D": "affine plus robust"
+  },
+  "locked_primary_metric": "equal-center mean full-768D raw teacher-token cosine error",
+  "locked_secondary_metric": "target-token-weighted full-768D raw teacher-token cosine error",
+  "locked_rules": {
+    "transport_survives": "max(C/A,D/B)>=5%, (A-C)/(A-D)>=50%, and C<A in >=4/5 folds",
+    "aggregation_survives": "B/A>=2%, D/C>=2%, B<A in >=4/5 folds, and D<C in >=4/5 folds",
+    "interaction_survives": "D best, D/B>=5%, D/C>=2%, and transport_survives=false",
+    "stop_transport_branch": "C/A<5% and D/B<5%"
+  },
+  "command": ".\\.venv\\Scripts\\python.exe experiments\\run_okutama_center_completion_matched_factorial.py",
+  "output_directory": ".runs/research_20260913/center_completion_matched_factorial_v1",
+  "replay_command": ".\\.venv\\Scripts\\python.exe experiments\\run_okutama_center_completion_matched_factorial.py --output .runs/research_20260913/center_completion_matched_factorial_v1_audit --audit-of .runs/research_20260913/center_completion_matched_factorial_v1",
+  "stop": "No task fit is authorized by this diagnostic. If stop_transport_branch is true, abandon affine transport; otherwise use the surviving mechanism only in a separately locked next-stage test."
+}

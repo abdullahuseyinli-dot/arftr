@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "study_id": "okutama_center_evidence_completion_reconstruction_screen_v1",
+  "locked_on": "2026-09-13",
+  "status": "LABEL_BLIND_RECONSTRUCTION_SCREEN_AUTHORIZED_NO_TASK_FIT",
+  "authorization": {
+    "default_400_update_screen": true,
+    "task_label_access": false,
+    "arftr_probability_access": false,
+    "pose_output_access": false,
+    "support_category_access": false,
+    "task_training": false,
+    "router_training": false,
+    "automatic_action_screen_authorization": false
+  },
+  "pinned_inputs": {
+    "protocol_schema8_sha256": "f2e95656cfd179e72522d02103d2542e96b4124ccb76c5f4c0c1706783505244",
+    "plan_v8_sha256": "b7e148c8efe1e72fc0000ffd0713aecf16a3a4e21387d9f520a9dac6e5e6b63c",
+    "full_cache_summary_sha256": "5eec07a433c189de949abeff70e1987fb8fbfb873cb4c0f308921b5833d4f201",
+    "full_cache_audit_sha256": "269eccee054f3313ed254445e5fb5a9cf71a581bf14dc1b4f1cd9306c3e6b1e2",
+    "transport_cache_summary_sha256": "1e2d3f1af9a096b80283a8d30cd00d06199d6e439064a62639eee3f0d6f7e401",
+    "transport_cache_request_sha256": "99b420b47f09fd94d0aa619783375a2d07b63586d4c75dbe3f9d5c10b81ee3ed",
+    "transport_cache_audit_sha256": "2d3719fc2e8473da5a64a56d40af352b5ef6d324f501761c17c66adfbaa94859",
+    "runner_sha256": "6e6544234612123129f88d609c9a81eb7a61f72280ed22a1b58baf2fed47f274",
+    "scientific_screen_core_sha256": "582a3f81b56dae749fb98691dc07eea65f0e409bd25f95158ce9afd870a37db7",
+    "transport_core_sha256": "3e284fefbc1150744212427a86cb9308e0ba137f6ac2cf3b7b706de87994256b",
+    "executed_transport_gate_builder_sha256": "0353fcc082a90faa12902a2c96d1dc5d9a8972a8076860888b96fc4c6a749b45",
+    "smoke_summary_sha256": "cc5c21e6363e0d4f371fdf5e820ccb7064c1bc99ca7c2f97daa2b02f7f6cdcd4"
+  },
+  "population": {
+    "centers": 128,
+    "scenarios": 11,
+    "outer_folds": 5,
+    "target_tokens": 27407,
+    "selection_was_label_blind": true,
+    "adaptive_measurement_cohort": true
+  },
+  "architecture": {
+    "arms": [
+      "P0_center_only",
+      "P1_unordered_pool",
+      "P2_same_grid_pool",
+      "P3_partial_transport"
+    ],
+    "fixed_projection": "seed-42 orthogonal 768-to-128",
+    "decoder": "LayerNorm, Linear 768-to-256, GELU, Linear 256-to-768, residual prediction",
+    "P0_ancestor": "fit on four scenario folds and frozen inside P1/P2/P3 for the same outer fold",
+    "P3_gate": "LayerNorm21, Linear21-to-32, GELU, Linear32-to-1, sigmoid multiplied by transport availability",
+    "P3_action": "prediction=(1-g)*P0+g*candidate; unavailable transport reproduces P0 bit-exact",
+    "active_parameters": {
+      "P0": 395776,
+      "P1": 395776,
+      "P2": 395776,
+      "P3": 396555,
+      "P1_to_P3_relative_range": 0.0019682850905562745
+    }
+  },
+  "training": {
+    "fits": 20,
+    "updates_each": 400,
+    "total_optimizer_updates": 8000,
+    "batch_centers": 64,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.01,
+    "seed": 42,
+    "held_target_early_stopping": false,
+    "teacher_target_detached": true,
+    "primary_error_unit": "center mean",
+    "loss": "1-cosine + 0.25*LayerNorm-Huber + 0.01*mean intervention"
+  },
+  "unchanged_checkpoint_controls": [
+    "wrong_track on fixed 124-center paired support",
+    "repeated masked center with independently recomputed gate inputs",
+    "spatial reassignment of the complete evidence packet",
+    "time reversal of offset and confidence metadata"
+  ],
+  "all_scientific_gates_required": {
+    "P3_relative_cosine_error_reduction_vs_P0_min": 0.05,
+    "P3_relative_cosine_error_reduction_vs_P1_min": 0.1,
+    "P3_vs_P1_scenarios_meeting_10_percent_min": 8,
+    "P3_relative_cosine_error_reduction_vs_P2_min": 0.05,
+    "P3_scenarios_strictly_better_than_P2_min": 7,
+    "usable_centers_min": 103,
+    "usable_centers_each_scenario_min": 8,
+    "wrong_track_gain_fraction_max_exclusive": 0.5,
+    "repeated_center_gain_fraction_max_exclusive": 0.5,
+    "spatial_reassignment_removed_gain_fraction_min": 0.5,
+    "target_dependency_rows_bit_exact": 256
+  },
+  "runtime_gate": {
+    "smoke_updates_each": 5,
+    "smoke_fits_and_evaluation_seconds": 11.704188800009433,
+    "smoke_total_seconds": 15.06952319998527,
+    "linear_400_update_projection_seconds": 939.7005574007392,
+    "projection_with_20_percent_contingency_seconds": 1127.640668880887,
+    "maximum_unattended_seconds": 1200,
+    "passes": true
+  },
+  "command": ".\\.venv\\Scripts\\python.exe experiments\\screen_okutama_center_evidence_completion.py",
+  "output_directory": ".runs/research_20260913/center_evidence_completion_screen_v1",
+  "stop": "If any reconstruction gate fails, retain ARFTR and do not open task labels. A passing screen requires a new versioned task authorization and does not itself improve macro-F1."
+}

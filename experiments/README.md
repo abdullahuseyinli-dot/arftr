@@ -1,5 +1,22 @@
 # Experiment runners
 
+## Current status: development search closed
+
+Start with the [current research overview](../docs/RESEARCH_OVERVIEW.md),
+[architecture map](../docs/ARCHITECTURE.md), and
+[reproduction guide](../docs/REPRODUCIBILITY.md). The retained ARFTR result is
+85.383648% macro-F1 on adaptive internal development, not an untouched test result.
+The final matched motion-null experiment failed its fixed continuation gates.
+
+These files are a research archive, not an automatic training queue. Many September
+runners require local `.runs/` caches, ancestry receipts and checkpoints. Their
+original paths and source bytes are retained where bound by execution locks.
+Do not launch old plans merely because a filename contains `next`, `pilot`, or
+`queue`; prospective decisions in dated documents have been superseded.
+
+Current read-only checks: `python tools/check_project.py` and `python -m pytest`.
+Historical sequences below explain provenance; they do not authorize fresh training.
+
 The September 2026 [team review](../docs/HAC_ENGINEERING_RESEARCH_REVIEW_20260906.md)
 and [next-run plan](../docs/HAC_NEXT_RUN_PLAN_20260906.md) add two analysis tools:
 `analyze_hac_component_relationships.py` compares immutable development exports with

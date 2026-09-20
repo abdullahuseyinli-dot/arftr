@@ -1,0 +1,98 @@
+{
+  "study_id": "okutama_bounded_factor_correction_v1",
+  "declared_on": "2026-09-12",
+  "scope": "Adaptive repeated development on 4977 Okutama centers; external scenarios remain required",
+  "primary_arm": "b2_bounded_separate_all_frames",
+  "arms": {
+    "b0_exact_arftr": "bit-exact frozen ARFTR reference",
+    "b1_bounded_separate_center_only": "separate auxiliary and bounded correction outputs; repeated center supervision",
+    "b2_bounded_separate_all_frames": "separate auxiliary and bounded correction outputs; all cached frame supervision",
+    "b3_bounded_shared_all_frames": "shared auxiliary/correction output under the same bound; all cached frames",
+    "b4_unbounded_separate_all_frames": "separate outputs with the same nominal scales but no tanh bound; all cached frames"
+  },
+  "inputs": {
+    "anchor": "frozen fold-specific ARFTR; training anchors replayed from nested M4/P6/A3 probabilities",
+    "center_feature": "short-cache center-index-8 DINOv2 CLS",
+    "auxiliary_features": "existing valid short/long DINOv2 CLS frame cache",
+    "new_pixels": 0,
+    "new_backbone_passes": 0
+  },
+  "architecture": {
+    "input_dim": 768,
+    "width": 128,
+    "classes": 3,
+    "dropout": 0.1,
+    "posture_bound": 0.5,
+    "motion_bound": 0.5,
+    "encoder": "LayerNorm, Linear, GELU, Dropout",
+    "separate_outputs": "three-class auxiliary classifier plus two-output zero-initialized factor correction",
+    "shared_output": "zero-initialized auxiliary logits mapped to centered posture and motion scores",
+    "bounded_equation": "delta=[0.5*tanh(raw_posture),0.5*tanh(raw_motion)]",
+    "unbounded_control_equation": "delta=[0.5*raw_posture,0.5*raw_motion]",
+    "zero_fallback": "zero correction copies ARFTR probabilities exactly",
+    "parameter_limit": 111000
+  },
+  "training": {
+    "outer_folds": [0, 1, 2, 3, 4],
+    "outer_seeds": [42, 43, 44],
+    "trained_arms": 4,
+    "model_fits": 60,
+    "epochs": 8,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "batch_size": 2048,
+    "gradient_clip_norm": 1.0,
+    "center_loss_weight": 1.0,
+    "auxiliary_loss_weight": 0.5,
+    "anchor_kl_weight": 0.1,
+    "optimizer_step_matching": "all arms use all-frame step count; center-only observations cycle",
+    "selection": "none; bounds and stopping are fixed before outer fitting",
+    "outer_labels_used_for_fitting_or_selection": false,
+    "required_device": "cuda",
+    "deterministic_algorithms": true,
+    "tf32": false
+  },
+  "statistics": {
+    "primary_contrasts": [
+      ["b2_bounded_separate_all_frames", "b0_exact_arftr"],
+      ["b2_bounded_separate_all_frames", "b1_bounded_separate_center_only"]
+    ],
+    "mechanism_contrasts": [
+      ["b2_bounded_separate_all_frames", "b3_bounded_shared_all_frames"],
+      ["b2_bounded_separate_all_frames", "b4_unbounded_separate_all_frames"]
+    ],
+    "scenario_bootstrap_resamples": 10000,
+    "exact_scenario_swaps": 2048,
+    "one_sided_alpha": 0.05,
+    "seed": 20260912,
+    "arftr_comparison_seed_rule": "seed_plus_arm_index",
+    "center_control_seed": 20260922,
+    "required_diagnostics": [
+      "per_class_precision_recall",
+      "known_pure_support_rescues_harms",
+      "known_mixed_support_rescues_harms",
+      "unknown_support_rescues_harms"
+    ]
+  },
+  "screen_gates": {
+    "minimum_primary_macro_f1": 0.858,
+    "minimum_gain_over_arftr_points": 0.45,
+    "minimum_gain_over_center_control_points": 0.25,
+    "minimum_net_corrections_over_arftr": 25,
+    "minimum_known_pure_net_corrections": 0,
+    "minimum_known_mixed_net_corrections": 0,
+    "both_primary_scenario_swap_p_maximum": 0.05,
+    "maximum_nll_delta_over_arftr_one_sided_upper95": 0.0,
+    "maximum_brier_delta_over_arftr_one_sided_upper95": 0.0,
+    "maximum_worst_class_f1_loss_points": 0.5,
+    "minimum_improved_scenarios": 7,
+    "maximum_seed_macro_f1_sd_points": 0.75,
+    "exact_arftr_replay": true
+  },
+  "stop_rules": {
+    "primary_fails_anchor": "retain frozen ARFTR",
+    "all_frames_help_control_but_not_anchor": "stop center-CLS integration and test actual temporal motion inputs",
+    "primary_passes": "freeze this recipe before untouched-scenario evaluation"
+  }
+}

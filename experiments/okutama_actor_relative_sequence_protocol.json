@@ -1,0 +1,79 @@
+{
+  "study_id": "okutama_actor_relative_state_sequence_v1",
+  "declared_on": "2026-09-12",
+  "scope": "Adaptive repeated development on the fixed 4977-center Okutama cohort; this standalone evidence screen does not train a fusion with ARFTR.",
+  "research_question": "Can jointly observed, timestamped actor-frame descriptors improve state recognition, and does actor-relative representation plus action-change supervision improve over a matched ordinary temporal encoder?",
+  "class_order": ["sitting", "standing", "walking_running"],
+  "arms": [
+    "s0_independent_all_frames",
+    "s1_unordered_pooled_all_frames",
+    "s2_timestamp_tcn_all_frames",
+    "s3_actor_relative_tcn_all_frames",
+    "s4_actor_relative_relation_all_frames"
+  ],
+  "primary_arm": "s4_actor_relative_relation_all_frames",
+  "inputs": {
+    "frame_features": "Frozen DINOv2 base CLS descriptors at the 16 short and 16 long exact actor-frame timestamps.",
+    "frame_targets": "Known action target at each valid cached physical actor frame; supervision is restricted to current outer-training scenarios.",
+    "new_pixels_read": 0,
+    "new_video_frames_decoded": 0,
+    "new_backbone_fits": 0,
+    "new_backbone_forward_passes": 0
+  },
+  "architecture": {
+    "input_dim": 768,
+    "width": 64,
+    "dropout": 0.1,
+    "temporal_blocks": 2,
+    "parameter_limit": 1000000,
+    "sequence_slots": 32,
+    "center_source": "short stream, immutable slot 8",
+    "timestamp": "(source_frame - center_frame) / 30.0, with masked invalid slots",
+    "actor_relative": "projected frame state plus its difference from the masked local actor mean",
+    "relation": "same-versus-different action state for valid, distinct timestamp pairs inside training sequences only"
+  },
+  "training": {
+    "outer_folds": [0, 1, 2, 3, 4],
+    "outer_seeds": [42, 43, 44],
+    "model_fits": 75,
+    "epochs": 8,
+    "batch_size": 256,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "gradient_clip_norm": 1.0,
+    "relation_loss_weight": 0.15,
+    "class_loss": "outer-training center class weights plus physical-frame multiplicity weights for frame and pair supervision",
+    "selection": "none; architecture, optimizer, relation weight and resource budget are fixed before fitting",
+    "outer_labels_used_for_fitting_or_selection": false,
+    "outer_metric_embargo": "Held labels are not read by an individual fit; predictions release only after the complete 75-fit inventory.",
+    "required_device": "cuda",
+    "deterministic_algorithms": true,
+    "tf32": false
+  },
+  "statistics": {
+    "scenario_bootstrap_resamples": 10000,
+    "exact_scenario_swaps": 2048,
+    "one_sided_alpha": 0.05,
+    "seed": 20260912,
+    "primary_mechanism_contrasts": [
+      ["s4_actor_relative_relation_all_frames", "s2_timestamp_tcn_all_frames"],
+      ["s4_actor_relative_relation_all_frames", "s3_actor_relative_tcn_all_frames"]
+    ]
+  },
+  "screen_gates": {
+    "minimum_primary_macro_f1": 0.8588364807373623,
+    "minimum_gain_over_arftr_points": 0.5,
+    "minimum_net_corrections_over_arftr": 25,
+    "maximum_worst_class_f1_loss_points": 0.5,
+    "minimum_improved_scenarios": 7,
+    "maximum_seed_macro_f1_sd_points": 0.75,
+    "primary_scenario_swap_p_maximum": 0.05,
+    "exact_arftr_replay": true
+  },
+  "stop_rules": {
+    "no_sequence_arm_improves_arfter": "stop cached global-descriptor sequence integration and move to a new observation type",
+    "ordinary_tcn_beats_actor_relative": "retain ordinary temporal evidence and reject the actor-relative mechanism",
+    "primary_passes": "rebuild full inner-nested candidate and ARFTR predictions before any fusion or utility analysis"
+  }
+}

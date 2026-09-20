@@ -3,6 +3,20 @@
 This file records versioned public study artifacts. The Python package has its own
 version in `pyproject.toml`.
 
+## Unreleased — 3.1.0.dev0
+
+- Added the September ARFTR development closeout: 85.383648% macro-F1 on
+  4,977 adaptively reused development examples, separate from earlier test results.
+- Preserved the failed matched motion-null experiment, its numerical exceptions,
+  exact replay result, and unchanged continuation gates.
+- Added aggregate-only portable evidence, a current research map, model card,
+  reproduction tiers, contribution guidance, and explicit public/local boundaries.
+- Replaced the oversized landing page with a research/portfolio overview; retained
+  historical reports and release records without rewriting their scientific claims.
+- Excluded named local environments and added portable checkout/evidence validation.
+- Made the source/posture queue test independent of local training progress.
+- No new training, model promotion, dataset deletion, remote push, or publication.
+
 ## Study 3.0.0 release candidate - 2026-08-24
 
 - Added the motion-identifiability study across V-COCO source tags and

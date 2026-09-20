@@ -1,0 +1,16 @@
+{
+  "artifacts": {
+    "experiment_ledger.csv": {
+      "sha256": "c52f49974d70f7a778d7e22a00d32a6ccd9da72ade2541b3b7a81c6f85db25c5"
+    },
+    "knowledge_graph.json": {
+      "sha256": "12a0111196178701c5e852fedbb2f77080f1a73feaf578ece14586edabeba7bd"
+    },
+    "metrics.json": {
+      "sha256": "cdcb90b391e49530e13bc9d75f204b769e5e10639dca160803eb33168813f5e5"
+    }
+  },
+  "hash_semantics": "UTF-8 text with CRLF normalized to LF for checkout portability",
+  "ledger_source_sha256": "f4fb3dc20bc8e748665206087cc893abfa8293a2eaaa0cb72ef4ceeee233759c",
+  "schema_version": 1
+}

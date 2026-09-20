@@ -1,0 +1,77 @@
+{
+  "study_id": "okutama_class_diagonal_protected_residual_cached_screen_v1",
+  "declared_on": "2026-09-12",
+  "scope": "Locked adaptive cached screen on the same 4977 Okutama centers; repeated-development evidence, not external confirmation",
+  "architecture_name": "M4-Anchored Class-Diagonal Protected Residual",
+  "class_order": ["sitting", "standing", "walking_running"],
+  "primary_arm": "c1_class_diagonal_protected_residual",
+  "arms": {
+    "c0_exact_m4": "bit-exact new-source M4 anchor",
+    "c1_class_diagonal_protected_residual": "three classwise log-residual coefficients learned on selected outer-training OOF predictions"
+  },
+  "equation": "softmax(log(p_M4 + epsilon) + alpha[class] * (log(p_A3 + epsilon) - log(p_M4 + epsilon)))",
+  "optimization": {
+    "objective": "mean outer-training OOF NLL + 0.1 * sum(alpha[class]^2)",
+    "coefficients": 3,
+    "coefficient_minimum": 0.0,
+    "coefficient_cap": 0.25,
+    "l2": 0.1,
+    "optimizer": "L-BFGS-B with analytic gradient",
+    "initial_coefficients": [0.0, 0.0, 0.0],
+    "maximum_iterations": 1000,
+    "tolerance": 1e-12,
+    "epsilon": 1e-12,
+    "fits": "exactly one three-coefficient fit per outer fold; five fits total"
+  },
+  "sitting_protection": {
+    "sitting_class": 0,
+    "rule": "If M4 and A3 predicted classes disagree and either prediction is sitting, return the exact M4 probability bytes",
+    "applies_during_training_and_inference": true
+  },
+  "splitting": {
+    "outer_folds": [0, 1, 2, 3, 4],
+    "groups": "scenario",
+    "training_probabilities": "fold-selected inner OOF M4 and A3 predictions covering only outer-training scenarios",
+    "inference_probabilities": "fold-selected M4 and A3 outer refits paired in fixed seed order [42, 43, 44]",
+    "outer_labels_used_for_fit": false,
+    "outer_metric_embargo": "No outer-held label, correctness flag, or metric is read, scored, or logged until all five fold receipts validate"
+  },
+  "inference_contract": {
+    "allowed": ["M4 probabilities", "A3 probabilities", "three fold-learned class coefficients"],
+    "forbidden": [
+      "scenario or fold identity as a model feature",
+      "ground-truth activity label",
+      "true or predicted boundary features",
+      "held-row correctness or error identity"
+    ],
+    "new_backbone_fits": 0,
+    "new_neural_checkpoint_fits": 0,
+    "cached_three_parameter_fits": 5
+  },
+  "statistics": {
+    "primary_contrast": ["c1_class_diagonal_protected_residual", "c0_exact_m4"],
+    "exact_scenario_swap_test": {
+      "alternative": "candidate macro-F1 improvement over exact M4",
+      "assignments": "all 2^N scenario-level candidate/anchor swaps",
+      "significance_alpha": 0.05,
+      "random_sampling": false
+    }
+  },
+  "screen_gate": {
+    "wording": "This is a strict go/no-go cached screen for investment in transported temporal parts; it is not confirmation and a failure cannot be rescued by post-hoc arm selection.",
+    "minimum_macro_f1": 0.85,
+    "minimum_gain_macro_f1_points": 0.1,
+    "minimum_net_corrections": 5,
+    "maximum_exact_scenario_swap_p_value": 0.05,
+    "maximum_nll_delta": 0.0,
+    "exact_m4_replay_required": true,
+    "exact_sitting_fallback_required": true,
+    "pass_decision": "CONTINUE_TO_TRANSPORTED_TEMPORAL_PARTS",
+    "fail_decision": "STOP_CLASS_DIAGONAL_BRANCH"
+  },
+  "interpretation": {
+    "adaptive_status": "The architecture and sitting protection were motivated after inspecting M4 and A3 on this cohort.",
+    "claim_limit": "Results quantify development utility only and cannot establish unbiased generalization.",
+    "held_release_rule": "The primary definition and hashes are frozen before this runner releases any new candidate metric."
+  }
+}

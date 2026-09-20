@@ -1,0 +1,55 @@
+{
+  "protocol_version": "1.0.1",
+  "study_id": "HAC_GAUGE_INVARIANT_PERSISTENT_ARTICULATION_V1",
+  "status": "PHASE_A_MEASUREMENT_ONLY",
+  "selection": {
+    "source": ".runs/research_20260913/body_witness_pilot_v1/pilot_selection.json",
+    "crop_manifest": ".runs/research_20260913/body_witness_pilot_v1/crop_manifest.json",
+    "first_smoke_centers": 16,
+    "expanded_centers_after_smoke": 128,
+    "selection_inputs": ["sample_id", "recording", "track", "scenario", "center_frame", "native_box"],
+    "forbidden_inputs": ["action_label", "ARFTR_prediction", "ARFTR_error", "support_category", "human_review"]
+  },
+  "frames": {
+    "offsets": [-30, -22, -15, -8, 0, 8, 15, 22, 30],
+    "center_index": 4,
+    "fps": 29.97002997002997,
+    "missingness": "record missingness; never repeat, interpolate, or substitute"
+  },
+  "sources": ["native4k", "exact_native_downsample720"],
+  "tracker": {
+    "primary_requested": ["CoTracker3", "TAPIR"],
+    "smoke_backend": "opencv_lk_persistent",
+    "smoke_backend_role": "explicit frozen feasibility lower bound; not a silent learned-tracker substitution",
+    "task_fit_before_tracker_lock": false
+  },
+  "points": {
+    "actor": 64,
+    "background": 64,
+    "identity": "same center-seeded point identity is propagated through all nine frames; no pair re-detection for the persistent arm"
+  },
+  "decomposition": {
+    "camera": "robust background similarity gauge",
+    "actor_root": "robust similarity after camera projection",
+    "articulation": "residual after camera and actor-root transforms in actor-box coordinates",
+    "features": ["survival", "cycle error", "root motion", "time-even shape", "time-odd velocity", "cyclic energy", "background/actor residual ratio"]
+  },
+  "controls": ["pair-local re-detection", "persistent raw", "background-only", "time reversal", "identity permutation", "wrong-track", "repeated center"],
+  "smoke_gates_first_16": {
+    "survival": "at least 75% of actor points survive all nine frames in at least 80% centers",
+    "cycle": "median cycle error <=0.05 actor-box diagonal",
+    "camera_separation": "camera removes >=50% background energy while retaining >=50% actor residual",
+    "identity_specificity": "identity permutation worsens held-point prediction >=25%",
+    "wrong_track": "wrong-track control is not comparable",
+    "source_consistency": "native4K and exact-native-downsample720 agree in gate direction"
+  },
+  "expanded_128_gate": {
+    "held_visible_point": "at least 20% lower error than pair-local overall and positive in at least 4/5 scenario folds",
+    "identity_specificity": "permutation penalty >=25%",
+    "foldwise_claim": "not evaluated on the 16-center smoke"
+  },
+  "stop": "Any smoke gate failure closes this representation without task fitting; no width, temporal block, router, or human review may be added to rescue it.",
+  "task_fit_authorized": false,
+  "artifact_script": "experiments/pilot_okutama_persistent_articulation.py"
+}
+

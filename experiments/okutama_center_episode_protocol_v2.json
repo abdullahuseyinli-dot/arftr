@@ -1,0 +1,176 @@
+{
+  "study_id": "okutama_center_episode_numerical_correction_execution_v2",
+  "declared_on": "2026-09-08",
+  "current_stage": "EXECUTABLE_AFTER_FINAL_INTEGRATION_TESTS_AND_INDEPENDENT_REVIEW",
+  "classifier_fitting_authorized": true,
+  "authorization_condition": "Main authorizes exactly 150 fresh matched fits after synthetic tests, actual failing-case validation and independent final runner review pass; no additional main round trip required after those gates.",
+  "proposal_snapshot": "experiments/okutama_center_episode_proposal_snapshot.json",
+  "proposal_snapshot_sha256": "7b2f2fdd5a0cdf0a4910a31a2141b7b055462697d5cc4024384014449a8ab038",
+  "original_memory_execution_lock_sha256": "6326362b8076d32136f4731a69badb0e0f224c2ccb71f91c313b74bc22b93651",
+  "status_note": "Post-M4 exploratory mechanism motivated by exposed development diagnostics; not a fresh confirmatory study or global novelty claim",
+  "existing_runs_are_immutable": true,
+  "primary_rows": 4977,
+  "class_order": [
+    "sitting",
+    "standing",
+    "walking_running"
+  ],
+  "allowed_input_cache": ".runs/research_20260908/evidence_memory/data/memory_data.npz",
+  "allowed_nested_base_cache": ".runs/research_20260908/evidence_memory/base_cache",
+  "cache_reuse_rule": "Reuse only after exact training-ID, feature, class-order, fold/configuration and provenance hashes match each inner or outer population; never substitute historical global OOF probabilities",
+  "new_pixels_or_duration_or_labels": false,
+  "neighbor_seconds": [
+    -2,
+    -1,
+    0,
+    1,
+    2
+  ],
+  "center_index": 2,
+  "offline_future_context": true,
+  "raw_frame_support": "Same existing memory union, approximately -3.0667 to +2.9333 seconds; retain exact frame-support manifests",
+  "arms": [
+    "log_survival_control",
+    "expected_episode"
+  ],
+  "primary_contrast": [
+    "expected_episode",
+    "log_survival_control"
+  ],
+  "descriptive_references_only": [
+    "p6",
+    "temporal_mean",
+    "temporal_conv",
+    "query_attention",
+    "survival_memory",
+    "corroborated_memory"
+  ],
+  "matched_capacity": {
+    "input_dim": 3072,
+    "width": 128,
+    "layers": 2,
+    "heads": 4,
+    "hazard_width": 32,
+    "dropout": 0.1,
+    "parameters_per_arm": 849059,
+    "parameter_limit": 1000000,
+    "same_state_dict_schema": true
+  },
+  "hazard": {
+    "node_inputs": "Separate projection of the same 3072 training-standardized frozen visual node features used by M2-M5; six node-quality fields remain diagnostics only. No class probabilities, quality inputs, identity codes, center-relative time/slot, or utility-context embeddings",
+    "edge_inputs": "ordered endpoint embeddings, signed difference, absolute difference",
+    "physical_interval": "edge at destination connects previous available timestamp, including missing-slot bridges; require strictly increasing observed times",
+    "boundary_probability": "1-exp(-softplus(edge_head)*dt_seconds)",
+    "classification_gradient": "Detached before either attention operator; hazard projection also detaches frozen input features",
+    "supervision": "Any target-state change across the entire inclusive observed edge interval; mask unknown/ambiguous/missing annotation support",
+    "loss": "Uniform unweighted masked BCE-with-logits; no positive weights, focal loss, oversampling or post-hoc threshold",
+    "calibration_caveat": "Proper loss does not guarantee finite-sample calibration; independence across edges is a model assumption"
+  },
+  "attention": {
+    "control": "softmax(utility + detached_log_path_survival), center survival 1; no epsilon floor",
+    "candidate": "Independent left/right stopping endpoints; normalize utility within each contiguous observed segment containing center, then average by segment probability",
+    "maximum_segments": 9,
+    "coefficient_bound": "For each neighbor j: attention_j <= predicted_path_survival_j, up to floating-point tolerance; final neighbor coefficient gate*attention_j also satisfies this",
+    "not_claimed": "Not guaranteed true-state survival, not a bound on all indirect contextual feature influence, and not a new source of class probability mass",
+    "fusion": "Same original-probability center mixture and learned gate in both arms; bias -4; exact singleton/zero-gate fallback",
+    "numerics": "Direct-path float64 survival and segment marginalization; learned utility/gate/hazard networks remain float32; no hazard temperature, probability floor, posthoc weight search or tolerance relaxation."
+  },
+  "outer_folds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "inner_folds": 3,
+  "split_seed": 42,
+  "inner_seed": 42,
+  "outer_seeds": [
+    42,
+    43,
+    44
+  ],
+  "optimizer": "AdamW",
+  "learning_rates": [
+    0.0003,
+    0.001
+  ],
+  "weight_decays": [
+    0.0001,
+    0.01
+  ],
+  "max_epochs": 30,
+  "early_stopping_patience": 7,
+  "batch_size": 128,
+  "batch_status": "Locked at 128 after synthetic GPU feasibility pilot; both arms 849059 parameters, finite gradients, peak allocation approximately 125 MB",
+  "resource_pilot": ".runs/research_20260908/center_episode_v2/resource_pilot.json",
+  "pilot_timing_caveat": "The control timing includes cold-start overhead; do not infer operator speed superiority from those pilot timings",
+  "deterministic_algorithms": true,
+  "gradient_clip_norm": 1,
+  "coefficient_bound_tolerance": 0.000001,
+  "classification_loss": "Current meta-training population balanced center NLL",
+  "boundary_loss_weight": 0.2,
+  "gate_square_penalty": 0.001,
+  "gradient_clipping": "Norm 1 independently for hazard_* parameters and all other parameters; never one global clip that couples classifier and hazard updates",
+  "feature_scaling": "Only current meta-training centers, same existing visual-feature statistics recipe; six quality fields remain diagnostics only; neighbors restricted to the same allowed scenario population",
+  "selection": "Pooled inner best-checkpoint macro-F1 descending, NLL ascending, learning-rate ascending, weight-decay ascending; no outer diagnostic tuning",
+  "outer_refit_epochs": "Rounded median of selected configuration's three best inner epochs",
+  "seed_aggregation": "Unweighted probability mean of outer seeds 42,43,44; never pick best outer seed",
+  "fit_budget": {
+    "formula": "2 arms * 5 outer folds * (4 optimizer settings * 3 inner fits + 3 outer seed refits)",
+    "maximum_neural_fits": 150,
+    "new_base_fits_if_hashes_match": 0,
+    "previous_measured_75_fit_seconds": {
+      "query_attention": 559.9297237999272,
+      "survival_memory": 493.30440509994514
+    },
+    "estimate_not_measurement": "About 25-45 minutes if early-stopping behavior resembles completed memory fits; reserve up to 2.5 hours for all 30 epochs plus validation/I/O. New candidate GPU throughput remains unmeasured."
+  },
+  "required_audit": [
+    "Lock prototype, runner, protocol, tests, data and nested-base lineage in a new run directory; active runs unchanged",
+    "Verify separate gradient clipping, unweighted BCE, train-only feature statistics and no known boundary labels in forward",
+    "Check held hazard NLL/Brier and reliability by physical duration; report repeated-edge occurrence-weighted and physical-edge-deduplicated summaries",
+    "Report all-row macro-F1/accuracy/NLL/Brier, seeds, scenarios, sampled boundaries, full-interval boundaries, stable and unknown subsets",
+    "Report rescues/harms against fixed references and matched control, including all 508 historical shared failures without selecting them for training",
+    "Audit maximum attention-minus-survival and final neighbor-coefficient-minus-survival; allow only documented numerical tolerance",
+    "Separate hazard calibration improvements from marginalization effect; do not attribute candidate-vs-old-M4 changes solely to the new operator",
+    "No radius, threshold, hazard temperature or utility tuning against exposed outer outcomes"
+  ],
+  "statistics": {
+    "primary": "Paired exact scenario-swap test across 11 scenarios for expected_episode minus matched control",
+    "uncertainty": "Scenario-block bootstrap; report individual seeds and probability-mean system",
+    "scope": "Exploratory repeated-use development evidence, not independent confirmation",
+    "bootstrap_resamples": 10000,
+    "seed": 20260908,
+    "confirmatory_family": "None; one declared exploratory primary contrast; old-arm comparisons remain descriptive"
+  },
+  "engineering_checks": {
+    "target_macro_f1": 0.84,
+    "stretch_macro_f1": 0.85,
+    "shared_failure_repairs_minimum": 50,
+    "improved_scenarios_minimum": 7,
+    "worst_scenario_accuracy_delta_minimum": -0.02,
+    "legacy_boundary_harms_less_than": 73,
+    "nll_and_brier_no_worse_than_p6": true,
+    "matched_control_improvement_required": true
+  },
+  "references": {
+    "monotonic_attention": "https://proceedings.mlr.press/v70/raffel17a.html",
+    "monotonic_chunkwise_attention": "https://arxiv.org/abs/1712.05382",
+    "structured_attention": "https://arxiv.org/abs/1702.00887"
+  },
+  "numerical_version": {
+    "change": "Replace subtractive float32 cumulative-prefix path arithmetic with direct center-to-node edge sums and float64 segment/survival/attention arithmetic in BOTH arms. Same neural modules, parameter count, learning settings and1e-6 bound tolerance.",
+    "motivation": "One exact forensic replay of the interrupted v1 fit reproduced attention-minus-survival1.190824224117648e-6 at epoch10.",
+    "no_checkpoint_reuse": true,
+    "previous_v1_completed_neural_fits": 97,
+    "previous_v1_failed_attempts": 1,
+    "separate_diagnostic_replayed_fits": 1,
+    "new_v2_neural_fits": 150,
+    "prior_v1_execution_lock": ".runs/research_20260908/center_episode_v1/execution_lock.json",
+    "prior_v1_execution_lock_sha256": "3291548b309e48563d9720e891a2357e8c717ebb05084c881505af08d78a1e7b",
+    "forensic_receipt": ".runs/research_20260908/center_episode_forensics_v1/failure_receipt.json",
+    "actual_failure_validation": ".runs/research_20260908/center_episode_v2/actual_failure_validation.json",
+    "scope": "V1 is an interrupted numerical implementation, not a completed matrix. V2 reruns both arms from fresh seeded initialization; prior v1 models only diagnostic, never v2 fits or aggregates."
+  }
+}

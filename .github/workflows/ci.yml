@@ -24,18 +24,12 @@ jobs:
           --index-url https://download.pytorch.org/whl/cpu
           torch==2.11.0 torchvision==0.26.0
       - name: Install project and validation dependencies
-        run: python -m pip install -e ".[dev,notebook,report]"
-      - name: Lint
-        run: python -m ruff check .
+        run: python -m pip install -e ".[dev,notebook,report,research]"
+      - name: Reject new style findings (frozen research baseline)
+        run: python tools/check_style.py
       - name: Compile
         run: python -m compileall -q src experiments tools
       - name: Test
         run: python -m pytest
-      - name: Validate release artifacts
-        run: python tools/validate_repository.py
-      - name: Verify historical release manifest
-        run: python tools/build_study_release_manifest.py --check
-      - name: Verify current release manifest
-        run: python tools/build_v3_release_manifest.py --check
-      - name: Verify distributable archive
-        run: python tools/verify_v3_release_archive.py
+      - name: Verify public evidence and current documentation
+        run: python tools/check_project.py

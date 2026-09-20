@@ -1,5 +1,9 @@
 # A 0.94 Macro-F1 System and the Tests That Made the Result Worth Trusting
 
+Historical POLAR case study. For the whole project, including the later ARFTR
+development result and negative findings, start with the
+[current project overview](../README.md) and [research overview](RESEARCH_OVERVIEW.md).
+
 It is easy to improve an image classifier when every decision can be reconsidered after
 looking at the test set. It is much harder to improve one while preserving a clean
 answer to a simple question: *what did the model know before the test was opened?*

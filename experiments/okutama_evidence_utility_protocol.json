@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "study_id": "HAC_ALIGNED_EVIDENCE_ACTION_BRIDGE_V1",
+  "status": "IMPLEMENTATION_LOCK_FOR_PREFLIGHT_AND_INITIAL_20_FITS",
+  "parent_design": ".runs/research_20260913/invention_council_20260913_135728/NEXT_PHASE_PROTOCOL.json",
+  "population": {
+    "rows": 4977,
+    "classes": ["sitting", "standing", "walking_running"],
+    "folds": [0, 1, 2, 3, 4],
+    "scenario_groups": 11,
+    "row_order": ".runs/research_20260908/source_swap_v1/data/memory_data.npz::sample_ids",
+    "task_data_sha256": "0bfadd5f080b162ab4ccfce76affbde4779d9fb61757124029b159adec4079e9",
+    "selection": "all rows; no error, support, confidence, transition, or annotation filtering"
+  },
+  "observations": {
+    "context_loader": "hac.correspondence_field_data.load_frozen_context",
+    "context_columns": ["short_video768", "long_video768", "center_dino768"],
+    "jpeg_condition": "provider supplied 1280x720 JPEG",
+    "crop": "1.25x actor crop, 384 letterbox, ImageNet normalization, DINOv2-base patch14 27x27",
+    "center": "actual unmasked center through prepare_neighbor",
+    "neighbor_time_indices": [0, 4, 12, 15],
+    "neighbor_frame_offsets": [-8, -4, 4, 7],
+    "source_availability": "finite positive supplied box, valid_geometry, image_present, allowlisted ZIP member CRC and bytes; ignore annotation_occluded and annotation_generated",
+    "missing": "zero contrast and zero common coverage; retain center and context features",
+    "corruption": "abort; never reinterpret hash, identity, shape, nonfinite, or impossible-geometry failures as missing evidence",
+    "dense_precision": "DINO last_hidden_state patch tokens cast to float16; matching and interpolation use float32; bin reductions accumulate in float64 and cast to float32 output",
+    "shard_size_max": 128
+  },
+  "decomposition": {
+    "arms": ["B0_center_repeat", "B1_unaligned", "B2_phase_control", "B3_aligned_primary"],
+    "primary": "B3_aligned_primary",
+    "primary_contrast": "B3_aligned_primary-B2_phase_control",
+    "affine": {"radius": 4, "minimum_matches": 12, "irls_steps": 5, "huber_delta": 1.5, "maximum_residual_patches": 2.0, "exclusion_mask": "all false"},
+    "pooling": "3x2 bins in unexpanded center actor box; patch centers are 14*(index+.5) in letterbox edge coordinates",
+    "common_support": "per-donor intersection of center ROI/source validity, same-grid four-corner validity, phase-only four-corner validity, and affine four-corner validity",
+    "aggregation": "uniform donor mean per supported target, then uniform target mean per bin",
+    "phase_formula": "q + T(q) - floor(T(q)+0.5)",
+    "coverage": "common targets divided by source-valid actor-ROI targets in each bin",
+    "input_dimension": 11526
+  },
+  "reader": {
+    "network": "Linear(11526,64)-GELU-Linear(64,2)",
+    "nominal_parameters": 737858,
+    "decode": "p0=sigmoid(a); p1=(1-p0)*(1-sigmoid(b)); p2=(1-p0)*sigmoid(b)",
+    "class_weight": "N_train/(3*n_train_class)",
+    "loss": "mean(class_weight[label] * stable_factor_NLL_per_row)",
+    "scaler": "outer-train-only float64 mean and population std; denominator max(std,1e-6); output float32",
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "batch_size": 64,
+    "steps": 400,
+    "gradient_clip_norm": 1.0,
+    "seed": 42,
+    "sampler": "For each fold create numpy default_rng(42); repeatedly append rng.permutation(sorted outer-train row indices), and consume consecutive batches of64. Recreate the identical schedule for every arm.",
+    "early_stopping": false,
+    "initial_fits": 20,
+    "held_labels_during_fit": 0,
+    "held_features_affect_optimization_or_selection": 0,
+    "held_features_used_once_after_final_update_for_predictions": true,
+    "ARFTR_predictions_during_fit": 0
+  },
+  "metrics": {
+    "macro_f1": "pooled confusion macro over fixed classes [0,1,2], absent-class F1=0",
+    "nll": "mean -log(max(p_true,1e-12))",
+    "brier": "mean rowwise sum over three classes",
+    "ece": "15 equal-width bins; bin=min(floor(confidence*15),14); weighted absolute confidence-accuracy gap",
+    "uncertainty": "100000 paired scenario bootstrap draws with numpy default_rng(20260913); sample 11 scenarios with replacement and pool all member rows with multiplicity",
+    "exact_swaps": "all 2048 assignments of signs to 11 scenario contributions, descriptive",
+    "outer_fold_macro_f1": "fixed three-class macro-F1 separately within each held fold"
+  },
+  "gates": {
+    "discovery": "B3-B2>=0.005 macro-F1, B3-B0>=0.005, B3-B1>=0.005, B3-B2>0 in every fold, and paired-scenario bootstrap95 lower bound>0",
+    "opportunity": "B3 rescues at least40 retained-ARFTR errors and either at least10 rescues unique beyond B0/B1/B2, or B3 rescues>=B2, B3 harms<=B2-10, and B3 net corrections>B2 in every fold",
+    "confirmation": "run locked seeds43 and44 only after discovery passes; opportunity is required before intervention design, not before confirmation",
+    "integration": "separate fully nested protocol; macro-F1>=0.8588364807373623, net corrections>=25, positive every fold, positive scenario-CI lower bound, class F1 loss<=0.005, NLL/Brier no worse, exact retain audit"
+  },
+  "evaluation_boundary": {
+    "task labels": "read only by task runner after observation cache is sealed",
+    "ARFTR and diagnostic support": "read only by post-fit auditor after all20 checkpoint/prediction receipts are sealed",
+    "forbidden": ["load_cached_study_data in observation extraction", "global OOF predictions as meta-training rows", "outer-held normalization", "threshold search", "error-list row selection", "annotation support at inference"]
+  },
+  "preflight": {
+    "centers": 16,
+    "selection": ".runs/research_20260913/center_evidence_completion_v1/plan_v8.json::preflight_selection.sample_ids",
+    "requirements": ["64 unmasked affine fits", "fresh source-only ROI geometry", "cached-token parity or fresh80-view timing", "all arm shapes finite", "B0 contrasts exact zero", "all arms share coverage", "reader forward/backward finite", "peak memory and stage timings recorded"]
+  },
+  "execution_limit": "Do not launch a training command projected above20 minutes; shard extraction and hand off a longer command."
+}

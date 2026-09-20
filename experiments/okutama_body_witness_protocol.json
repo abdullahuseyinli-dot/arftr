@@ -1,0 +1,376 @@
+{
+  "schema_version": 5,
+  "study_id": "okutama_body_witness_v1",
+  "status": "task_screen_not_executed; provisional pose cache retained; v5 human-coordinate UI defect discovered and final gate blocked",
+  "contract": {
+    "path": ".runs/research_20260912/invention_synthesis_20260912_234907/NEXT_ACTIONS.md",
+    "sha256": "15ae1fe930fa4b4ed8d0c5b91274a905d70d3df1038e2e5f6bf6b05513adff3c",
+    "claim_scope": "Adaptive internal development; conditional predictive testing is not a causal counterfactual proof.",
+    "previous_field_gate": "Closed at failed gate; no old execution lock or result is amended.",
+    "prospective_amendments": [
+      {
+        "date": "2026-09-13",
+        "reason": "Independent pre-fit audit found that schema v1 excluded V3's task-trained conditional decoder from the matched-capacity count and did not expose the identical masked-DINO feature bank directly to V1/V2.",
+        "prior_protocol_sha256": "be5ae3c6432adb0d9610ca1bf0511fa1d54a380ae2a2009bd44d5ba0e193d6d3",
+        "changes": ["count all active task-trained modules", "give V1/V2/V3 the identical six-slot direct RGB bank", "match V1/V2/V3 total capacity with useful residual blocks 5/2/0"],
+        "timing": "before pose-quality output, task-label access, or task optimizer update",
+        "prior_receipts": "retained as superseded evidence; never overwritten"
+      },
+      {
+        "date": "2026-09-13",
+        "reason": "The pinned Hugging Face ViTPose-B configuration omitted layer_norm_eps and inherited 1e-12 instead of the official implementation's 1e-6.",
+        "prior_protocol_sha256": "37e2045539dc3d82fc939de902115541662ba5ff49b33ac43171c0335190a2cb",
+        "changes": [
+          "materialize every implicit ViTPose-B backbone field in a local corrected configuration",
+          "set layer_norm_eps to 1e-6 before model construction",
+          "require exact all-tensor transport equality and full-heatmap reference-forward parity",
+          "retain the independent official-publisher-byte provenance gate"
+        ],
+        "timing": "before any pretrained pose output, task-label access, or task optimizer update",
+        "verification_receipt": ".runs/research_20260913/vitpose_parity_v1/vitpose_computational_parity_receipt.json",
+        "verification_receipt_sha256": "c26ace93be192d71d265bc4abfbadcb3f7feefeeea9c3ab09a2eb1c7cfb51a0e",
+        "prior_receipts": "retained as superseded evidence; never overwritten"
+      },
+      {
+        "date": "2026-09-13",
+        "reason": "User authorized provisional continuation after one blinded human review, with the second review deferred.",
+        "prior_protocol_sha256": "b0c5f6ab636343322b2f8a933cb591cc9899e828346a73f0a71d74d588cc8a17",
+        "changes": [
+          "allow frozen pose extraction and provisional measurement diagnostics after one valid 128-row blinded review",
+          "retain two independent reviews and disagreement resolution as requirements for a final availability decision",
+          "forbid task-model fitting, route promotion, or threshold revision from single-review results"
+        ],
+        "timing": "before any pretrained-pose pilot output or task optimizer update",
+        "single_review_receipt": ".runs/research_20260913/body_witness_pilot_v1/reviewer_a_provisional_receipt_v1.json",
+        "single_review_normalized_sha256": "4636a82145f74783e464738f83c215e24193dde5204b1bf7531d493d634ce43d",
+        "prior_receipts": "retained as superseded evidence; never overwritten"
+      },
+      {
+        "date": "2026-09-13",
+        "reason": "Post-extraction overlay inspection exposed horizontal coordinate compression in the v5 interactive human-review page whenever the 70vh height cap made object-fit content narrower than its full-width canvas.",
+        "prior_protocol_sha256": "4f4b6cd285ea2877092751500a941d059cd5ebc55be8a29ea918ed2a32ed4be8",
+        "changes": [
+          "invalidate the 7/128 localization count as a pose-capability conclusion while retaining it as arithmetic over corrupted reference coordinates",
+          "preserve the pretrained pose cache and 365/368 target-sensitivity result as provisional measurements",
+          "isolate a geometry-corrected v6 reviewer in a new browser-state namespace",
+          "forbid final availability and task fitting until a valid independent second review and coordinate repair or re-review"
+        ],
+        "timing": "after provisional pose output but before any task-label access, task optimizer update, final availability decision, or threshold change",
+        "defective_reviewer_sha256": "b6629a46f2e0976a42518b5822b557bd1347b47d079c062fb03bcba49f287477",
+        "corrected_reviewer_path": ".runs/research_20260913/body_witness_pilot_v1/blinded_review/index_v6_interactive.html",
+        "corrected_reviewer_sha256": "6ceb8d62210a8b1d74bfb9d44d6bf349f2c1d1608aa5e1837df90e72021faf7a",
+        "css_inverse_receipt": ".runs/research_20260913/body_witness_review_geometry_v1/css_inverse_receipt_v1.json",
+        "css_inverse_receipt_sha256": "f52013cf00610a511dc36b88a0da4175625a2cb0ce56a18942e576adba4e31e5",
+        "diagnostic_only_result_sha256": "9c835f1967387f53050474b4eacf068141c1a4796c25070a0b46fef6f1ca4c52",
+        "prior_receipts": "retained as historical evidence; never overwritten"
+      }
+    ]
+  },
+  "population": {
+    "rows": 4977,
+    "scenario_count": 11,
+    "classes": ["sitting", "standing", "walking_running"],
+    "class_ids": [0, 1, 2],
+    "sample_ids_sha256": "59cfac24af97e4baba569038eb0ca0cd46cd8ec303d0044989115b01898acb26",
+    "sample_ids_hash_encoding": "sha256(json.dumps(list, sort_keys=True, separators=(',', ':')).encode('utf-8'))",
+    "outer_scenarios": {
+      "0": ["1.4", "2.2", "2.5"],
+      "1": ["1.5", "2.11"],
+      "2": ["1.10", "1.2"],
+      "3": ["2.7", "2.8"],
+      "4": ["1.11", "1.3"]
+    },
+    "identifier_type": "string",
+    "metadata_join": "canonical sample_id; never use old residual CSV scenario values",
+    "endpoint": "offline supplied-box within-recording-track; no cross-drone identity assumption",
+    "training_labels": [0, 1],
+    "evaluation_labels": [0, 1, 2],
+    "diagnostic_only_slices": {
+      "historical_bank_unresolved_posture_errors": 119,
+      "true_locomotion_anchor_predicts_posture": 249,
+      "support": ["pure", "mixed", "unknown"]
+    }
+  },
+  "pinned_inputs": {
+    "canonical_data": {
+      "path": ".runs/research_20260908/source_swap_v1/data/memory_data.npz",
+      "sha256": "0bfadd5f080b162ab4ccfce76affbde4779d9fb61757124029b159adec4079e9"
+    },
+    "anchor": {
+      "path": ".runs/research_20260912/arftr_v1/results/v0001/oof_probabilities.npz",
+      "sha256": "ec9957a9393e6f1803d274d281549c20290ed59343b308c5be3446be37cec720"
+    },
+    "center_dino": {
+      "path": ".runs/research_20260907/okutama_native_video_p0_r1/dinov2_full/dinov2_native_frames.npy",
+      "sha256": "b40cfea1659795bf7554b0e77f7f6d95226c1745038baca884460065546ec2f2",
+      "slice": "[:,8,0,:]"
+    },
+    "historical_m4_protocol": {
+      "path": "experiments/okutama_evidence_memory_protocol.json",
+      "sha256": "be0249d19064c0a5545c51e79a0a2c004aa5ed17c6e68bc4860864c4eaf5cd8a"
+    },
+    "historical_a3_protocol": {
+      "path": "experiments/okutama_sear_matrix_protocol.json",
+      "sha256": "c8fb729ed0f9f0cbbb8a86bb34409a6af2872dfea0cc89338af6457b581246e3"
+    },
+    "historical_arftr_protocol": {
+      "path": "experiments/okutama_arftr_protocol.json",
+      "sha256": "365c6edbfdcd5c78ad4d2783bf59f3841a6386d2c123eef4e1a29ec8c11eceaa"
+    },
+    "historical_base_code": {
+      "path": "src/hac/actor_memory_base.py",
+      "sha256": "e2129e820c32df1d91ce2548ff1302b48035914c0b50e9c71fc61dab20dd2756"
+    },
+    "historical_fit_receipt_code": {
+      "path": "src/hac/source_swap_execution.py",
+      "sha256": "f5123cacb63d92b0b6a4256081caffb27fbc9f98eae7a613dd74e57212b912fb"
+    }
+  },
+  "anchor_metrics": {
+    "macro_f1": 0.8538364807373623,
+    "accuracy": 0.8589511754068716,
+    "errors": 702,
+    "nll": 0.37734901395307213,
+    "brier_sum_classes_mean_rows": 0.21350492452064215
+  },
+  "observations": {
+    "context_dim": 2304,
+    "context": "canonical memory features[:, :1536] concatenated with pinned center DINO [:,8,0,:]",
+    "source": "exact verified original center video frame and supplied actor-box field of view at each prescribed extent; no nearest-frame or alternate-FOV fallback",
+    "required_source_receipts": ["sample_id", "physical_timestamp", "decode_index", "source_dimensions", "crop_affine", "interpolation", "fallback_or_failure"],
+    "crop_extents": [1.0, 1.25],
+    "spatial_masks": {"names": ["upper", "lower"], "excluded_band_fraction": 0.05, "before_resize_and_encoder": true},
+    "source_model_lock": {
+      "status": "computational_mismatch_corrected; pilot preprocessing and flip replay pass; publisher byte identity remains unresolved",
+      "pose_model": "ViTPose-B COCO-only single-task classic decoder 256x192",
+      "repository": "https://github.com/ViTAE-Transformer/ViTPose",
+      "config_url": "https://github.com/ViTAE-Transformer/ViTPose/blob/main/configs/body/2d_kpt_sview_rgb_img/topdown_heatmap/coco/ViTPose_base_coco_256x192.py",
+      "repository_revision": "c050ed29112da7704797cc1a65af0234b525010d",
+      "config_sha256": "4c1cfc13c6f73cb7522559085b543e40f075f644f1495b0b8986f43132008846",
+      "config_sha256_scope": "UTF-8 content fetched from the pinned official raw GitHub URL",
+      "required_layer_norm_eps": 0.000001,
+      "checkpoint_sha256": "cd9a4e6cefc33c51ddcc32dd509fc4114b5845256463a69a10ea2dfde402b2f8",
+      "source_mirror_checkpoint_sha256": "2e849e1f1dbb5b87191eda7171f1b16468d5d082a7380e93e94b7ce76a061679",
+      "raw_converted_config_sha256": "488377867b16542e0c0025a0eab646abfd066e67f115ab3ec100e3af49872787",
+      "corrected_config_sha256": "a5ea1212fa849b347e9bd9083bb043637845c83cecc12975343b728163787afe",
+      "corrected_model_path": ".runs/research_20260913/vitpose_parity_v1/corrected_model",
+      "computational_parity_receipt": ".runs/research_20260913/vitpose_parity_v1/vitpose_computational_parity_receipt.json",
+      "checkpoint_candidate_status": "COMPUTATIONAL_PASS; exact tensor transport and full-heatmap reference parity pass after explicit 1e-6 correction; official OneDrive byte identity remains unresolved",
+      "masked_dino_checkpoint_sha256": null,
+      "source_map_sha256": null,
+      "dependency_versions": null,
+      "computational_compatibility_check_passed": true,
+      "publisher_byte_identity_verified": false,
+      "pilot_preprocessing_and_flip_lock_passed": true,
+      "compatibility_check_passed": false,
+      "freeze_before": "first pretrained-pose or target-sensitivity pilot output; native review crops contain no pose estimates",
+      "post_output_switch_forbidden": true
+    },
+    "forbidden_inference_inputs": ["action_labels", "support_category", "action_annotation_presence", "error_bank_membership", "human_pose_audit_verdict", "known_action_transition"],
+    "acquisition_failure_action": "copy_exact_ARFTR_probabilities"
+  },
+  "pilot": {
+    "rows": 128,
+    "sample_hash_prefix": "hac-body-witness-v1|",
+    "selection": {"salt": "hac-body-witness-v1|", "scenario_order": "lexicographic_strings", "first_seven_scenario_quota": 12, "remaining_four_scenario_quota": 11, "first_pass_unit": ["recording", "track"], "deterministic_ranked_fill": true},
+    "scenario_order": "lexicographic_strings",
+    "quotas": {"first_scenarios": 7, "first_quota": 12, "remaining_quota": 11},
+    "within_scenario_order": "sha256(prefix + sample_id), then sample_id",
+    "first_pass": "at most one center per (recording, track), then deterministic ranked fill",
+    "human_reference": {"reviewers": 2, "blinded_to": ["pose_estimates", "action_labels", "ARFTR_outputs", "error_membership"], "visibility_disagreements_resolved_before_final_gate": true, "adjudication_remains_blinded_to_pose_outputs": true, "use": "feasibility_only_never_training_or_policy", "coordinate_status": "reviewer_a visibility decisions retained; v5 coordinates invalid for final scoring due to UI geometry defect; CSS inverse is diagnostic only", "valid_reviewer": ".runs/research_20260913/body_witness_pilot_v1/blinded_review/index_v6_interactive.html", "interim_single_review": {"authorized_scope": ["frozen_pose_cache_preservation", "provisional_target_sensitivity_diagnostic", "pose_blind_css_geometry_diagnostic"], "forbidden_scope": ["final_availability_pass", "task_model_fitting", "route_promotion", "threshold_revision", "treating_css_inverse_as_final_reference"], "second_review_still_required": true}},
+    "landmarks": ["left_shoulder", "right_shoulder", "left_hip", "right_hip", "left_knee", "right_knee", "left_ankle", "right_ankle"],
+    "primary_scored_extent": 1.0,
+    "stability_only_extent": 1.25,
+    "whole_crop_pass": {"visible_landmarks_min": 6, "each_joint_category_min": 1, "localized_visible_fraction_min": 0.8, "peak_error_max_actor_box_height": 0.1},
+    "availability_gate": {"passing_crops_min": 103, "denominator": 128, "passing_crops_each_scenario_min": 1},
+    "missing_rows_remain_in_denominator": true,
+    "timing_centers": 16,
+    "synthetic_reader_updates": 20,
+    "target_sensitivity_gate": {"corruption": "replace withheld raw pixels by per-image visible-region mean", "metric": "mean_landmark(0.5 * sum_spatial_bins(abs(normalized_original - normalized_corrupted)))", "metric_name": "mean_landmark_total_variation_including_outside_bin", "total_variation_strict_min": 0.05, "per_bin_mean_L1_forbidden": true, "spatial_witness_fraction_min": 0.5, "population": "pilot crops passing blinded anatomical review", "metric_clarification": "Explicit total-variation convention requested during implementation; NEXT_ACTIONS describes normalized witness L1 without this scaling convention.", "failure": "exclude V3 before task fits; V2 route remains eligible"}
+  },
+  "verifier": {
+    "masks": ["upper", "lower"],
+    "excluded_middle_band_height_fraction": 0.05,
+    "mask_before": ["resize", "image_encoder"],
+    "heatmap_grid": [16, 12],
+    "landmarks": 8,
+    "outside_bins": 1,
+    "spatial_bins_including_outside": 193,
+    "pose_inference_lock": {
+      "input": "exact raw supplied-box FOV letterboxed to 192x256 with fixed RGB [124,116,104] padding and ImageNet normalization",
+      "flip_test": true,
+      "flip_pairs_coco_zero_based": [[1,2],[3,4],[5,6],[7,8],[9,10],[11,12],[13,14],[15,16]],
+      "shift_heatmap": false,
+      "raw_peak_coordinate": "center of maximum cell in flip-averaged 64x48 heatmap, inverse-mapped through exact letterbox affine",
+      "descriptor_nonnegative_mass": "relu(flip-averaged raw heatmap)",
+      "descriptor_grid": "aggregate model-cell centers into fixed 16x12 raw-crop grid",
+      "outside_bin": "all mass outside the requested raw-crop target region, including letterbox padding, non-target partition, and excluded middle band",
+      "normalization": "add 1e-6 to outside bin then divide all 193 bins by their sum",
+      "claim": "descriptor only; not calibrated pose probability"
+    },
+    "normalization_epsilon": 0.000001,
+    "decoder_width": 64,
+    "decoder_layers": 2,
+    "hypothesis_embedding_dim": 8,
+    "decoder_inputs_only": ["independently_encoded_visible_pixels", "mask_id", "crop_transform", "observation_valid", "hypothesis_embedding"],
+    "decoder_forbidden": ["full_image_DINO", "video_context", "other_masked_view", "target_heatmap", "target_reliability", "target_derived_crop_center"],
+    "predictor_validity_sources_only": ["successful_decode", "finite_crop_transform", "supplied_crop_extent"],
+    "landmark_score_weights": "clip(original_peak_magnitude, 0, 1); same observed weights under both hypotheses",
+    "total_weight_min": 2.0,
+    "energy": "weighted_mean_landmark_CE(observed, predicted) / log(193)",
+    "energy_features_each_mask_and_view": ["E_sit", "E_stand", "E_stand_minus_E_sit"],
+    "final_reader_width": 64,
+    "prediction_interface": "r=P(sitting | sitting-or-standing); finite probability per physical center",
+    "dependency_test": "alter every withheld raw pixel: predictor output unchanged, witness allowed to change"
+  },
+  "arms": {
+    "V0": {"inputs": ["context"], "reader": "width64_direct", "role": "context_only_information_control"},
+    "V1": {"inputs": ["context", "six_slot_independently_encoded_body_bank", "observed_crop_quality"], "reader": "width64_direct", "role": "new_pixels_control"},
+    "V2": {"inputs": ["all_V1_inputs", "all_pose_heatmaps_available_to_V3_final_reader"], "reader": "width64_direct", "role": "matched_input_direct_measurement_control_and_only_fallback"},
+    "V3": {"inputs": ["all_V2_inputs", "conditional_predictive_energies"], "reader": "width64_verifier_augmented", "role": "primary"}
+  },
+  "reader_architecture": {
+    "modality_dims": {"context": 2304, "body": 4608, "quality": 36, "pose": 3104, "energy": 12},
+    "body_dim_definition": "identical direct six-slot RGB bank for V1/V2/V3: two 768D unmasked extent encodings plus four 768D extent-by-visible-mask encodings in fixed order [extent1.0_unmasked, extent1.25_unmasked, extent1.0_upper_visible, extent1.0_lower_visible, extent1.25_upper_visible, extent1.25_lower_visible]",
+    "pose_dim_definition": "two crop views * eight landmarks * 193 bins + sixteen original peak magnitudes",
+    "energy_dim_definition": "four mask/view witnesses * [E_sit,E_stand,E_stand-E_sit]",
+    "quality_dim_definition": "36 fixed fields: [actor x1/W,y1/H,x2/W,y2/H,actor_area/source_area,log1p(actor_area)/log1p(source_area),extent1.0 inside-image fraction,extent1.25 inside-image fraction] followed by each 6D normalized crop transform [(actor x1-crop left)/crop W,(actor y1-crop top)/crop H,(actor x2-crop left)/crop W,(actor y2-crop top)/crop H,crop W/source W,crop H/source H] in masked slot order [extent1.0 upper_visible,extent1.0 lower_visible,extent1.25 upper_visible,extent1.25 lower_visible], then the four predictor-valid bits; identical for V1/V2/V3",
+    "modality_projection": "LayerNorm then Linear(input_dim,64); sum projected modalities",
+    "V1_active_direct_residual_blocks": 5,
+    "V2_active_direct_residual_blocks": 2,
+    "V3_active_direct_residual_blocks": 0,
+    "direct_residual_block_widths": [64, 512, 64],
+    "capacity_receipt_required": "exact counts of every task-trained module, including V3's conditional decoder, within matched-arm 10% range and below one million; no unused padding",
+    "frozen_expected_active_counts": {"V1": 790153, "V2": 796361, "V3": 821287},
+    "frozen_expected_relative_range": 0.03940249546606789
+  },
+  "training": {
+    "initial_seeds": [42],
+    "confirmation_seeds": [43, 44],
+    "updates": 800,
+    "batch_size": 128,
+    "optimizer": "AdamW",
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "dropout": 0.1,
+    "gradient_norm_cap": 1.0,
+    "sampler": "uniform physical centers without replacement per epoch-equivalent pass",
+    "class_weight": "inverse frequency within allowed training rows; two class weights normalized to arithmetic mean one",
+    "train_only_classes": [0, 1],
+    "binary_target": "1[canonical_label == 0]",
+    "energy_class_index": "canonical_label in [0,1]",
+    "held_label_early_stopping": false,
+    "losses": {"V0_V1_V2": "class_weighted_BCE", "V3": {"class_weighted_BCE": 1.0, "class_weighted_CE_negative_mean_mask_energy": 0.2, "normalized_correct_hypothesis_observed_prediction_loss": 0.2, "missingness_and_normalization": "BCE uses sum(class_weight*row_loss)/sum(class_weight); energy CE uses sum(class_weight*row_available*row_loss)/sum(class_weight), so unavailable rows contribute zero without denominator deletion; observed prediction loss is an unweighted mean over every training row after averaging available witnesses within each row, with unavailable rows equal zero; class weights never enter heatmap prediction"}},
+    "active_parameters_strict_max": 1000000,
+    "matched_arms": ["V1", "V2", "V3"],
+    "matched_active_parameter_relative_range_max": 0.1,
+    "capacity_method": "useful direct-path residual blocks, not unused padding; count V3 conditional decoder; report V0 separately",
+    "log": ["training_loss", "gradient_norm", "missing_observation_rate", "final_checkpoint"],
+    "outer_release": "all fitted arms and folds together after integrity and independent replay"
+  },
+  "candidate": {
+    "raw_formula": "[(p0+p1)*r, (p0+p1)*(1-r), p2]",
+    "eligibility_all": ["common_measurement_acquisition_valid", "anchor_argmax_in_0_1", "raw_candidate_argmax_in_0_1", "argmax_disagrees"],
+    "otherwise": "copy_exact_ARFTR_probability_bytes",
+    "common_availability": "identical cache mask including observable pose availability for every arm; never human usability",
+    "primary_BA_population": "all true classes0/1, including unavailable measurements; use context path for missing inputs",
+    "BA_classes": [0, 1],
+    "all_row_metrics_classes": [0, 1, 2],
+    "class2_exact_invariants": ["probability_column", "predicted_indicator", "precision", "recall", "f1", "nll_on_true_class2"],
+    "class2_brier_invariant": false
+  },
+  "screen_gates": {
+    "V3": {"BA_minus_V0_min": 0.01, "BA_minus_V1_min": 0.01, "nonnegative_V3_minus_V1_folds_min": 4, "BA_minus_V2_min": 0.005, "nonnegative_V3_minus_V2_folds_min": 4, "rescues_min": 40, "rescues_each_fold_min": 3, "repairs_historical_119_min": 10, "extra_harms_vs_V2_max": 5, "macro_f1_minus_V2_min": 0.0, "brier_minus_V2_max": 0.002},
+    "V2_only": {"BA_minus_V0_min": 0.01, "BA_minus_V1_min": 0.005, "nonnegative_each_comparison_folds_min": 4, "rescues_min": 40, "rescues_each_fold_min": 3, "repairs_historical_119_min": 10, "extra_harms_vs_V1_max": 5, "brier_minus_V1_max": 0.002},
+    "integrity_all": ["class2_exact_invariants", "input_eligibility", "predictive_target_exclusion_if_V3", "finite_values", "parameter_budget", "locked_ancestry", "independent_replay"],
+    "diagnostic_slice_warning": "held-label gate only; never use historical error membership to select training rows or policy inputs"
+  },
+  "continuation_tree": [
+    {"if": "computational_pose_compatibility_or_pilot_preprocessing_lock_missing", "then": "native_crop_and_blinded_review_materials_allowed; no_pose_quality_or_target_sensitivity_outputs"},
+    {"if": "pilot_availability_fails", "then": "stop_V2_V3_no_V1_promotion_fallback_planning"},
+    {"if": "availability_passes_and_target_sensitivity_passes", "then": "initial_V0_V1_V2_V3_20_fits"},
+    {"if": "availability_passes_and_target_sensitivity_fails", "then": "initial_V0_V1_V2_15_fits_V3_not_fitted"},
+    {"if": "V3_initial_passes", "then": "confirm_all_four_40_additional_60_total_repeat_V3_gates_on_probability_means"},
+    {"if": "V3_initial_fails_and_V2_initial_passes", "then": "confirm_V0_V1_V2_30_additional_50_or_45_total"},
+    {"if": "neither_qualifies_or_applicable_confirmation_fails", "then": "stop_retain_ARFTR"},
+    {"if": "V3_confirmation_passes", "then": "two_mechanism_controls_30_fits"},
+    {"if": "V3_mechanism_fails", "then": "V2_only_if_its_initial_and_confirmation_gates_independently_passed_else_stop"},
+    {"if": "selected_route_qualifies_but_nested_dependency_infeasible", "then": "stop_integration_no_relaxed_exclusion_or_historical_recipe_change"},
+    {"if": "selected_route_and_dependency_pass", "then": "nested_policy_fitting_after_cost_handoff_and_frozen_test_family"},
+    {"if": "full_system_gates_fail", "then": "retain_ARFTR_no_oracle_substitution"}
+  ],
+  "mechanism": {
+    "controls": ["class_independent_decoder", "shared_template_energy"],
+    "fits": 30,
+    "V3_BA_minus_each_control_min": 0.0025,
+    "class_independent_removes_confirmed_V3_minus_V2_gain_fraction_min": 0.5,
+    "fixed_checkpoint_diagnostics": ["within_scenario_source_crop_quality_matched_hashed_witness_reassignment", "predictor_visible_region_deletion"],
+    "donor_selection_forbids": ["action_label", "error_status"],
+    "wrong_person_gain_preserved": "actor_specific_verification_claim_unsupported; coincident donor actions remain rival explanation"
+  },
+  "nested_integration": {
+    "F_definition": "complete historical ARFTR selection/refit recipe plus qualified reader(s), using only supplied training scenario set",
+    "policy_block_prefix": "hac-body-policy-v1|",
+    "policy_blocks": 3,
+    "block_algorithm": "sort scenario strings by (sha256(prefix+scenario), scenario), round-robin into three blocks; recompute inside every restricted population",
+    "outer": "H held; S=all_scenarios-H",
+    "policy_training": "for each I in blocks(S), predict I using F(S-I)",
+    "calibration_procedure": "for each J in blocks(S), rebuild policy training on T=S-J, including F(T-I_T); predict J using F(T)",
+    "final": "refit policy using valid cross-fitted S rows; predict H using F(S)",
+    "ancestor_exclusions": "every ancestor excludes outer H and its calibration J; policy target I excluded by its generating F",
+    "insufficient_classes_or_scenarios": "protocol_infeasible_stop_no_relaxation",
+    "historical_inner_split": "StratifiedGroupKFold(min(3,group_count), shuffle=True, random_state=42), train must contain all three classes",
+    "historical_inner_exact_populations": "label-dependent and deliberately not generated by this label-blind planner",
+    "historical_recipe_budget": {"M4_configs": 4, "A3_configs": 4, "selection_folds_max": 3, "refit_seeds": 3, "P6_training_population_calls_per_F_max": 13, "P6_estimator_streams": 4, "P6_C_candidates": 4, "P6_inner_folds_max": 3, "ARFTR_coefficient_candidates_per_F": 300},
+    "historical_structural_min_scenarios_necessary": 5,
+    "historical_structural_min_warning": "Necessary not sufficient: three-way M4 selection then P6 cross-fitting then grouped base-C selection fails for any F population with at most four groups; labels may impose additional failures.",
+    "policy": {"estimator": "StandardScaler_then_L2_multinomial_logistic", "C": 0.1, "max_iter": 2000, "class_order": ["rescue", "harm", "neither"], "class_rebalancing": false, "missing_target_class": "exact_retain_everywhere", "features_only": ["predicted_probability_vectors", "margin", "entropy", "aligned_scalar_predictive_energies", "crop_stability", "observed_measurement_quality"], "forbidden_features": ["hidden_state_coordinates", "scenario_id", "actor_id", "annotation_support", "error_bank_membership"]},
+    "routes": {"V3": ["probability_only_V3_candidate", "direct_body_V2_candidate", "verifier_V3_candidate"], "V2_only": ["probability_only_V2_candidate", "body_quality_V2_candidate"]},
+    "calibration": {"score": "P(rescue)-2*P(harm)", "thresholds": [0.0, 0.1, 0.2, 0.3, 0.4, "infinity"], "overall_net_strict_min": 0, "each_block_net_min": 0, "interventions_min": 10, "rescue_fraction_among_rescue_or_harm_min": 0.7, "ordering": ["descending_macro_f1", "ascending_intervention_count", "descending_threshold"], "none_qualifies": "infinity", "high_confidence_blanket_exclusion": false},
+    "reuse": {"frozen_pretrained_encoders": true, "global_outer_OOF_policy_training": false, "exact_task_trained_identity_required": ["training_scenario_set", "training_row_ids_and_hash", "selection_row_ids_and_hash", "all_transitive_ancestors", "training_label_hash", "selection_label_hash_where_used", "protocol_hash", "training_code_hash", "model_architecture_hash", "input_hashes", "seed_and_optimizer_settings", "selection_and_epoch_receipts", "checkpoint_hash", "prediction_hash_and_batch_contract", "independent_replay"], "scenario_set_match_alone": "not_authority_to_reuse", "planner_certified_reusable_task_fits": 0}
+  },
+  "adoption_gates": {
+    "macro_f1_min": 0.8588364807373623,
+    "net_corrections_min": 25,
+    "each_outer_fold_net_strict_min": 0,
+    "scenario_macro_f1_wins_min": 7,
+    "per_class_f1_loss_max": 0.005,
+    "pure_net_min": 0,
+    "mixed_net_min": 0,
+    "unknown_rows_included": true,
+    "repairs_historical_119_min": 10,
+    "nll_max": 0.37734901395307213,
+    "brier_sum_classes_mean_rows_max": 0.21350492452064215,
+    "paired_scenario_bootstrap": {"draws": 10000, "seed": 20260913, "confidence": 0.95, "lower_bound_macro_f1_change_strict_min": 0},
+    "exact_scenario_swaps": {"assignments": 2048, "alternative": "one_sided_positive_macro_f1", "adjustment": "Holm", "adjusted_p_strict_max": 0.05, "V3_primary_family": ["V3_policy_minus_ARFTR", "V3_policy_minus_V2_direct_policy"], "V2_only_primary_family": ["V2_body_quality_policy_minus_ARFTR"], "freeze_family_before": "Stage2_fitting"},
+    "extra_policy_feature_claim": "positive contrast vs same-candidate probability-only policy required, reported separately",
+    "seed_macro_f1_sd_max": 0.0075,
+    "seed_specific_thresholds": false,
+    "retain_bit_exact": true,
+    "independent_checkpoint_replay": true,
+    "oracle_qualifies": false,
+    "required_metrics": ["macro_f1", "accuracy", "per_class_precision_recall_f1", "confusion", "NLL", "summed_multiclass_Brier", "ECE", "selective_risk", "rescue_harm_neither_by_direction", "fold_seed_scenario_variance"]
+  },
+  "execution_authorization": {
+    "currently_authorized": ["protocol_preparation", "label_blind_dependency_planning", "synthetic_focused_tests", "corrected_v6_blinded_review", "preservation_and_audit_of_existing_frozen_pose_cache", "pose_blind_review_geometry_diagnostics"],
+    "currently_blocked": ["final_pose_availability_result_until_two_valid_reviews_and_adjudication", "task_training_fits_until_all_prior_gates_and_execution_authority", "nested_integration_due_to_insufficient_scenario_ancestors"],
+    "planner_stages": ["plan"],
+    "future_stages": ["plan", "preflight", "pilot", "fit", "summarize", "independent_audit"],
+    "future_stages_are_not_commands_implemented_by_this_planner": true,
+    "pilot_requires": ["exact_source_and_model_lock", "bounded_forward_compatibility_pass", "reviewable_blinded_reference_process"],
+    "fit_requires": ["explicit_execution_authority", "all_applicable_prior_gates_passed", "validated_locked_inputs_and_ancestors", "measured_runtime_within_handoff_boundary"],
+    "nested_integration_requires": ["qualified_confirmed_reader_route", "mechanism_controls_if_V3", "feasible_dependency_plan", "frozen_primary_test_family"],
+    "gate_outcomes_inferred_from_existing_labels": false
+  },
+  "compute": {
+    "training_job_max_seconds": 1200,
+    "above_boundary": "do_not_launch_full_job; prepare_manifest_command_new_run_directory; verify_bounded_optimizer_startup; persist_and_handoff",
+    "unmeasured_runtime": "no_full_training_launch_until_measured_projection",
+    "timing_pilot_centers": 16,
+    "synthetic_preflight_updates": 20,
+    "planning_only_minutes": {"pilot_GPU": [5, 20], "full_extraction": [15, 90], "initial_20_cached_reader_fits": [5, 20]},
+    "nested_historical_ancestors": "potential_hours_and_currently_structurally_infeasible",
+    "include_costs": ["setup", "human_quality_review", "decode", "frozen_encoders", "repeated_ancestors", "reader_fits", "policy_fits", "audit"],
+    "planner_behavior": "read_only_label_blind planning; JSON always on stdout and optionally written once as a new versioned receipt; no model construction, extraction or training"
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "study_id": "okutama_m4_anchored_transition_residual_cached_screen_v1",
+  "declared_on": "2026-09-12",
+  "scope": "Adaptive architecture development on the same 4977 Okutama centers; not external confirmation",
+  "primary_rows": 4977,
+  "class_order": ["sitting", "standing", "walking_running"],
+  "architecture_name": "M4-Anchored Transition-Gated Residual (MATR)",
+  "primary_arm": "r3_boundary_risk_gate",
+  "equation": "softmax(log(p_M4 + epsilon) + g * (log(p_A3 + epsilon) - log(p_M4 + epsilon)))",
+  "arms": {
+    "r0_exact_m4": {
+      "purpose": "bit-exact new-source M4 anchor",
+      "gate": "identically zero"
+    },
+    "r1_fixed_10pct_a3": {
+      "purpose": "predeclared calibration sentinel motivated by the completed post-hoc diagnostic",
+      "gate": "fixed 0.10 on every row"
+    },
+    "r2_uncertainty_risk_gate": {
+      "purpose": "test whether output uncertainty and disagreement alone route A3 safely",
+      "gate": "risk-weighted logistic correction utility; smooth activation from 0.50 to 0.70"
+    },
+    "r3_boundary_risk_gate": {
+      "purpose": "primary predicted-transition correction router",
+      "gate": "R2 plus M4-predicted boundary, attention, survival and compact temporal-change evidence; smooth activation from 0.50 to 0.70; suppress predicted standing-to-sitting switches"
+    },
+    "r4_direct_boundary_switch": {
+      "purpose": "mechanism control for learned correction utility",
+      "gate": "hard A3 switch when M4 predicted-boundary score exceeds the outer-training threshold maximizing boundary F1; suppress predicted standing-to-sitting switches"
+    },
+    "r5_unrestricted_gate": {
+      "purpose": "failure control without risk weighting, activation floor or standing-to-sitting protection",
+      "gate": "uncapped logistic correction-utility probability"
+    }
+  },
+  "inputs": {
+    "anchor": "new-source M4 selected inner OOF predictions and three outer refit seeds",
+    "residual_expert": "A3 unrestricted-template selected inner OOF predictions and three outer refit seeds",
+    "gate_features": [
+      "M4 and A3 probabilities, entropy, margin, confidence advantage and disagreement",
+      "predicted class-pair one-hot encoding",
+      "M4 learned memory gate, attention, survival and boundary probabilities",
+      "A3 slot-mass entropy, maximum share, effective-slot count and active-slot count",
+      "six source quality features",
+      "short/long V-JEPA and DINO norm, cosine and relative-change summaries"
+    ],
+    "forbidden_inference_features": [
+      "scenario or fold identity",
+      "ground-truth activity label",
+      "true boundary, purity or interval stratum",
+      "held-row correctness or error identity"
+    ],
+    "new_backbone_fits": 0,
+    "new_neural_checkpoint_fits": 0,
+    "cached_router_fits": 15
+  },
+  "splitting": {
+    "outer_folds": [0, 1, 2, 3, 4],
+    "groups": "scenario",
+    "router_training_inputs": "selected inner OOF M4 and A3 predictions covering only the outer-training scenarios",
+    "router_evaluation_inputs": "three selected outer-refit seeds for M4 and A3 on the untouched outer-held scenarios",
+    "outer_labels_used_for_router_training_or_selection": false,
+    "outer_metric_embargo": "no held labels are scored or logged until all five fold artifacts validate"
+  },
+  "router": {
+    "model": "StandardScaler plus deterministic LogisticRegression",
+    "solver": "lbfgs",
+    "maximum_iterations": 2000,
+    "tolerance": 1e-08,
+    "random_state": 42,
+    "uncertainty_C": 0.1,
+    "boundary_C": 0.1,
+    "unrestricted_C": 1.0,
+    "risk_harm_weight": 1.5,
+    "training_population": "rows where M4 and A3 predicted classes disagree",
+    "positive_target": "A3 correct and M4 wrong",
+    "negative_target": "all other disagreements, including M4 corrections and neither-model-correct rows",
+    "activation_probability": 0.5,
+    "full_gate_probability": 0.7,
+    "residual_epsilon": 1e-12,
+    "direct_boundary_thresholds": [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+    "direct_boundary_selection": "outer-training node-support-boundary F1 descending, threshold descending on ties",
+    "protected_prediction_transition": [1, 0]
+  },
+  "statistics": {
+    "primary_contrast": ["r3_boundary_risk_gate", "r0_exact_m4"],
+    "descriptive_arms": [
+      "r1_fixed_10pct_a3",
+      "r2_uncertainty_risk_gate",
+      "r4_direct_boundary_switch",
+      "r5_unrestricted_gate"
+    ],
+    "bootstrap_resamples": 10000,
+    "scenario_swaps": 2048,
+    "seed": 20260912,
+    "multiplicity": "none; one primary contrast; other arms are mechanism and failure controls"
+  },
+  "promotion_gates": {
+    "minimum_macro_f1": 0.8531,
+    "minimum_gain_macro_f1_points": 0.5,
+    "minimum_net_corrections": 25,
+    "scenario_bootstrap_lower_gain_points": 0.0,
+    "maximum_one_sided_nll_delta": 0.0,
+    "maximum_one_sided_brier_delta": 0.0,
+    "maximum_class_f1_loss_points": 0.5,
+    "maximum_stable_accuracy_loss_points": 0.5,
+    "maximum_small_actor_accuracy_loss_points": 0.5,
+    "minimum_boundary_accuracy_gain_points": 1.5,
+    "maximum_seed_macro_f1_sd_points": 0.75,
+    "exact_zero_gate_anchor_replay": true
+  },
+  "interpretation": {
+    "development_status": "All results are repeated-development evidence because M4, A3 and the boundary hypothesis were discovered on these same rows",
+    "stage_1": "This cached screen tests whether complementarity is routable before any expensive transported-part implementation",
+    "stage_2": "Only a gate that improves the anchor with positive net corrections justifies actor-relative temporal part transport",
+    "post_hoc_warning": "No arm may be renamed primary or selected after outer metrics are released"
+  }
+}

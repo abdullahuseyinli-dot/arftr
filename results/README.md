@@ -1,5 +1,13 @@
 # Tracked evidence
 
+## Current development closeout
+
+The [ARFTR development package](arftr_development/README.md) adds a versioned,
+aggregate-only result ledger, confusion matrices, matched motion-null outcomes,
+and a compact knowledge graph. These are adaptive development results, separate
+from the earlier confirmation studies below. Validate the new package without
+datasets or model dependencies using `python tools/check_project.py`.
+
 This directory contains compact, path-sanitized evidence for the repository's
 versioned studies. Dataset images, checkpoints, embeddings, fitted estimators, dense
 probabilities, and full-resolution attribution arrays remain outside Git.
