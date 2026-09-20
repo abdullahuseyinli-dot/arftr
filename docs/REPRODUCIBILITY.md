@@ -5,6 +5,8 @@
 From the repository root, with Python 3.11 or 3.12:
 
 ```bash
+git clone https://github.com/abdullahuseyinli-dot/arftr.git
+cd arftr
 python tools/check_project.py
 ```
 
@@ -17,6 +19,9 @@ the original per-example probabilities; those are explicitly exported quantities
 ## Tier 2 — install and run code-level tests
 
 Use a fresh environment, separate from historical training environments:
+
+The companion POLAR project retains the historical `hac` import namespace. Install
+the two projects in **separate virtual environments**, not together in one environment.
 
 ```bash
 python -m venv .venv
@@ -90,7 +95,7 @@ substitution. It does not silently rewrite old manifests or waive model/data has
 
 Versioned v1/v2/v3 PDFs, manifests and checksum files remain historical evidence.
 Their builders and exact Git-archive validators target those releases, not the
-unreleased 3.1 development tree. Do not regenerate an old release manifest to make
+separately versioned ARFTR 1.0 tree. Do not regenerate an old release manifest to make
 new content appear to have been part of the old study. Likewise, the historical
 `tools/build_readme.py` generates the old v3 page and must not overwrite the current
 hand-maintained overview.

@@ -21,7 +21,7 @@ def test_public_evidence_recomputes_without_private_files():
 
 def test_current_navigation_and_metadata():
     assert navigation(ROOT) > 30
-    assert metadata(ROOT) == "3.1.0.dev0"
+    assert metadata(ROOT) == "1.0.0"
 
 
 def test_confusion_checker_rejects_changed_scores():

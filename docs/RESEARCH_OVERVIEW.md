@@ -6,8 +6,9 @@ original component study and results, start with the
 The earlier studies and later corrections below provide context; they are not
 additional parts of the retained ARFTR architecture.
 
-Status: development search closed; retained result unchanged. Package version
-`3.1.0.dev0` is an unreleased working revision, not a published release or DOI.
+Status: development search closed; retained result unchanged. ARFTR project version
+`1.0.0` separates this architecture from the companion still-image benchmark;
+it does not designate new training, independent confirmation, or a DOI.
 
 ## Distinct evaluation tracks
 

@@ -1,31 +1,30 @@
 cff-version: 1.2.0
 message: "If you use this software or its evidence, cite this versioned record."
-title: "Human Activity Classification Under Domain and Temporal Shift"
+title: "ARFTR: Anchor-Restored Factorized Temporal Residual"
 type: software
-version: "3.1.0.dev0"
+version: "1.0.0"
 authors:
   - family-names: Huseyinli
     given-names: Abdulla
-repository-code: "https://github.com/abdullahuseyinli-dot/human-activity-classification"
-url: "https://github.com/abdullahuseyinli-dot/human-activity-classification"
+repository-code: "https://github.com/abdullahuseyinli-dot/arftr"
+url: "https://github.com/abdullahuseyinli-dot/arftr"
 license: MIT
 abstract: >-
-  A leakage-audited human activity classification study spanning POLAR, V-COCO,
-  and Okutama-Action. This version includes source-overlap controls, person-level
-  transfer, short-clip temporal modeling, budgeted inference, paired uncertainty,
-  attribution diagnostics, bounded fault injection, and a recording-grouped
-  camera-compensated part-trajectory residual architecture study. The unreleased
-  development continuation retains ARFTR at 85.383648 percent macro-F1 on 4,977
-  adaptively reused examples, documents unsuccessful corrections, and provides
-  aggregate-only reproducibility checks. This is not independent confirmation.
+  Person-centered activity classification using an actor-memory anchor,
+  complementary posture and locomotion evidence, a motion-specific template
+  residual, and a constrained same-track temporal update. ARFTR retains
+  85.383648 percent macro-F1 on 4,977 adaptively reused Okutama development
+  centers. Includes the original seven-arm component study, aggregate evidence,
+  an experimental knowledge graph, and the preserved research lineage.
+  This development result is not independent confirmation. Version 1.0.0
+  identifies the separately named ARFTR project, not a new model evaluation.
 keywords:
   - human activity recognition
   - transfer learning
   - DINOv2
-  - DINOv3
-  - ConvNeXt
-  - POLAR
-  - V-COCO
+  - ARFTR
+  - actor memory
+  - factorized residuals
   - Okutama-Action
   - domain adaptation
   - calibration

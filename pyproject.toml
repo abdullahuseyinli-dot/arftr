@@ -3,9 +3,9 @@ requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "human-activity-classification"
-version = "3.1.0.dev0"
-description = "Reproducible human activity classification benchmarks for still images and short clips"
+name = "arftr"
+version = "1.0.0"
+description = "Anchor-Restored Factorized Temporal Residual for person-centered activity classification"
 readme = "README.md"
 requires-python = ">=3.11,<3.13"
 dependencies = [
@@ -26,6 +26,11 @@ dependencies = [
   "tqdm>=4.66,<5",
   "transformers>=4.56,<6",
 ]
+
+[project.urls]
+Repository = "https://github.com/abdullahuseyinli-dot/arftr"
+Documentation = "https://github.com/abdullahuseyinli-dot/arftr/tree/main/docs"
+"Companion benchmark" = "https://github.com/abdullahuseyinli-dot/polar-posture-recognition"
 
 [project.optional-dependencies]
 notebook = [

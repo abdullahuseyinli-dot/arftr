@@ -14,9 +14,16 @@ follow-up experiments are supporting research records.
 | [Reproducibility](REPRODUCIBILITY.md) | What a public checkout can verify and what requires local research assets |
 | [Repository maintenance](REPOSITORY_MAINTENANCE.md) | Public/local separation, evidence preservation, and release preparation |
 | [Validation record](VALIDATION.md) | Exact checks performed, skip reasons, environment and remaining limits |
+| [Result highlights](RESULTS.md) | ARFTR components, positive temporal controls, and protocol-specific gains |
+| [Project history](PROJECT_HISTORY.md) | Companion repository, preservation boundary and independent 1.0 version |
 | [Research history and follow-up experiments](RESEARCH_OVERVIEW.md) | Broader lineage, subsequent corrections and their outcomes |
 
 ## Historical studies
+
+For the maintained still-image presentation, use the companion
+[POLAR Posture Recognition repository](https://github.com/abdullahuseyinli-dot/polar-posture-recognition).
+It includes DINOv2, ConvNeXt, the locked ensemble, V-COCO transfer, and the later
+matched DINOv3/SigLIP2 comparison. Copies below retain the original evidence paths.
 
 These documents are retained as dated research records, not current instructions.
 In particular, an old proposed experiment or “next phase” is not an active task.

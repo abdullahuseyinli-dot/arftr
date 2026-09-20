@@ -22,6 +22,8 @@ CURRENT_DOCS = (
     "docs/REPRODUCIBILITY.md",
     "docs/REPOSITORY_MAINTENANCE.md",
     "docs/VALIDATION.md",
+    "docs/RESULTS.md",
+    "docs/PROJECT_HISTORY.md",
     "assets/README.md",
     "data/README.md",
     "experiments/README.md",

@@ -47,10 +47,11 @@ recipe where existing execution locks bind the old source.
 2. Review `git diff` and the complete untracked-source inventory. Do not add `.runs/`,
    environments, credentials, model weights, or dataset media.
 3. Back up local research evidence independently; a Git commit is not that backup.
-4. Choose a release version and citation metadata. `3.1.0.dev0` currently means
-   **unreleased**; no DOI, release date, or publication is claimed.
+4. Keep the independent ARFTR package and citation version aligned (`1.0.0`).
+   Historical study v1/v2/v3 identifiers remain unchanged; see [version history](PROJECT_HISTORY.md).
 5. Build and inspect a new archive/manifest for that chosen version, rather than
    altering v1/v2/v3 manifests. Validate from a fresh checkout and install.
 6. Review dataset/model redistribution boundaries and the existing third-party notices.
-7. Publish or deposit only after explicit approval. Cleanup does not authorize a
-   remote push, GitHub release, Zenodo upload, or modification of old tags.
+7. The project separation authorizes the two named GitHub repositories and their
+   independent versioning. Zenodo deposition, DOI claims, and modification of old
+   tags are separate actions; none is implied by this reorganization.

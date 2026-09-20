@@ -1,6 +1,6 @@
 {
-  "title": "Human Activity Classification Under Domain and Temporal Shift",
-  "description": "Unreleased development revision of a research and engineering portfolio spanning POLAR, V-COCO, and Okutama-Action. It preserves the earlier versioned confirmation studies and adds the completed ARFTR development phase: 85.383648% macro-F1 on 4,977 adaptively reused examples, not independent confirmation. The final matched shared motion-null experiment failed its fixed continuation gates and ARFTR remains retained. Includes source code, negative results, model limitations, an aggregate-only evidence package and current reproducibility checks. Dataset media, pretrained checkpoints and qualitative source-image composites are not included. This metadata does not indicate that a new release or deposit has been published.",
+  "title": "ARFTR: Anchor-Restored Factorized Temporal Residual",
+  "description": "Person-centered activity classification with actor-memory anchoring, factor-specific evidence restoration and a constrained same-track temporal residual. Retained macro-F1 is 85.383648% on 4,977 adaptively reused Okutama development centers, not independent confirmation. Includes original component evidence, a knowledge graph, aggregate verification and preserved experimental history. Project version 1.0.0 marks separation from the companion POLAR Posture Recognition benchmark, not new training or changed scores. No dataset media or model weights are distributed. This metadata does not itself indicate a Zenodo deposit or DOI.",
   "creators": [
     {
       "name": "Huseyinli, Abdulla"
@@ -9,29 +9,15 @@
   "access_right": "open",
   "license": "mit",
   "upload_type": "software",
-  "version": "3.1.0.dev0",
+  "version": "1.0.0",
   "language": "eng",
   "keywords": [
+    "ARFTR",
     "human activity recognition",
-    "person-level classification",
-    "transfer learning",
-    "domain adaptation",
-    "DINOv2",
-    "DINOv3",
-    "ConvNeXt",
-    "SigLIP2",
-    "multiview learning",
-    "factorized classification",
-    "domain shift",
-    "calibration",
-    "selective classification",
+    "actor memory",
+    "factorized residuals",
     "temporal modeling",
-    "motion identifiability",
-    "budgeted inference",
-    "camera compensation",
-    "reproducible research",
-    "POLAR",
-    "V-COCO",
-    "Okutama-Action"
+    "Okutama-Action",
+    "reproducible research"
   ]
 }

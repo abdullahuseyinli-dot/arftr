@@ -1,8 +1,26 @@
 # Validation record — 20 September 2026
 
-This records the original portfolio cleanup and its subsequent presentation review.
-Neither is a new scientific evaluation. Local checks and remote CI are distinguished
-below.
+This records the independent ARFTR 1.0.0 project package and earlier presentation
+reviews. None is a new scientific evaluation. Local checks and remote CI are
+distinguished below.
+
+## ARFTR 1.0.0 project separation
+
+| Check | Outcome on 20 September 2026 |
+| --- | --- |
+| Full workstation test suite | **1,535 passed, 6 CUDA-only skips**, 78.20 seconds |
+| Public-only checkout | 1,004 permitted files; no private runs, environments or dataset media |
+| Focused tests in that public copy | **11 passed**, including metadata/navigation and architecture figures |
+| Public evidence | Three continuation systems and seven original component arms recomputed; 220 historical numerical/report hashes and six current figures verified |
+| Local preservation | 218 protected records, 59 completed-experiment artifacts and 907 execution-locked dependencies unchanged |
+| Style and compilation | Passed; no new Ruff findings (533 unchanged legacy findings) |
+| Independent wheel | `arftr-1.0.0-py3-none-any.whl` built successfully |
+
+The rename preserves Git history; the companion POLAR benchmark has its own
+identity, source/evidence inventory, tests and figures. Project version 1.0.0 does
+not imply independent confirmation of the adaptive ARFTR score. The current
+[quality-gates workflow](https://github.com/abdullahuseyinli-dot/arftr/actions/workflows/ci.yml?query=branch%3Amain)
+is the authoritative remote check; prior runs below refer to earlier commits.
 
 ## Original cleanup validation
 

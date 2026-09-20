@@ -3,7 +3,17 @@
 This file records versioned public study artifacts. The Python package has its own
 version in `pyproject.toml`.
 
-## Unreleased — 3.1.0.dev0
+## ARFTR 1.0.0 — 2026-09-20
+
+- Established `arftr` as the architecture project's repository and package identity.
+- Separated the still-image benchmark into `polar-posture-recognition`, also starting
+  at project version 1.0.0; the original study versions and tags remain unchanged.
+- Added result highlights covering the retained architecture, original components,
+  sealed temporal confirmation and budgeted inference, with explicit protocol boundaries.
+- Preserved all research code, numerical evidence, archived reports and private runs.
+- No new training, revised scores, model promotion or Zenodo deposit.
+
+## Legacy working revision — 3.1.0.dev0
 
 - Centered the landing page on ARFTR's design, retained results and original component
   study; moved older studies and detailed follow-up outcomes to supporting guides.

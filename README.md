@@ -2,7 +2,7 @@
 
 **Anchor-Restored Factorized Temporal Residual for human activity classification**
 
-[![Quality gates](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/abdullahuseyinli-dot/human-activity-classification/actions/workflows/ci.yml?query=branch%3Amain)
+[![Quality gates](https://github.com/abdullahuseyinli-dot/arftr/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/abdullahuseyinli-dot/arftr/actions/workflows/ci.yml?query=branch%3Amain)
 [![Python](https://img.shields.io/badge/Python-3.11%E2%80%933.12-3776AB.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/Code-MIT-0F766E.svg)](LICENSE)
 
@@ -22,7 +22,8 @@ the additional template expert's residual to locomotion.
 These are adaptive internal-development results, not an untouched confirmation test.
 
 [Architecture](docs/ARCHITECTURE.md) · [Results and evidence](results/arftr_development/README.md) ·
-[Model card](docs/MODEL_CARD.md) · [Reproduce](docs/REPRODUCIBILITY.md)
+[Model card](docs/MODEL_CARD.md) · [Reproduce](docs/REPRODUCIBILITY.md) ·
+[Result highlights](docs/RESULTS.md)
 
 ## How ARFTR works
 
@@ -93,18 +94,25 @@ feature caches are not distributed; aggregate validation is not checkpoint repla
 | [Model card](docs/MODEL_CARD.md) | Inputs, per-class behavior, intended use and limitations |
 | [Validation record](docs/VALIDATION.md) | Checkout checks, CI, preservation and reproducibility scope |
 
-## Research background
+## Related work from this project
 
 ARFTR grew out of earlier work on person-centric representations, image/video fusion,
 and actor memory. The [development lineage](docs/HAC_EXPERIMENT_REVIEW_20260912.md)
-traces those contributions. Earlier POLAR, V-COCO and temporal-confirmation studies,
-their PDFs, and the historical notebook are available in the
-[research archive](docs/README.md#historical-studies); they evaluate different systems
-and populations.
+traces those contributions. The earlier sealed temporal study achieved **78.54%
+macro-F1**, with **78.17% at a 50% clip-use budget** on 1,771 separate confirmation
+examples. These are earlier models, not a confirmation score for ARFTR.
+[Temporal results and useful gains](docs/RESULTS.md).
+
+The still-image work now has its own home:
+[**POLAR Posture Recognition**](https://github.com/abdullahuseyinli-dot/polar-posture-recognition),
+with the **93.99% four-class held-out ensemble**, DINOv2/ConvNeXt comparisons,
+V-COCO transfer and the matched DINOv3 screen. Its scores use different protocols.
+Original reports and historical paths remain in the [research archive](docs/README.md#historical-studies)
+to preserve reproducibility. [Project separation and version history](docs/PROJECT_HISTORY.md).
 
 ## Project information
 
-Author: **Abdulla Huseyinli**. Working version **3.1.0.dev0** is unreleased.
+Author: **Abdulla Huseyinli**. ARFTR project version **1.0.0**.
 [Citation](CITATION.cff) · [MIT License](LICENSE) ·
 [Third-party data/model terms](THIRD_PARTY_NOTICES.md) · [Contributing](CONTRIBUTING.md) ·
 [Changelog](CHANGELOG.md) · [Documentation index](docs/README.md)
