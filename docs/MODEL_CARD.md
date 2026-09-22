@@ -56,7 +56,9 @@ domain shift can cause errors. Three coarse labels do not capture intent, identi
 health, suspiciousness, or the full range of human behavior. There is no fairness
 claim across demographic groups and no validation for consequential decisions about
 individuals. Do not use this research result as evidence of such capabilities.
-The recorded evaluation assumes its available person/track metadata; an independently
+The recorded evaluation uses supplied annotation-derived person boxes and track
+identities, not an independently detected/tracked stream. Activity labels and
+annotation-derived support categories are not inference inputs. An independently
 detected and tracked end-to-end deployment pipeline has not been validated here.
 
 No task-specific safety, clinical, workplace-monitoring, or law-enforcement validation

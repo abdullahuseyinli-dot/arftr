@@ -13,7 +13,7 @@
       "sha256": "1f530e1314f74625b57d32e783cad288902b2ec9769a13fc7823178bed1ad060"
     },
     "tools/render_arftr_figures.py": {
-      "sha256": "6dfd2dbdf0f6d1acd685bea8137f76846bbc2db1a5897a3bc11de9c961468e75"
+      "sha256": "501c45fcca5c42a005ff193fa7f9cbc037e1e65700f4a25ffd06c9071da74f3b"
     }
   },
   "matplotlib_version": "3.11.2",
@@ -35,6 +35,18 @@
     },
     "arftr_architecture_results.svg": {
       "sha256": "c5e6f51bbd4c8bd2cfb28920563f663e88d014f27a724194c1fe06ec84d21849"
+    },
+    "arftr_report_components.png": {
+      "sha256": "064e195cab269082540662d58e6d2f398ae6e9f81803a90e479d2204f717c065"
+    },
+    "arftr_report_components.svg": {
+      "sha256": "51887c1b9836f4451d7a679c7ea79ab566bfec52175403e4b141f4d65749f373"
+    },
+    "arftr_system_overview.png": {
+      "sha256": "f99462f3117ce1e497bd38896bb21599ad302f8044d727d2942f5d1c1da2cf5e"
+    },
+    "arftr_system_overview.svg": {
+      "sha256": "32b3e3362ce8a133ce26d7644f1997af4b6ecf2011689ed971829fb1da8f1e07"
     }
   }
 }

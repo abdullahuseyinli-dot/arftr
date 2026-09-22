@@ -15,7 +15,13 @@ SOURCES = (
     "results/arftr_development/architecture_study.json",
 )
 GENERATOR = "tools/render_arftr_figures.py"
-FIGURES = ("arftr_development_summary", "arftr_confusion_matrix", "arftr_architecture_results")
+FIGURES = (
+    "arftr_development_summary",
+    "arftr_confusion_matrix",
+    "arftr_architecture_results",
+    "arftr_report_components",
+    "arftr_system_overview",
+)
 
 
 def digest(path: Path) -> str:
@@ -276,6 +282,210 @@ def architecture_figure(data: dict):
     return fig
 
 
+def report_components_figure(data: dict):
+    """Print-sized companion to the original, unchanged web component chart."""
+    import matplotlib.pyplot as plt
+
+    study = data["architecture"]
+    arms = (
+        ("r0_exact_m4", "M4 anchor"),
+        ("r1_p6_restoration_only", "+ P6 restoration only"),
+        ("r2_a3_motion_only", "+ A3 motion only"),
+        ("r3_temporal_only", "+ Temporal update only"),
+        ("r4_residual_no_temporal", "+ Factor residuals\n(no temporal update)"),
+        ("r5_arftr_full", "Full ARFTR"),
+        ("r6_shuffled_neighbor_control", "Shuffled-neighbor control"),
+    )
+    fig, axis = plt.subplots(figsize=(7.2, 5.8))
+    fig.subplots_adjust(left=0.38, right=0.96, top=0.81, bottom=0.28)
+    fig.suptitle("ARFTR: original component evidence", y=0.965, fontsize=14, weight="bold")
+    fig.text(
+        0.5,
+        0.885,
+        f"{study['rows']:,} centers / {study['outer_folds']} grouped folds / "
+        f"{len(study['prediction_seeds'])}-seed predictions",
+        ha="center",
+        fontsize=10.5,
+        color="#475569",
+    )
+    anchor = 100 * study["scores"]["r0_exact_m4"]["macro_f1"]
+    axis.axvline(anchor, linestyle="--", linewidth=1, color="#94a3b8", zorder=1)
+    axis.axhspan(4.58, 5.42, color="#e4f3ef", zorder=0)
+    for row, (arm, _) in enumerate(arms):
+        score = 100 * study["scores"][arm]["macro_f1"]
+        full = arm == "r5_arftr_full"
+        control = arm == "r6_shuffled_neighbor_control"
+        color = "#00796b" if full else "#9b5900" if control else "#0072b2"
+        axis.scatter(
+            score, row, color=color, s=75 if full else 40, marker="D" if full else "o", zorder=3
+        )
+        axis.annotate(
+            f"{score:.2f}%",
+            (score, row),
+            xytext=(7, 0),
+            textcoords="offset points",
+            va="center",
+            color=color,
+            fontsize=10.5,
+            weight="bold" if full else "normal",
+        )
+    axis.set_yticks(range(len(arms)), [label for _, label in arms], fontsize=10.5)
+    axis.set_ylim(6.5, -0.5)
+    axis.set_xlim(80, 86.9)
+    axis.set_xticks([80, 82, 84, 86])
+    axis.set_xlabel("Macro-F1 (%) · zoomed scale", labelpad=9, fontsize=10.5)
+    axis.grid(axis="x", alpha=0.18)
+    axis.tick_params(length=0, pad=8, labelsize=10.5)
+    axis.spines[["top", "right", "left"]].set_visible(False)
+    fig.text(
+        0.5,
+        0.105,
+        "Points: observed scores. Dashed line: M4 anchor.\n"
+        "Removal arms reuse the full model's selected coefficients.",
+        ha="center",
+        fontsize=10.5,
+        color="#475569",
+        linespacing=1.5,
+    )
+    quantiles = study["paired_scenario_bootstrap"]["delta_quantiles_2_5_50_97_5"]
+    fig.text(
+        0.5,
+        0.035,
+        f"Full − anchor: {study['effects']['macro_f1_gain_points']:+.2f} pp; "
+        f"95% interval [{100 * quantiles[0]:+.2f}, {100 * quantiles[2]:+.2f}] pp.",
+        ha="center",
+        fontsize=10.5,
+        color="#475569",
+    )
+    return fig
+
+
+def system_overview_figure(data: dict):
+    """Show probability-level inference and its selection/context boundaries."""
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+
+    fig, axis = plt.subplots(figsize=(7.2, 5.8))
+    fig.subplots_adjust(left=0, right=1, bottom=0, top=1)
+    axis.set_xlim(0, 1)
+    axis.set_ylim(0, 1)
+    axis.axis("off")
+    fig.suptitle("ARFTR: anchored factor correction", y=0.965, fontsize=14, weight="bold")
+    fig.text(
+        0.5,
+        0.895,
+        "Probability fusion above the upstream visual and actor-memory models",
+        ha="center",
+        fontsize=10.5,
+        color="#475569",
+    )
+
+    def box(x, y, width, height, title, details, *, core=False):
+        axis.add_patch(
+            FancyBboxPatch(
+                (x, y),
+                width,
+                height,
+                boxstyle="round,pad=0.009,rounding_size=0.012",
+                linewidth=1.1,
+                facecolor="#e4f3ef" if core else "#f1f5f9",
+                edgecolor="#00796b" if core else "#94a3b8",
+            )
+        )
+        axis.text(
+            x + width / 2,
+            y + height * 0.73,
+            title,
+            ha="center",
+            va="center",
+            fontsize=11,
+            weight="bold",
+        )
+        axis.text(
+            x + width / 2,
+            y + height * 0.33,
+            details,
+            ha="center",
+            va="center",
+            fontsize=10.5,
+            linespacing=1.25,
+        )
+
+    def arrow(start, end):
+        axis.add_patch(
+            FancyArrowPatch(
+                start,
+                end,
+                arrowstyle="-|>",
+                mutation_scale=13,
+                linewidth=1.2,
+                color="#475569",
+                shrinkA=4,
+                shrinkB=5,
+            )
+        )
+
+    for x, title, details in (
+        (0.035, "M4 anchor", "Actor-memory\nprobabilities"),
+        (0.355, "P6 restoration", "Posture and motion\nprobabilities"),
+        (0.675, "A3 template expert", "Upright-motion\nresidual only"),
+    ):
+        box(x, 0.705, 0.29, 0.125, title, details)
+    box(
+        0.15,
+        0.49,
+        0.70,
+        0.145,
+        "Factor correction in log-odds",
+        "Posture: sitting versus upright\nMotion: standing versus walking/running",
+        core=True,
+    )
+    for start, end in (
+        ((0.18, 0.705), (0.28, 0.635)),
+        ((0.50, 0.705), (0.50, 0.635)),
+        ((0.82, 0.705), (0.72, 0.635)),
+        ((0.50, 0.49), (0.50, 0.425)),
+        ((0.50, 0.28), (0.50, 0.21)),
+    ):
+        arrow(start, end)
+    box(
+        0.15,
+        0.28,
+        0.70,
+        0.145,
+        "One same-track temporal update",
+        "Exact −1 / +1 second neighbors\nSame recording, scenario, fold and track",
+        core=True,
+    )
+    axis.text(
+        0.5,
+        0.18,
+        "Decode: sitting · standing · walking/running",
+        ha="center",
+        va="center",
+        fontsize=11,
+        weight="bold",
+        bbox={"boxstyle": "round,pad=0.65", "facecolor": "#f1f5f9", "edgecolor": "#94a3b8"},
+    )
+    fig.text(
+        0.5,
+        0.09,
+        "Four coefficients selected from inner out-of-fold predictions only.",
+        ha="center",
+        fontsize=10.5,
+        color="#475569",
+    )
+    fig.text(
+        0.5,
+        0.045,
+        "All-zero correction retains M4 exactly. Offline / look-ahead inference.",
+        ha="center",
+        fontsize=10.5,
+        color="#475569",
+    )
+    return fig
+
+
 def render(root: Path, output: Path) -> dict:
     import matplotlib
 
@@ -298,7 +508,15 @@ def render(root: Path, output: Path) -> dict:
         }
     ):
         for name, builder in zip(
-            FIGURES, (development_figure, confusion_figure, architecture_figure), strict=True
+            FIGURES,
+            (
+                development_figure,
+                confusion_figure,
+                architecture_figure,
+                report_components_figure,
+                system_overview_figure,
+            ),
+            strict=True,
         ):
             figure = builder(data)
             try:

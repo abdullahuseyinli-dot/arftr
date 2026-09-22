@@ -1,9 +1,19 @@
 # Versioned technical reports
 
-These are unchanged **historical v1/v2/v3 reports**, not PDFs of the September
-ARFTR continuation. The latest outcome is in the
-[current research overview](../../docs/RESEARCH_OVERVIEW.md) and
-[ARFTR evidence package](../../results/arftr_development/README.md).
+## Current ARFTR report
+
+[ARFTR 1.0.0](arftr_report_v1.0.0.pdf) summarizes the retained architecture,
+its original component study and adaptive-development evaluation boundary.
+The [Markdown source](../../docs/ARFTR_REPORT.md) and
+[integrity manifest](arftr_report_v1.0.0.manifest.json) accompany the PDF.
+It is an independent technical report, not a new experiment or a peer-reviewed paper.
+See the [reproduction guide](../../docs/REPRODUCIBILITY.md) for its build commands.
+
+## Historical reports
+
+The unchanged **historical v1/v2/v3 reports** below concern earlier systems, not
+the retained ARFTR architecture. The [research history](../../docs/RESEARCH_OVERVIEW.md)
+and [ARFTR evidence package](../../results/arftr_development/README.md) describe the continuation.
 
 | Report | Scope |
 | --- | --- |

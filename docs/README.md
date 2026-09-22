@@ -9,6 +9,7 @@ follow-up experiments are supporting research records.
 | Document | What it answers |
 | --- | --- |
 | [ARFTR architecture and component evidence](ARCHITECTURE.md) | The mechanism, equations, original controls and result interpretation |
+| [Technical report](ARFTR_REPORT.md) · [PDF](../output/pdf/arftr_report_v1.0.0.pdf) | A compact account of the retained architecture, component study and evaluation limits |
 | [Portable ARFTR evidence](../results/arftr_development/README.md) | Original component study, retained metrics and machine-readable evidence |
 | [Model card](MODEL_CARD.md) | Intended use, evaluation, inputs, limits, and misuse risks |
 | [Reproducibility](REPRODUCIBILITY.md) | What a public checkout can verify and what requires local research assets |
@@ -22,8 +23,9 @@ follow-up experiments are supporting research records.
 
 For the maintained still-image presentation, use the companion
 [POLAR Posture Recognition repository](https://github.com/abdullahuseyinli-dot/polar-posture-recognition).
-It includes DINOv2, ConvNeXt, the locked ensemble, V-COCO transfer, and the later
-matched DINOv3/SigLIP2 comparison. Copies below retain the original evidence paths.
+It includes the current audited four-/nine-class benchmark with DINOv2, DINOv3,
+SigLIP2 and ConvNeXt V2, the historical locked ensemble, and V-COCO transfer.
+Copies below retain the original evidence paths, not the companion's newer results.
 
 These documents are retained as dated research records, not current instructions.
 In particular, an old proposed experiment or “next phase” is not an active task.

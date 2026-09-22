@@ -12,12 +12,38 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
+# Immutable release inventories, not hashes regenerated from the current checkout.
+# Pinning their bytes prevents omitted entries from silently weakening validation.
+LOCKED_INVENTORIES = {
+    "results/arftr_development/evidence_manifest.json": "c65ba1d633a0479e4719afabb2f81b6a7cefbb8622731d449494cf179815a6d3",
+    "results/arftr_development/architecture_manifest.json": "ecb61efa4f5c0ed4a906f02be531f79075a7966c9708e3243ccfd248fb69c004",
+    "results/human_activity_study_v3.0.0_manifest.json": "9be8160b6a56fa1eb944956a13edb3bbe42877579110812631b86597f04025fd",
+    "experiments/okutama_motion_null_contrast_protocol.json": "6f98699dea12f7067ef1672958e41abeaa2f7b85fbb6f0550bf261532daf936a",
+    ".runs/research_20260920/repo_polish_20260920_v1/before_cleanup.json": "c0f8ba2869a9f3f7eb2c8514f61d45980a35c6b7c1e7d9e2181f53330fe2a1eb",
+    ".runs/research_20260920/research_closeout_v1/preservation_manifest.json": "2ef2eaa0523f4527ecf38c178a85076e2cb217fb64636ad99dab7bb7c61fdbd3",
+    ".runs/research_20260920/motion_null_contrast_v1/completion_receipt.json": "d8054421cff18a96c8e501f58d325b7dc931a16df2977cd86ed76a28c391dbba",
+    ".runs/research_20260920/motion_null_contrast_v1/execution_lock.json": "bd93d032b51af6224961af541081ae46d57faf21b65db86d17a4c23413990d15",
+}
+CLASSES = ["sitting", "standing", "walking_running"]
+SCORE_FIELDS = {
+    "accuracy",
+    "brier_sum",
+    "confusion",
+    "errors",
+    "macro_f1",
+    "nll",
+    "per_class_f1",
+    "precision",
+    "recall",
+    "support",
+}
 CURRENT_DOCS = (
     "README.md",
     "CONTRIBUTING.md",
     "docs/README.md",
     "docs/RESEARCH_OVERVIEW.md",
     "docs/ARCHITECTURE.md",
+    "docs/ARFTR_REPORT.md",
     "docs/MODEL_CARD.md",
     "docs/REPRODUCIBILITY.md",
     "docs/REPOSITORY_MAINTENANCE.md",
@@ -51,6 +77,13 @@ def sha256(path: Path, *, normalized: bool = False) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def locked_json(root: Path, relative: str) -> dict:
+    path = within(root, relative)
+    if sha256(path, normalized=True) != LOCKED_INVENTORIES[relative]:
+        raise ValueError(f"Locked evidence inventory or protocol changed: {relative}")
+    return read_json(path)
+
+
 def confusion_metrics(matrix: list[list[int]]) -> dict:
     if len(matrix) != 3 or any(len(row) != 3 for row in matrix):
         raise ValueError("Expected a three-class confusion matrix")
@@ -70,6 +103,11 @@ def confusion_metrics(matrix: list[list[int]]) -> dict:
         "accuracy": correct / total,
         "macro_f1": sum(f1) / 3,
         "per_class_f1": f1,
+        "precision": [
+            matrix[i][i] / sum(row[i] for row in matrix) if sum(row[i] for row in matrix) else 0.0
+            for i in range(3)
+        ],
+        "recall": [matrix[i][i] / sum(matrix[i]) if sum(matrix[i]) else 0.0 for i in range(3)],
     }
 
 
@@ -78,30 +116,56 @@ def check_scores(score: dict, rows: int) -> None:
     for key in ("errors", "accuracy", "macro_f1"):
         if not math.isclose(calculated[key], score[key], abs_tol=1e-12, rel_tol=0):
             raise ValueError(f"Confusion matrix disagrees with {key}")
-    if calculated["rows"] != rows or sum(score["support"]) != rows:
-        raise ValueError("Evaluation population changed")
-    if any(
-        not math.isclose(a, b, abs_tol=1e-12, rel_tol=0)
-        for a, b in zip(calculated["per_class_f1"], score["per_class_f1"], strict=True)
+    if (
+        calculated["rows"] != rows
+        or score["support"] != list(map(sum, score["confusion"]))
+        or score.get("rows", rows) != rows
     ):
-        raise ValueError("Per-class F1 differs")
+        raise ValueError("Evaluation population changed")
+    for key in ("per_class_f1", "precision", "recall"):
+        if key not in score and key != "per_class_f1":
+            continue  # The older architecture export has no precision/recall columns.
+        if len(score[key]) != 3 or any(
+            not math.isclose(a, b, abs_tol=1e-12, rel_tol=0)
+            for a, b in zip(calculated[key], score[key], strict=True)
+        ):
+            raise ValueError(f"Per-class {key} differs")
 
 
 def evidence(root: Path) -> dict:
     folder = root / "results/arftr_development"
-    manifest = read_json(folder / "evidence_manifest.json")
+    manifest = locked_json(root, "results/arftr_development/evidence_manifest.json")
+    if manifest["schema_version"] != 1 or set(manifest["artifacts"]) != {
+        "experiment_ledger.csv",
+        "knowledge_graph.json",
+        "metrics.json",
+    }:
+        raise ValueError("Public evidence inventory differs")
     for name, item in manifest["artifacts"].items():
         if sha256(within(folder, name), normalized=True) != item["sha256"]:
             raise ValueError(f"Public evidence hash changed: {name}")
     result = read_json(folder / "metrics.json")
-    if result["classes"] != ["sitting", "standing", "walking_running"]:
+    if result["classes"] != CLASSES:
         raise ValueError("Class mapping differs")
+    if (
+        result["schema_version"] != 1
+        or result["rows"] != 4977
+        or result["outer_folds"] != 5
+        or result["scenarios"] != 11
+        or set(result["scores"]) != {"ARFTR", "plain", "paired_null"}
+        or set(result["transitions"]) != {"plain", "paired_null"}
+    ):
+        raise ValueError("Development population or model inventory differs")
     if result["evaluation_scope"] != "adaptive_internal_development_not_independent_confirmation":
         raise ValueError("Development scope must remain explicit")
     for score in result["scores"].values():
+        if set(score) != SCORE_FIELDS:
+            raise ValueError("Development score schema differs")
         check_scores(score, result["rows"])
     base, plain, paired = (result["scores"][k] for k in ("ARFTR", "plain", "paired_null"))
     for arm, transition in result["transitions"].items():
+        if len(transition["per_fold_net"]) != 5 or len(transition["per_fold_metrics"]) != 5:
+            raise ValueError("Outer-fold inventory differs")
         if transition["rescues"] - transition["harms"] != transition["net"]:
             raise ValueError("Rescue/harm arithmetic differs")
         if sum(transition["per_fold_net"]) != transition["net"]:
@@ -109,6 +173,8 @@ def evidence(root: Path) -> dict:
         if base["errors"] - result["scores"][arm]["errors"] != transition["net"]:
             raise ValueError("Error-count transition differs")
         for score in transition["per_fold_metrics"]:
+            if set(score) != SCORE_FIELDS:
+                raise ValueError("Fold score schema differs")
             check_scores(score, sum(score["support"]))
         summed = [
             [sum(s["confusion"][i][j] for s in transition["per_fold_metrics"]) for j in range(3)]
@@ -116,7 +182,7 @@ def evidence(root: Path) -> dict:
         ]
         if summed != result["scores"][arm]["confusion"]:
             raise ValueError("Fold confusion matrices do not sum to aggregate")
-    protocol = read_json(root / "experiments/okutama_motion_null_contrast_protocol.json")
+    protocol = locked_json(root, "experiments/okutama_motion_null_contrast_protocol.json")
     criteria = protocol["continuation_gates"]
     intervals = result["bootstrap"]
     gates = {
@@ -196,14 +262,15 @@ def metadata(root: Path) -> str:
 
 
 def local_preservation(root: Path) -> dict:
-    snapshot = root / ".runs/research_20260920/repo_polish_20260920_v1"
-    original = read_json(snapshot / "before_cleanup.json")
+    original = locked_json(
+        root, ".runs/research_20260920/repo_polish_20260920_v1/before_cleanup.json"
+    )
     documents = {r["path"]: r for r in original["documents"]}
     for item in original["documents"]:
         if sha256(within(root, item["snapshot"])) != item["sha256"]:
             raise ValueError("Pre-cleanup document snapshot changed")
-    manifest = read_json(
-        root / ".runs/research_20260920/research_closeout_v1/preservation_manifest.json"
+    manifest = locked_json(
+        root, ".runs/research_20260920/research_closeout_v1/preservation_manifest.json"
     )
     substitutions = []
     for record in manifest["files"]:
@@ -219,13 +286,13 @@ def local_preservation(root: Path) -> dict:
                 "sha256": saved["sha256"],
             }
         )
-    completion = read_json(
-        root / ".runs/research_20260920/motion_null_contrast_v1/completion_receipt.json"
+    completion = locked_json(
+        root, ".runs/research_20260920/motion_null_contrast_v1/completion_receipt.json"
     )
     for item in completion["artifacts"]:
         if sha256(within(root, item["path"])) != item["sha256"]:
             raise ValueError(f"Completed-experiment artifact changed: {item['path']}")
-    lock = read_json(root / ".runs/research_20260920/motion_null_contrast_v1/execution_lock.json")
+    lock = locked_json(root, ".runs/research_20260920/motion_null_contrast_v1/execution_lock.json")
     for item in lock["dependencies"]:
         if sha256(within(root, item["path"])) != item["sha256"]:
             raise ValueError(f"Locked experiment dependency changed: {item['path']}")
@@ -239,7 +306,7 @@ def local_preservation(root: Path) -> dict:
 
 def historical_evidence(root: Path) -> int:
     """Verify frozen numerical exports and reports, not mutable project metadata."""
-    manifest = read_json(root / "results/human_activity_study_v3.0.0_manifest.json")
+    manifest = locked_json(root, "results/human_activity_study_v3.0.0_manifest.json")
     checked = 0
     for name, item in manifest["artifacts"].items():
         if not name.startswith(("results/", "output/pdf/", "assets/")) or name.endswith(
@@ -257,7 +324,9 @@ def historical_evidence(root: Path) -> int:
 def architecture_evidence(root: Path) -> int:
     """Check the original ARFTR component export without opening private artifacts."""
     folder = root / "results/arftr_development"
-    manifest = read_json(folder / "architecture_manifest.json")
+    manifest = locked_json(root, "results/arftr_development/architecture_manifest.json")
+    if manifest["schema_version"] != 1 or set(manifest["artifacts"]) != {"architecture_study.json"}:
+        raise ValueError("Architecture evidence inventory differs")
     for name, item in manifest["artifacts"].items():
         if sha256(within(folder, name), normalized=True) != item["sha256"]:
             raise ValueError(f"Architecture evidence hash changed: {name}")
@@ -269,6 +338,12 @@ def architecture_evidence(root: Path) -> int:
     study = read_json(folder / "architecture_study.json")
     if (
         set(study["scores"]) != set(protocol["arms"])
+        or len(study["scores"]) != 7
+        or study["schema_version"] != 1
+        or study["primary_arm"] != protocol["primary_arm"]
+        or study["evaluation_scope"] != protocol["status"]
+        or study["outer_folds"] != len(protocol["population"]["outer_folds"])
+        or study["scenarios"] != 11
         or study["classes"] != protocol["population"]["classes"]
         or study["rows"] != protocol["population"]["rows"]
         or study["prediction_seeds"] != protocol["population"]["prediction_seeds"]
@@ -276,6 +351,8 @@ def architecture_evidence(root: Path) -> int:
     ):
         raise ValueError("Architecture comparison contract differs")
     for score in study["scores"].values():
+        if set(score) != (SCORE_FIELDS - {"precision", "recall"}) | {"rows"}:
+            raise ValueError("Architecture score schema differs")
         check_scores(score, study["rows"])
     primary = study["scores"][study["primary_arm"]]
     retained = read_json(folder / "metrics.json")["scores"]["ARFTR"]
@@ -304,7 +381,13 @@ def figures(root: Path) -> int:
     manifest = read_json(folder / "arftr_figure_manifest.json")
     expected = {
         f"arftr_{name}.{suffix}"
-        for name in ("development_summary", "confusion_matrix", "architecture_results")
+        for name in (
+            "development_summary",
+            "confusion_matrix",
+            "architecture_results",
+            "report_components",
+            "system_overview",
+        )
         for suffix in ("png", "svg")
     }
     if set(manifest["artifacts"]) != expected or set(manifest["sources"]) != {
@@ -323,6 +406,30 @@ def figures(root: Path) -> int:
     return len(expected)
 
 
+def report(root: Path) -> int:
+    """Validate the current report separately from immutable historical reports."""
+    manifest = read_json(root / "output/pdf/arftr_report_v1.0.0.manifest.json")
+    expected = {
+        "docs/ARFTR_REPORT.md",
+        "tools/build_study_papers.py",
+        "assets/arftr_figure_manifest.json",
+        "output/pdf/arftr_report_v1.0.0.pdf",
+    }
+    if (
+        manifest["schema_version"] != 1
+        or manifest["project_version"] != metadata(root)
+        or set(manifest["artifacts"]) != expected
+    ):
+        raise ValueError("Current report inventory or version differs")
+    for name, item in manifest["artifacts"].items():
+        normalized = not name.endswith(".pdf")
+        if item["normalized_lf"] is not normalized or sha256(
+            within(root, name), normalized=normalized
+        ) != item["sha256"]:
+            raise ValueError(f"Current report source/artifact differs: {name}")
+    return len(expected)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repository", type=Path, default=ROOT)
@@ -337,6 +444,7 @@ def main() -> None:
         "architecture_arms_recomputed": architecture_evidence(root),
         "historical_evidence_files": historical_evidence(root),
         "current_figure_files": figures(root),
+        "current_report_bindings": report(root),
         "scope": "portable aggregate validation; not model execution",
     }
     if args.local_preservation:

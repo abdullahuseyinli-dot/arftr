@@ -2,7 +2,7 @@
 
 The research is presented as two linked projects from 20 September 2026:
 
-| Project | Repository | First independent project version | Primary result |
+| Project | Repository | First independent project version | Result at separation |
 | --- | --- | --- | --- |
 | ARFTR | [arftr](https://github.com/abdullahuseyinli-dot/arftr) | 1.0.0 | 85.383648% macro-F1; adaptive Okutama development |
 | POLAR Posture Recognition | [polar-posture-recognition](https://github.com/abdullahuseyinli-dot/polar-posture-recognition) | 1.0.0 | 93.988333% macro-F1; four-class locked POLAR test |
@@ -10,6 +10,9 @@ The research is presented as two linked projects from 20 September 2026:
 These are different tasks, not a score ranking. ARFTR owns the temporal architecture
 and continued research lineage. The companion owns the still-image benchmark,
 its representation/ensemble comparison, and person-centric transfer follow-ups.
+Its later 1.1.0 four-/nine-class benchmark is documented in the
+[companion's current results](https://github.com/abdullahuseyinli-dot/polar-posture-recognition/blob/main/docs/RESULTS.md);
+the table above records the original separation, not the latest companion release.
 
 ## Versioning
 

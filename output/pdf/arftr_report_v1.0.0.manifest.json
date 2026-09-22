@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "project_version": "1.0.0",
+  "artifacts": {
+    "docs/ARFTR_REPORT.md": {
+      "sha256": "9911fb5136b7c248ae37e60f2b18422cd561d28dd9844bd8d3adca0bbad39a71",
+      "normalized_lf": true
+    },
+    "tools/build_study_papers.py": {
+      "sha256": "d9c6c422bb3928a56e152e26e07017cdeef611545ea0ed4b902ee8d19ebc8926",
+      "normalized_lf": true
+    },
+    "assets/arftr_figure_manifest.json": {
+      "sha256": "4cd22389384e8bbbc35322a9789193f42a96883211a37ef6ea32a3ace395b39f",
+      "normalized_lf": true
+    },
+    "output/pdf/arftr_report_v1.0.0.pdf": {
+      "sha256": "51a77f43dced2a30b26fef9c8fb7807d4ee889b736770c9e35d175806cdfd866",
+      "normalized_lf": false
+    }
+  }
+}

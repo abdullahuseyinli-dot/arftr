@@ -12,7 +12,9 @@ python tools/check_project.py
 
 This standard-library check verifies current navigation, metadata consistency,
 public evidence hashes, confusion-matrix macro-F1/accuracy/error counts, rescue/harm
-arithmetic, current figure/source hashes and the fixed final-study decision. It does
+arithmetic, current figure/report hashes and the fixed final-study decision. It
+rejects incomplete evidence inventories and checks each class's support, precision
+and recall against the confusion counts. It does
 not install anything or download data. It cannot recompute NLL/Brier or scenario-bootstrap intervals without
 the original per-example probabilities; those are explicitly exported quantities.
 
@@ -39,6 +41,7 @@ checks and unit tests do not require a GPU or permission to download model weigh
 Historical integration tests that need non-distributed `.runs/` evidence are
 explicitly marked `local_artifacts` and skip when their required files are absent;
 CUDA-only tests also skip on CPU. These skips are not claimed as successful replay.
+CI tests both supported Python versions (3.11 and 3.12) with CPU PyTorch.
 On the research workstation, require those selected integration inputs with:
 
 ```bash
@@ -46,17 +49,21 @@ python -m pytest -m local_artifacts --require-local-artifacts
 ```
 
 The optional `research` extra supplies graph tooling; notebook and PDF dependencies
-are only required for their corresponding historical tooling.
+are only required for their corresponding tooling.
 
 To regenerate the new aggregate-only ARFTR figures (no model execution):
 
 ```bash
 python tools/render_arftr_figures.py
+python tools/build_study_papers.py docs/ARFTR_REPORT.md -o output/pdf/arftr_report_v1.0.0.pdf
+python tools/seal_arftr_report.py
 python tools/check_project.py
 ```
 
-This updates only the named ARFTR figures and their manifest. The original study
-figures, notebook and PDFs remain untouched; see the [figure guide](../assets/README.md).
+This updates only the named ARFTR figures, current report and their manifests.
+Review intentional changes before refreshing the report seal: it binds the
+Markdown, renderer, figure manifest and PDF. The original study figures, notebook
+and PDFs remain untouched; see the [figure guide](../assets/README.md).
 
 `check_style.py` compares Ruff diagnostics with an explicit legacy baseline. New
 issues fail; an improvement is allowed. The baseline is not a claim that all
@@ -77,6 +84,9 @@ Generation Laptop GPU. All ten saved head outputs replayed bit-exactly with the
 layout-corrected auditor. This does not guarantee bitwise identity on another GPU,
 PyTorch build, or memory layout. The old environment snapshots are not promises of
 current cross-platform binary reproducibility.
+The root `requirements-lock.txt` is an earlier study snapshot, not a lockfile for
+the full ARFTR research continuation. The maintained package uses `pyproject.toml`;
+its dependency ranges do not guarantee bitwise reproduction of historical fits.
 
 The cleanup changes documentation referenced by historical hash manifests. Original
 document bytes were copied into the local cleanup snapshot before editing. A legacy

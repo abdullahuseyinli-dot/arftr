@@ -56,7 +56,7 @@ it is not the isolated effect of ARFTR's final layer. The
 [lineage review](HAC_EXPERIMENT_REVIEW_20260912.md) retain the links.
 
 Higher exploratory point estimates also remain visible in the
-[complete continuation ledger](../results/arftr_development/experiment_ledger.csv):
+[selected continuation ledger](../results/arftr_development/experiment_ledger.csv):
 the crossing verifier reached 85.611648% but did not improve every outer fold;
 the signed-motion control reached 85.467181% with inconsistent folds and worse
 proper scores. Neither is a promoted improvement. The earlier CPTR validation gain
@@ -67,6 +67,9 @@ scores as deployable achievements.
 ## Still-image contributions
 
 The [companion benchmark](https://github.com/abdullahuseyinli-dot/polar-posture-recognition)
-presents the 93.99% POLAR ensemble, 86.63% V-COCO held-out posture stack,
-86.97% nested-development DINO/SigLIP stack, and DINOv2/DINOv3/SigLIP2 controls.
-Their independent populations and evaluation boundaries remain explicit.
+presents the current audited four-/nine-class POLAR study, including DINOv2,
+DINOv3, SigLIP2 and ConvNeXt V2 controls. Its
+[results guide](https://github.com/abdullahuseyinli-dot/polar-posture-recognition/blob/main/docs/RESULTS.md)
+also preserves the original 93.99% four-class ensemble, 86.63% V-COCO held-out
+posture stack and 86.97% nested-development DINO/SigLIP stack. These are separate
+tasks and evaluation populations, not additional ARFTR results.

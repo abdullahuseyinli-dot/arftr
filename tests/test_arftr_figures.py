@@ -44,12 +44,12 @@ def test_figure_data_rejects_changed_evidence(tmp_path):
 def test_figure_render_and_integrity_checks(tmp_path):
     output = tmp_path / "assets"
     result = render(ROOT, output)
-    assert result["artifacts"] == 6
+    assert result["artifacts"] == 10
     for relative in (*SOURCES, "tools/render_arftr_figures.py"):
         destination = tmp_path / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / relative, destination)
-    assert figures(tmp_path) == 6
+    assert figures(tmp_path) == 10
     png = output / "arftr_development_summary.png"
     assert png.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
     svg = output / "arftr_confusion_matrix.svg"
@@ -61,7 +61,7 @@ def test_figure_render_and_integrity_checks(tmp_path):
 
 
 def test_checked_in_figures_are_bound_to_public_evidence():
-    assert figures(Path(ROOT)) == 6
+    assert figures(Path(ROOT)) == 10
 
 
 def test_architecture_supplement_rejects_changed_export(tmp_path):

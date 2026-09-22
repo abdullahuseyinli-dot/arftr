@@ -1,8 +1,57 @@
-# Validation record — 20 September 2026
+# Validation record
 
-This records the independent ARFTR 1.0.0 project package and earlier presentation
-reviews. None is a new scientific evaluation. Local checks and remote CI are
-distinguished below.
+## Current review — 22 September 2026
+
+ARFTR project 1.0.0; presentation and verification changes only. The local checkout
+and GitHub `main` matched at `0a897b8` before this review. No training, model
+selection, revised score, historical tag change or publication was performed.
+
+| Check | Outcome |
+| --- | --- |
+| Full workstation test suite | **1,570 passed, six CUDA-dependent skips** |
+| Public-only copy | **1,563 passed, 13 skipped** across 1,013 permitted files; no private runs, environments or dataset media |
+| Required local-artifact tests | **Six passed** with `--require-local-artifacts` |
+| Public aggregate evidence | Three continuation systems and seven original component arms agree with exported confusion counts |
+| Private saved-row replay | All seven arms' F1, accuracy, NLL, Brier and confusions match within 1e-12; seed means match exactly |
+| Retained fusion-layer replay | **105 fold × arm × seed outputs reproduced bit-exactly** from saved upstream inputs |
+| Paired uncertainty | 10,000 scenario bootstrap draws and all 2,048 exact scenario swaps reproduce the original interval and p-value |
+| Historical preservation | 220 public numerical/report artifacts, 218 protected records, 59 final-study artifacts and 907 execution-locked dependencies verified |
+| Integrity failure tests | Missing inventories, weakened protocol, incomplete models/folds, inconsistent class support/metrics and altered report bindings rejected |
+| Presentation | Ten current figure files and four report bindings checked; six-page PDF reviewed for readable figures, tables and portable links |
+| Style and compilation | No new Ruff findings; 533 frozen legacy findings remain; compilation passed |
+| Wheel | `arftr-1.0.0-py3-none-any.whl` built successfully |
+
+Saved-row checks also confirm identical T2/ARFTR sample IDs and labels, the
+71.923768% starting F1, and the +13.459880-point historical gain. They do not
+re-execute upstream neural models or turn the reused cohort into confirmation.
+The specialist replay is a separate calculation, not an independent-person
+external audit. Public aggregate checks cannot reproduce proper scores or paired
+uncertainty without the private row predictions.
+
+The workstation suite used Python 3.11.9, CPU PyTorch 2.14.0 and Transformers
+5.17.0 in the existing environment. It is not a clean installation or a GPU
+validation. CI now tests Python 3.11 and 3.12 with CPU PyTorch 2.11.0; the
+[main-branch workflow](https://github.com/abdullahuseyinli-dot/arftr/actions/workflows/ci.yml?query=branch%3Amain)
+records the result for each published commit. Dependency ranges remain distinct
+from the historical fitting environment.
+
+The public-only copy used that same installed environment, with imports directed
+to the exported source. Its skips comprise seven unavailable private-artifact
+checks and six CUDA-dependent checks. This tests isolation from local data, not
+a fresh dependency installation. Final validation-document edits were followed
+by navigation, integrity and focused-test reruns.
+
+Local JUnit records, the public-only copy and a numerical-review receipt are under
+`.runs/review_20260922/`. They contain no new fits and are not an independent backup.
+Use the [reproduction guide](REPRODUCIBILITY.md) for check and report-build commands.
+
+## Earlier validation records
+
+The records below describe earlier commits and remain historical, not the current
+test count or figure inventory.
+
+<details>
+<summary>20 September: separation, cleanup and presentation checks</summary>
 
 ## ARFTR 1.0.0 project separation
 
@@ -146,3 +195,5 @@ remote check for the published revision.
 
 See [reproduction instructions](REPRODUCIBILITY.md) and
 [release-readiness boundaries](REPOSITORY_MAINTENANCE.md).
+
+</details>

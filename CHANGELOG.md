@@ -3,6 +3,15 @@
 This file records versioned public study artifacts. The Python package has its own
 version in `pyproject.toml`.
 
+## ARFTR 1.0.0 presentation and verification review — 2026-09-22
+
+- Added a concise current ARFTR report and print-sized architecture/component
+  figures; kept the existing main-page focus and historical reports unchanged.
+- Updated companion-project navigation and clarified the selected ledger's scope.
+- Hardened evidence checks against incomplete inventories and inconsistent
+  class/fold records; added negative integrity tests and Python 3.12 CI coverage.
+- No new training, changed scores, model promotion, or historical tag changes.
+
 ## ARFTR 1.0.0 — 2026-09-20
 
 - Established `arftr` as the architecture project's repository and package identity.

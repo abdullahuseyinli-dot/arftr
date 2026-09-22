@@ -19,9 +19,11 @@ the additional template expert's residual to locomotion.
 | ---: | ---: | --- |
 | **85.383648%** | **85.895118%** | 4,977 Okutama centers · 11 scenarios · 5 outer folds |
 
-These are adaptive internal-development results, not an untouched confirmation test.
+ARFTR makes **702 errors** on this cohort. These are adaptive internal-development
+results, not an untouched confirmation test.
 
 [Architecture](docs/ARCHITECTURE.md) · [Results and evidence](results/arftr_development/README.md) ·
+[Technical report](docs/ARFTR_REPORT.md) · [PDF](output/pdf/arftr_report_v1.0.0.pdf) ·
 [Model card](docs/MODEL_CARD.md) · [Reproduce](docs/REPRODUCIBILITY.md) ·
 [Result highlights](docs/RESULTS.md)
 
@@ -105,8 +107,10 @@ examples. These are earlier models, not a confirmation score for ARFTR.
 
 The still-image work now has its own home:
 [**POLAR Posture Recognition**](https://github.com/abdullahuseyinli-dot/polar-posture-recognition),
-with the **93.99% four-class held-out ensemble**, DINOv2/ConvNeXt comparisons,
-V-COCO transfer and the matched DINOv3 screen. Its scores use different protocols.
+with an audited four-/nine-class benchmark covering DINOv2, DINOv3, SigLIP2 and
+ConvNeXt V2, plus the original **93.99% four-class ensemble** and V-COCO transfer.
+Its [current results](https://github.com/abdullahuseyinli-dot/polar-posture-recognition/blob/main/docs/RESULTS.md)
+use different tasks and protocols; they are not ARFTR baselines.
 Original reports and historical paths remain in the [research archive](docs/README.md#historical-studies)
 to preserve reproducibility. [Project separation and version history](docs/PROJECT_HISTORY.md).
 

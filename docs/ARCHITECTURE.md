@@ -53,8 +53,9 @@ remaining upright probability with `sigmoid(m_final)` into walking/running and
 standing. All-zero coefficients return the original M4 probabilities byte-for-byte.
 The protocol applies each arm per aligned upstream seed, then averages probabilities.
 
-No class labels enter these inference functions. The recorded setup **does require
-person/track metadata and may use future (+1 second) evidence**; it is not a tested
+No class labels enter these inference functions. The recorded setup **uses supplied
+annotation-derived person boxes and track identities, and may use future (+1 second)
+evidence**; it is not a tested
 causal, zero-latency raw-video classifier. See the [model card](MODEL_CARD.md).
 
 ## Original component study
